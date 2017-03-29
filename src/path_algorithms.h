@@ -66,6 +66,8 @@ shared_ptr<struct path_data<typename G::vertex_type, typename G::edge_type::cost
 	}
 	shared_ptr<struct path_data<vertex_type, cost_type>> path_d = make_shared<struct path_data<vertex_type, cost_type>>();
 	path_d->path_v = path;
+	path_d->path_v_stringified = helper_path_data->path_v_stringified;
+	path_d->cost = helper_path_data->cost;
 	return path_d;
 }
 
@@ -91,6 +93,8 @@ shared_ptr<struct path_data<typename G::vertex_type, typename G::edge_type::cost
 	}
 	shared_ptr<struct path_data<vertex_type, cost_type>> path_d = make_shared<struct path_data<vertex_type, cost_type>>();
 	path_d->path_v = path;
+	path_d->path_v_stringified = helper_path_data->path_v_stringified;
+	path_d->cost = helper_path_data->cost;
 	return path_d;
 }
 
@@ -114,6 +118,8 @@ shared_ptr<struct path_data<typename G::vertex_type, typename G::edge_type::cost
 	}
 	shared_ptr<struct path_data<vertex_type, cost_type>> path_d = make_shared<struct path_data<vertex_type, cost_type>>();
 	path_d->path_v = path;
+	path_d->path_v_stringified = helper_path_data->path_v_stringified;
+	path_d->cost = helper_path_data->cost;
 	return path_d;
 }
 
@@ -138,6 +144,8 @@ shared_ptr<struct path_data<typename G::vertex_type, typename G::edge_type::cost
 	}
 	shared_ptr<struct path_data<vertex_type, cost_type>> path_d = make_shared<struct path_data<vertex_type, cost_type>>();
 	path_d->path_v = path;
+	path_d->path_v_stringified = helper_path_data->path_v_stringified;
+	path_d->cost = helper_path_data->cost;
 	return path_d;
 }
 

@@ -452,10 +452,30 @@ void generic_dt_example()
 		cout << val.first << " " << val.second << ", ";
 	}
 	cout << '\n';
-	vector<V> path = find_path_dfs(my_graph, v0, v3);
-	for (auto p : path) {
-		cout << p.to_string() << '\n';
-	}
+	cout << "path dfs\n";
+	shared_ptr<path_data<V, int>> path_info = find_path_dfs(my_graph, v0, v3);
+	vector<V> path = path_info->path_v;
+	string s = path_info->to_string();
+	int c = path_info->cost;
+	cout << s << '\n';
+	cout << "cost\n";
+	cout << c << '\n';
+	cout << "path bfs\n";
+	path_info = find_path_bfs(my_graph, v0, v3);
+	path = path_info->path_v;
+	s = path_info->to_string();
+	c = path_info->cost;
+	cout << s << '\n';
+	cout << "cost\n";
+	cout << c << '\n';
+	cout << "path ucs\n";
+	path_info = find_path_ucs(my_graph, v0, v3);
+	path = path_info->path_v;
+	s = path_info->to_string();
+	c = path_info->cost;
+	cout << s << '\n';
+	cout << "cost\n";
+	cout << c << '\n';
 }
 
 template<typename T>

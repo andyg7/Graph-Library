@@ -22,6 +22,7 @@ class city {
 		bool operator< (const city&) const;
 		bool operator> (const city&) const;
 		heuristic_function_type heuristic_func() const;
+		string to_string() const;
 	private:
 		string name;
 		int population;
@@ -38,6 +39,11 @@ class road {
 };
 
 city::city() {}
+
+string city::to_string() const 
+{
+	return name;
+}
 
 city::city(string s, int p) 
 {

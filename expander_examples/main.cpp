@@ -46,10 +46,8 @@ int main(int argc, const char *argv[])
 	shared_ptr<struct path_data<Node, int>> path_d = find_path_ast(n, goal_state);
 	vector<Node> path = path_d->path_v;
 	cout << "ast path\n";
-	for (int i = 0; i < path.size(); i++) {
-		auto v = path[i];
-		cout << v << '\n';
-	}
+	string s= path_d->to_string();
+	cout << s;
 	path_d = find_path_dfs(n, goal_state);
 	path_d = find_path_bfs(n, goal_state);
 	path_d = find_path_ucs(n, goal_state);

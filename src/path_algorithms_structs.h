@@ -43,6 +43,11 @@ namespace std
 				return true;
 			}
 
+			string to_string() {
+				string s = (vertex_wrapper_data->vertex_data).to_string();
+				return s;
+			}
+
 			C heuristic_func() 
 			{
 				return (vertex_wrapper_data->vertex_data).heuristic_func();
@@ -75,10 +80,19 @@ namespace std
 
 	template<typename V, typename C>
 	struct path_data {
-		string stringified_path;
 		C cost;
 		vector<V> path_v;
 		vector<string> path_v_stringified;
+		string to_string() {
+			string s;
+			for (auto p : path_v_stringified) {
+				s+=p;
+				s+="|";
+				s+="\n";
+			}
+			s+="\n";
+			return s;
+		}
 	};
 
 	template <typename T, typename C>

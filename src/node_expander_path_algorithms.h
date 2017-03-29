@@ -16,7 +16,7 @@ template<typename V>
 bool path_exists(V v, V g)
 {
 	list<V> frontier;
-	return path_exists_generic(v, g, frontier, [](list<V>& q, V& v) { q.push_front(v); }, [] (list<V>& q) { q.pop_back(); }, [] (list<V>& q) { return q.back(); });
+	return path_exists_generic(v, g, frontier, [](list<V>& q, V& v) { q.push_front(v); }, [](list<V>& q) { q.pop_back(); }, [](list<V>& q) { return q.back(); });
 }
 
 template<typename V, typename F, typename Insert, typename Remove, typename Top>
@@ -53,14 +53,14 @@ template<typename V>
 shared_ptr<struct path_data<typename V::element_type, typename V::element_type::cost_type>> find_path_dfs(V v, V g)
 {
 	list<V> frontier;
-	return find_path_generic(v, g, frontier, [](list<V>& q, V& v) { q.push_back(v); }, [] (list<V>& q) { q.pop_back(); }, [] (list<V>& q) { return q.back(); });
+	return find_path_generic(v, g, frontier, [](list<V>& q, V& v) { q.push_back(v); }, [](list<V>& q) { q.pop_back(); }, [](list<V>& q) { return q.back(); });
 }
 
 template<typename V>
 shared_ptr<struct path_data<typename V::element_type, typename V::element_type::cost_type>> find_path_bfs(V v, V g)
 {
 	list<V> frontier;
-	return find_path_generic(v, g, frontier, [](list<V>& q, V& v) { q.push_front(v); }, [] (list<V>& q) { q.pop_back(); }, [] (list<V>& q) { return q.back(); });
+	return find_path_generic(v, g, frontier, [](list<V>& q, V& v) { q.push_front(v); }, [](list<V>& q) { q.pop_back(); }, [](list<V>& q) { return q.back(); });
 }
 
 
@@ -69,7 +69,7 @@ shared_ptr<struct path_data<typename V::element_type, typename V::element_type::
 {
 	typedef priority_queue<V, vector<V>, GreaterThanCost<V>> queue_type;
 	queue_type pq;
-	return find_path_generic(v, g, pq, [](queue_type& q, V& v) { q.push(v); }, [] (queue_type& q) { q.pop(); }, [] (queue_type& q) { return q.top(); });
+	return find_path_generic(v, g, pq, [](queue_type& q, V& v) { q.push(v); }, [](queue_type& q) { q.pop(); }, [](queue_type& q) { return q.top(); });
 }
 
 template<typename V>
@@ -77,7 +77,7 @@ shared_ptr<struct path_data<typename V::element_type, typename V::element_type::
 {
 	typedef priority_queue<V, vector<V>, HeuristicGreaterThanCost<V>> queue_type;
 	queue_type pq;
-	return find_path_generic(v, g, pq, [](queue_type& q, V& v) { q.push(v); }, [] (queue_type& q) { q.pop(); }, [] (queue_type& q) { return q.top(); });
+	return find_path_generic(v, g, pq, [](queue_type& q, V& v) { q.push(v); }, [](queue_type& q) { q.pop(); }, [](queue_type& q) { return q.top(); });
 }
 
 template<typename V, typename F, typename Insert, typename Remove, typename Top>
@@ -86,7 +86,6 @@ shared_ptr<struct path_data<typename V::element_type, typename V::element_type::
 	typedef typename V::element_type element_type;
 	typedef typename V::element_type::cost_type cost_type;
 	bool debug_on = false;
-	vector<typename V::element_type> path;
 	unordered_set<typename V::element_type> visited_nodes;
 	F frontier = f;
 	in(frontier, v);
@@ -98,18 +97,27 @@ shared_ptr<struct path_data<typename V::element_type, typename V::element_type::
 		V curr_node = top(frontier);
 		visited_nodes.insert(*curr_node);
 		if (*curr_node == *g) {
+			vector<element_type> path;
+			vector<string> string_path;
 			if (debug_on) {
 				cout << "found goal state\n";
 			}
 			path.push_back(*curr_node);
-			shared_ptr<typename V::element_type> curr_v = curr_node->parent;
+			string_path.push_back((*curr_node).to_string());
+			cost_type total_cost = (curr_node->cost);
+			shared_ptr<element_type> curr_v = curr_node->parent;
 			while (curr_v != nullptr) {
 				path.push_back(*curr_v);
+				string t_s = curr_v->to_string();
+				string_path.push_back(t_s);
 				curr_v = curr_v->parent;
 			}
 			reverse(path.begin(), path.end());
+			reverse(string_path.begin(), string_path.end());
 			shared_ptr<path_data<element_type, cost_type>> found_path_data = make_shared<path_data<element_type, cost_type>>();
 			found_path_data->path_v = path;
+			found_path_data->path_v_stringified = string_path;
+			found_path_data->cost = total_cost;
 			return found_path_data;
 		}
 		rem(frontier);
@@ -121,6 +129,7 @@ shared_ptr<struct path_data<typename V::element_type, typename V::element_type::
 		}
 	}
 	shared_ptr<struct path_data<element_type, cost_type>> found_path_data = make_shared<path_data<element_type, cost_type>>();
+	vector<element_type> path;
 	found_path_data->path_v = path;
 	return found_path_data;
 }
