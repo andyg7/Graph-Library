@@ -20,15 +20,15 @@ int main(int argc, const char *argv[])
 		}
 	}
 	shared_ptr<Node> n = make_shared<Node>(v, 0, nullptr);
-	n->set_element(0,0,0);
-	n->set_element(1,0,1);
-	n->set_element(2,0,5);
+	n->set_element(0,0,1);
+	n->set_element(1,0,7);
+	n->set_element(2,0,4);
 	n->set_element(0,1,3);
-	n->set_element(1,1,6);
-	n->set_element(2,1,7);
-	n->set_element(0,2,8);
-	n->set_element(1,2,2);
-	n->set_element(2,2,4);
+	n->set_element(1,1,5);
+	n->set_element(2,1,6);
+	n->set_element(0,2,2);
+	n->set_element(1,2,8);
+	n->set_element(2,2,0);
 	shared_ptr<Node> goal_state = make_shared<Node>(v, 0, nullptr);
 	goal_state->set_element(0,0,1);
 	goal_state->set_element(1,0,2);

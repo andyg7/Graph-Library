@@ -31,15 +31,12 @@ bool path_exists_generic(V v, V g, F f, Insert in, Remove rem, Top top)
 	in(frontier, v);
 	frontier_helper.insert(*v);
 	while (!frontier.empty()) {
-		if (debug_on) {
-			cout << "still looping\n";
-			cout << "frontier size" << frontier.size() << '\n';
-		}
 		V curr_node = top(frontier);
 		visited_nodes.insert(*curr_node);
 		rem(frontier);
 		auto tmp_it = frontier_helper.find(*curr_node);
 		frontier_helper.erase(tmp_it);
+
 		vector<V> children = curr_node->expand();
 		for (auto c : children) {
 			if (*c == *g) {

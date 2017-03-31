@@ -144,6 +144,9 @@ int main(int argc, char *argv[])
 	cout << "cycle exists for dallas\n";
 	cycle_ex = cycle_exists(my_graph, v8);
 	cout << cycle_ex << '\n';
+	cout << "cycle exists for nyc\n";
+	cycle_ex = cycle_exists(my_graph, v0);
+	cout << cycle_ex << '\n';
 	return 0;
 }
 

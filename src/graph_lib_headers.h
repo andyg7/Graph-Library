@@ -3,14 +3,6 @@
 
 #include "graph_concepts.h"
 
-template<typename G>
-requires Graph<G> && Vertex_numeric_id<typename G::vertex_type>
-shared_ptr<typename G::vertex_type> create_vertex(G&);
-
-template<typename G, typename V>
-requires Graph_and_Vertex_ptr<G, V>
-shared_ptr<typename G::edge_type> create_edge(G&, V, V);
-
 template<typename G, typename V>
 requires Graph_and_Vertex_ptr<G, V>
 bool add(G&, V);
@@ -74,10 +66,6 @@ bool vertex_exists(G&, V);
 template<typename G, typename V>
 requires Graph_and_Vertex_ptr<G, V>
 void remove(G&, V);
-
-template<typename G>
-requires Vertex_numeric_id<typename G::vertex_type>
-int get_unique_id(G&);
 
 template<typename G, typename V>
 requires Graph_and_Vertex_ptr<G, V> && Edge_cost<typename G::edge_type>
