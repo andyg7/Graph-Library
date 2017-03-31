@@ -224,12 +224,4 @@ requires (G g) {
 	requires Numeric<typename G::vertex_type::heuristic_function_type>;
 };
 
-template<typename G, typename V>
-concept bool Heuristic_graph_and_Vertex_ptr =
-requires (G g, V v) {
-	requires Heuristic_graph<G>;
-	{ *v } -> typename G::vertex_type;
-	requires Vertex<typename G::vertex_type>;
-};
-
 #endif

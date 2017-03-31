@@ -135,6 +135,7 @@ shared_ptr<struct path_data<typename G::vertex_type, typename G::edge_type::cost
    Uses UCS to find shortest path
  */
 template<typename G, typename V>
+requires Graph<G> && Vertex_ptr<V>
 shared_ptr<struct path_data<typename G::vertex_type, typename G::edge_type::cost_type>> find_path_ucs(G& g, V x, V y)
 {
 	typedef typename G::vertex_type vertex_type;
@@ -160,7 +161,7 @@ shared_ptr<struct path_data<typename G::vertex_type, typename G::edge_type::cost
    Uses AST to find shortest path
  */
 template<typename G, typename V>
-requires Heuristic_graph_and_Vertex_ptr<G, V> && Edge<typename G::edge_type>
+requires Heuristic_graph<G> && Vertex_ptr<V>
 shared_ptr<struct path_data<typename G::vertex_type, typename G::edge_type::cost_type>> find_path_ast(G& g, V x, V y)
 {
 	typedef typename G::vertex_type vertex_type;
