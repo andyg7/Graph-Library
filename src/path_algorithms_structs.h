@@ -87,8 +87,8 @@ namespace std
 			string s;
 			for (auto p : path_v_stringified) {
 				s+=p;
-				s+="|";
 				s+="\n";
+				s+="|";
 			}
 			s+="\n";
 			return s;

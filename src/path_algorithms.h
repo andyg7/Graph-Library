@@ -18,7 +18,7 @@ shared_ptr<path_state<G, typename G::edge_type::cost_type>> generate_state(G& g,
 {
 	typedef typename G::vertex_type vertex_type;
 	typedef typename G::edge_type::cost_type cost_type;
-	typedef path_state<G, cost_type> helper_type;
+	typedef path_state<G, cost_type> path_state_type;
 	auto it = g.underlying_data.begin();
 	auto it_end = g.underlying_data.end();
 	for (; it != it_end; it++) {
@@ -26,8 +26,41 @@ shared_ptr<path_state<G, typename G::edge_type::cost_type>> generate_state(G& g,
 			break;
 		}
 	}
-	shared_ptr<helper_type> state = make_shared<helper_type>(it->vertex_wrapper_data, 0, nullptr, g);
+	shared_ptr<path_state_type> state = make_shared<path_state_type>(it->vertex_wrapper_data, 0, nullptr, g);
 	return state;
+}
+
+template<typename G>
+requires Graph<G>
+bool cycle_exists(G& g)
+{
+	typedef typename G::vertex_type vertex_type;
+	typedef typename G::edge_type::cost_type cost_type;
+	typedef path_state<G, cost_type> path_state_type;
+	auto it = g.underlying_data.begin();
+	auto it_end = g.underlying_data.end();
+
+	for (; it != it_end; it++) {
+		shared_ptr<path_state_type> start_state = make_shared<path_state_type>(it->vertex_wrapper_data, 0, nullptr, g);
+		if (path_exists(start_state, start_state)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+template<typename G, typename V>
+requires Graph_and_Vertex_ptr<G, V>
+bool cycle_exists(G& g, V v)
+{
+	typedef typename G::edge_type::cost_type cost_type;
+	typedef path_state<G, cost_type> path_state_type;
+
+	shared_ptr<path_state_type> start_state = generate_state(g, v);
+	if (path_exists(start_state, start_state)) {
+		return true;
+	}
+	return false;
 }
 
 template<typename G, typename V>
@@ -36,10 +69,10 @@ bool path_exists(G& g, V x, V y)
 {
 	typedef typename G::vertex_type vertex_type;
 	typedef typename G::edge_type::cost_type cost_type;
-	typedef path_state<G, cost_type> helper_type;
+	typedef path_state<G, cost_type> path_state_type;
 
-	shared_ptr<helper_type> start_state = generate_state(g, x);
-	shared_ptr<helper_type> goal_state = generate_state(g, y);
+	shared_ptr<path_state_type> start_state = generate_state(g, x);
+	shared_ptr<path_state_type> goal_state = generate_state(g, y);
 
 	return path_exists(start_state, goal_state);
 }
@@ -53,10 +86,10 @@ shared_ptr<struct path_data<typename G::vertex_type, typename G::edge_type::cost
 {
 	typedef typename G::vertex_type vertex_type;
 	typedef typename G::edge_type::cost_type cost_type;
-	typedef path_state<G, cost_type> helper_type;
+	typedef path_state<G, cost_type> path_state_type;
 
-	shared_ptr<helper_type> start_state = generate_state(g, x);
-	shared_ptr<helper_type> goal_state = generate_state(g, y);
+	shared_ptr<path_state_type> start_state = generate_state(g, x);
+	shared_ptr<path_state_type> goal_state = generate_state(g, y);
 
 	auto helper_path_data = find_path_dfs(start_state, goal_state);
 
@@ -80,10 +113,10 @@ shared_ptr<struct path_data<typename G::vertex_type, typename G::edge_type::cost
 {
 	typedef typename G::vertex_type vertex_type;
 	typedef typename G::edge_type::cost_type cost_type;
-	typedef path_state<G, cost_type> helper_type;
+	typedef path_state<G, cost_type> path_state_type;
 
-	shared_ptr<helper_type> start_state = generate_state(g, x);
-	shared_ptr<helper_type> goal_state = generate_state(g, y);
+	shared_ptr<path_state_type> start_state = generate_state(g, x);
+	shared_ptr<path_state_type> goal_state = generate_state(g, y);
 
 	auto helper_path_data = find_path_bfs(start_state, goal_state);
 
@@ -106,9 +139,9 @@ shared_ptr<struct path_data<typename G::vertex_type, typename G::edge_type::cost
 {
 	typedef typename G::vertex_type vertex_type;
 	typedef typename G::edge_type::cost_type cost_type;
-	typedef path_state<G, cost_type> helper_type;
-	shared_ptr<helper_type> start_state = generate_state(g, x);
-	shared_ptr<helper_type> goal_state = generate_state(g, y);
+	typedef path_state<G, cost_type> path_state_type;
+	shared_ptr<path_state_type> start_state = generate_state(g, x);
+	shared_ptr<path_state_type> goal_state = generate_state(g, y);
 
 	auto helper_path_data = find_path_ucs(start_state, goal_state);
 
@@ -132,9 +165,9 @@ shared_ptr<struct path_data<typename G::vertex_type, typename G::edge_type::cost
 {
 	typedef typename G::vertex_type vertex_type;
 	typedef typename G::edge_type::cost_type cost_type;
-	typedef path_state<G, cost_type> helper_type;
-	shared_ptr<helper_type> start_state = generate_state(g, x);
-	shared_ptr<helper_type> goal_state = generate_state(g, y);
+	typedef path_state<G, cost_type> path_state_type;
+	shared_ptr<path_state_type> start_state = generate_state(g, x);
+	shared_ptr<path_state_type> goal_state = generate_state(g, y);
 
 	auto helper_path_data = find_path_ast(start_state, goal_state);
 

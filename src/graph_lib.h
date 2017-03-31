@@ -60,7 +60,7 @@ shared_ptr<typename G::vertex_type> create_vertex(G& g)
 {
 	typedef typename G::vertex_type vertex_type;
 	int unique_id = get_unique_id(g);
-	shared_ptr<vertex_type> new_vertex  { new vertex_type};
+	shared_ptr<vertex_type> new_vertex = make_shared<vertex_type>();
 	new_vertex->set_key(unique_id);
 	return new_vertex;
 }
@@ -70,7 +70,7 @@ requires Graph_and_Vertex_ptr<G, V>
 shared_ptr<typename G::edge_type> create_edge(G& g, V x, V y)
 {
 	typedef typename G::edge_type edge_type;
-	shared_ptr<edge_type> new_edge  { new edge_type};
+	shared_ptr<edge_type> new_edge = make_shared<edge_type>(); 
 	new_edge->v1 = *x;
 	new_edge->v2 = *y;
 	new_edge->cost = 1;
@@ -82,7 +82,7 @@ requires Graph_and_Vertex_ptr<G, V> && Edge_cost<typename G::edge_type>
 shared_ptr<typename G::edge_type> create_edge(G& g, V x, V y, C c)
 {
 	typedef typename G::edge_type edge_type;
-	shared_ptr<edge_type> new_edge  { new edge_type};
+	shared_ptr<edge_type> new_edge = make_shared<edge_type>();
 	new_edge->v1 = *x;
 	new_edge->v2 = *y;
 	new_edge->cost = c;
@@ -209,7 +209,7 @@ bool add_edge(G& g, E e)
 	bool path_ex = path_exists(g, &(e->v2), &(e->v1));
 	if (path_ex == true) {
 		return false;
-	}
+	} 
 	bool added_edge = add_edge_blindly_w_edge(g, &(e->v1), &(e->v2), e);
 	return added_edge;
 }
@@ -362,25 +362,6 @@ bool vertex_exists(G& g, V x)
 
 	for (; it != it_end; it++) {
 		if ((*it).vertex_wrapper_data->vertex_data == *x) {
-			return true;
-		}
-	}
-	return false;
-}
-
-template<typename G>
-requires Graph<G>
-bool cycle_exists(G& g)
-{
-	typedef typename G::vertex_type vertex_type;
-	auto it = g.underlying_data.begin();
-	auto it_end = g.underlying_data.end();
-
-	for (; it != it_end; it++) {
-		auto curr_v = it->vertex_wrapper_data->vertex_data;
-		shared_ptr<vertex_type> tmp_p { new vertex_type };
-		*(tmp_p) = curr_v;
-		if (path_exists(g, tmp_p, tmp_p)) {
 			return true;
 		}
 	}

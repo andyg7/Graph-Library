@@ -18,39 +18,47 @@ int main(int argc, char *argv[])
 	v0->set_name("New York");
 	v0->set_population(8406000);
 	add(my_graph, v0);
+	cout << "NYC is 0\n";
 	auto v1 = create_vertex(my_graph);
 	v1->set_name("Los Angeles");
 	v1->set_population(3808000);
 	add(my_graph, v1);
+	cout << "Los Angeles is 1\n";
 	auto v2 = create_vertex(my_graph);
 	v2->set_name("Chicago");
 	v2->set_population(2719000);
 	add(my_graph, v2);
+	cout << "Chicago is 2\n";
 	auto v3 = create_vertex(my_graph);
 	v3->set_name("Austin");
 	v3->set_population(885000);
 	add(my_graph, v3);
+	cout << "Austin is 3\n";
 	auto v4 = create_vertex(my_graph);
 	v4->set_name("Cleveland");
 	v4->set_population(350000);
 	add(my_graph, v4);
+	cout << "Cleveland is 4\n";
 	auto v5 = create_vertex(my_graph);
 	v5->set_name("Atlanta");
 	v5->set_population(3999);
 	add(my_graph, v5);
-
+	cout << "Atlanta is 5\n";
 	auto v6 = create_vertex(my_graph);
 	v6->set_name("Dallas");
-	v6->set_population(3333999);
+	v6->set_population(3999);
 	add(my_graph, v6);
-
+	cout << "Dallas is 6\n";
 	auto v7 = create_vertex(my_graph);
 	v7->set_name("San Francisco");
 	v7->set_population(700000);
 	add(my_graph, v7);
-
-	remove(my_graph, v6);
-	remove(my_graph, v7);
+	cout << "SF is 7\n";
+	auto v8 = create_vertex(my_graph);
+	v8->set_name("Dallas");
+	v8->set_population(3333999);
+	add(my_graph, v8);
+	cout << "Dallas is 8\n";
 
 	auto e1 = create_edge(my_graph, v0, v2);
 	e1->cost = 1000;
@@ -92,9 +100,13 @@ int main(int argc, char *argv[])
 	e11->cost = 10;
 	add_edge(my_graph, e11);
 
+	auto e12 = create_edge(my_graph, v3, v8);
+	e12->cost = 10;
+	add_edge(my_graph, e12);
+
 	auto edges = get_edges(my_graph);
 	for (auto& e : edges) {
-		cout << e.v1.get_name() << "->" << e.v2.get_name() << '\n';
+		//cout << e.v1.get_name() << "->" << e.v2.get_name() << '\n';
 	}
 	auto path_v0_v1 = find_path_dfs(my_graph, v0, v1);
 	cout << "dfs: \n";
@@ -120,6 +132,18 @@ int main(int argc, char *argv[])
 		cout << p.get_name() << ", ";
 	}
 	cout << '\n';
+	cout << "path from chicago to Austin?\n";
+	auto path_ex = path_exists(my_graph, v2, v3);
+	cout << path_ex << '\n';
+	cout << "path from dallas to Austin?\n";
+	path_ex = path_exists(my_graph, v8, v3);
+	cout << path_ex << '\n';
+	cout << "cycle exists\n";
+	auto cycle_ex = cycle_exists(my_graph);
+	cout << cycle_ex << '\n';
+	cout << "cycle exists for dallas\n";
+	cycle_ex = cycle_exists(my_graph, v8);
+	cout << cycle_ex << '\n';
 	return 0;
 }
 

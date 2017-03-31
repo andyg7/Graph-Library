@@ -22,12 +22,14 @@ bool path_exists(V v, V g)
 template<typename V, typename F, typename Insert, typename Remove, typename Top>
 bool path_exists_generic(V v, V g, F f, Insert in, Remove rem, Top top)
 {
+	typedef typename V::element_type element_type;
 	bool debug_on = false;
-	vector<typename V::element_type> path;
-	unordered_set<typename V::element_type> visited_nodes;
+	vector<element_type> path;
+	unordered_set<element_type> visited_nodes;
+	unordered_set<element_type> frontier_helper;
 	F frontier = f;
 	in(frontier, v);
-	bool first_it = true;
+	frontier_helper.insert(*v);
 	while (!frontier.empty()) {
 		if (debug_on) {
 			cout << "still looping\n";
@@ -35,20 +37,23 @@ bool path_exists_generic(V v, V g, F f, Insert in, Remove rem, Top top)
 		}
 		V curr_node = top(frontier);
 		visited_nodes.insert(*curr_node);
-		if (*curr_node == *g && first_it == false) {
-			return true;
-		}
 		rem(frontier);
+		auto tmp_it = frontier_helper.find(*curr_node);
+		frontier_helper.erase(tmp_it);
 		vector<V> children = curr_node->expand();
 		for (auto c : children) {
-			if (visited_nodes.find(*c) == visited_nodes.end()) {
+			if (*c == *g) {
+				return true;
+			}
+			if (visited_nodes.find(*c) == visited_nodes.end() && frontier_helper.find(*c) == frontier_helper.end()) {
 				in(frontier, c);
+				frontier_helper.insert(*c);
 			}
 		}
-		first_it = false;
 	}
 	return false;
 }
+
 template<typename V>
 shared_ptr<struct path_data<typename V::element_type, typename V::element_type::cost_type>> find_path_dfs(V v, V g)
 {
@@ -62,7 +67,6 @@ shared_ptr<struct path_data<typename V::element_type, typename V::element_type::
 	list<V> frontier;
 	return find_path_generic(v, g, frontier, [](list<V>& q, V& v) { q.push_front(v); }, [](list<V>& q) { q.pop_back(); }, [](list<V>& q) { return q.back(); });
 }
-
 
 template<typename V>
 shared_ptr<struct path_data<typename V::element_type, typename V::element_type::cost_type>> find_path_ucs(V v, V g)
