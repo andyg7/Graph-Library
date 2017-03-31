@@ -27,7 +27,6 @@ class city {
 	private:
 		string name;
 		int population;
-		int id;
 };
 
 class road {
@@ -74,27 +73,27 @@ void city::set_population(int a)
 
 int city::get_key() const
 {
-	return id;
+	return vertex_id;
 }
 
 void city::set_key(int a)
 {
-	id = a;
+	vertex_id = a;
 }
 
 bool city::operator==(const city& c) const
 {
-	return id == c.get_key();
+	return vertex_id == c.get_key();
 }
 
 bool city::operator!=(const city& c) const
 {
-	return id != c.get_key();
+	return vertex_id != c.get_key();
 }
 
 bool city::operator> (const city& c) const
 {
-	return id > c.get_key();
+	return vertex_id > c.get_key();
 }
 
 int city::heuristic_func() const
@@ -104,7 +103,7 @@ int city::heuristic_func() const
 
 bool city::operator< (const city& c) const
 {
-	return id < c.get_key();
+	return vertex_id < c.get_key();
 }
 
 namespace std

@@ -8,13 +8,27 @@
 #include <list>
 #include "graph_concepts.h"
 #include "graph_structs.h"
-#include "graph_lib_headers.h"
 #include "graph_create.h"
 #include "path_algorithms.h"
 #include "node_expander_path_algorithms.h"
 
 using namespace std;
 using namespace graph_std_lib;
+
+template<typename G, typename V>
+requires Graph<G> && Vertex_ptr<V>
+bool vertex_exists(G& g, V x)
+{
+	auto it = g.underlying_data.begin();
+	auto it_end = g.underlying_data.end();
+
+	for (; it != it_end; it++) {
+		if ((*it).vertex_wrapper_data->vertex_data == *x) {
+			return true;
+		}
+	}
+	return false;
+}
 
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
@@ -54,7 +68,6 @@ bool adjacent(G& g, V x, V y)
 	}
 	return false;
 }
-
 
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
@@ -258,6 +271,25 @@ bool add_edge(G& g, E e)
 }
 
 template<typename G, typename V>
+requires Graph<G> && Vertex_ptr<V>
+bool has_parent(G& g, V x)
+{
+	auto nodes = g.underlying_data;
+	auto it = g.underlying_data.begin();
+	auto it_end = g.underlying_data.end();
+
+	for (; it != it_end; it++) {
+		auto neighbors = it->neighbors;
+		for (auto &n : neighbors) {
+			if (n->vertex_data == *x) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+template<typename G, typename V>
 requires DT_Graph<G> && Vertex_ptr<V>
 bool add_edge(G& g, V x, V y)
 {
@@ -272,6 +304,7 @@ bool add_edge(G& g, V x, V y)
 	bool added_edge = add_edge_blindly(g, x, y);
 	return added_edge;
 }
+
 
 template<typename G, typename E>
 requires DT_Graph<G> && Edge_ptr<E>
@@ -290,42 +323,6 @@ bool add_edge(G& g, E e)
 	}
 	bool added_edge = add_edge_blindly_w_edge(g, e);
 	return added_edge;
-}
-
-
-
-template<typename G, typename V>
-requires Graph<G> && Vertex_ptr<V>
-bool vertex_exists(G& g, V x)
-{
-	auto it = g.underlying_data.begin();
-	auto it_end = g.underlying_data.end();
-
-	for (; it != it_end; it++) {
-		if ((*it).vertex_wrapper_data->vertex_data == *x) {
-			return true;
-		}
-	}
-	return false;
-}
-
-template<typename G, typename V>
-requires Graph<G> && Vertex_ptr<V>
-bool has_parent(G& g, V x)
-{
-	auto nodes = g.underlying_data;
-	auto it = g.underlying_data.begin();
-	auto it_end = g.underlying_data.end();
-
-	for (; it != it_end; it++) {
-		auto neighbors = it->neighbors;
-		for (auto &n : neighbors) {
-			if (n->vertex_data == *x) {
-				return true;
-			}
-		}
-	}
-	return false;
 }
 
 template<typename G, typename V>
@@ -412,6 +409,22 @@ int num_edges(G& g)
 	return num_edges;
 }
 
+template<typename G, typename V>
+requires Graph<G> && Vertex_ptr<V>
+bool reachable_from_top(G& g, V x)
+{
+	auto curr_top = top(g);
+	auto it = g.underlying_data.begin();
+	auto it_end = g.underlying_data.end();
+
+	for (; it != it_end; it++) {
+		if (path_exists(g, curr_top, x)) {
+			return true;
+		}
+	}
+	return false;
+}
+
 template<typename G>
 requires Graph<G>
 bool all_reachable_from_top(G& g)
@@ -430,22 +443,6 @@ bool all_reachable_from_top(G& g)
 		}
 	}
 	return true;
-}
-
-template<typename G, typename V>
-requires Graph<G> && Vertex_ptr<V>
-bool reachable_from_top(G& g, V x)
-{
-	auto curr_top = top(g);
-	auto it = g.underlying_data.begin();
-	auto it_end = g.underlying_data.end();
-
-	for (; it != it_end; it++) {
-		if (path_exists(g, curr_top, x)) {
-			return true;
-		}
-	}
-	return false;
 }
 
 template<typename G>

@@ -8,7 +8,7 @@ EXE=main
 DEBUG_EXE=debug
 VALGRIND_TARGET=valgrind
 OBJS=main.o 
-HEADERS=$(GRAPH_LIB_DIR)/graph_lib.h $(GRAPH_LIB_DIR)/path_algorithms.h $(GRAPH_LIB_DIR)/graph_lib_headers.h $(GRAPH_LIB_DIR)/graph_concepts.h $(GRAPH_LIB_DIR)/graph_structs.h user_data_structures.h $(GRAPH_LIB_DIR)/function_objs.h $(GRAPH_LIB_DIR)/node_expander_path_algorithms.h $(GRAPH_LIB_DIR)/path_algorithms_structs.h
+HEADERS=$(GRAPH_LIB_DIR)/graph_lib.h $(GRAPH_LIB_DIR)/path_algorithms.h $(GRAPH_LIB_DIR)/graph_concepts.h $(GRAPH_LIB_DIR)/graph_structs.h user_data_structures.h $(GRAPH_LIB_DIR)/function_objs.h $(GRAPH_LIB_DIR)/node_expander_path_algorithms.h $(GRAPH_LIB_DIR)/path_algorithms_structs.h
 
 $(EXE): $(OBJS)
 	$(CC) $(FLAGS) $(INCLUDE) $(OBJS) -o $@
