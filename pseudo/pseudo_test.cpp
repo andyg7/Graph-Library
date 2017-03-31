@@ -30,6 +30,18 @@ int main(){
 	g1.adjacent(n3, n1); // should say false
 	g1.adjacent(n4, n1); // Exception or false? Which one? ******
 
+
+	// Here is one of the issue we need to deal with, which illustrates
+	// the difficulty of providing hidden implementation
+	/* The library has to go from Node -> NodeAM/NodeAL. It knows
+	to which one it has to go, but it is important that it has
+	enough information to do so. So GraphAM and GraphAL should have this
+	information */
+	vector<Pointer<Node>> v1 = g1.neighbours(n1); 
+	vector<Pointer<Node>> v2 = g1.neighbours(n4); // throw exception? ****
+
+
+
 	// Lets build another overlapping graph on top of these nodes
 	// By default this should be adjacency list
 	Graph<string> g2();
@@ -76,6 +88,6 @@ int main(){
 		2) Node remembers pointers to graphs
 		The centralized way to do this seems to be much worse.*/
 
-	
+
 
 }
