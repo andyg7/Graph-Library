@@ -50,32 +50,32 @@ namespace graph_std_lib
 	};
 
 	struct vertex {
-		int id;
+		int vertex_id;
 		bool operator==(const vertex& rhs) const {
-			return id == rhs.id;
+			return vertex_id == rhs.vertex_id;
 		}		
 		bool operator!=(const vertex& rhs) const {
-			return id != rhs.id;
+			return vertex_id != rhs.vertex_id;
 		}		
 		bool operator> (const vertex& rhs) const {
-			return id > rhs.id;
+			return vertex_id > rhs.vertex_id;
 		}
 		bool operator< (const vertex& rhs) const {
-			return id < rhs.id;
+			return vertex_id < rhs.vertex_id;
 		}
 		vertex& operator=(const vertex& rhs) {
-			id = rhs.id;
+			vertex_id = rhs.vertex_id;
 			return *this;
 		}
 		int get_key() const {
-			return id;
+			return vertex_id;
 		}
 		void set_key(int a) {
-			id = a;
+			vertex_id = a;
 		}
 
 		string to_string() {
-			return std::to_string(id);
+			return std::to_string(vertex_id);
 		}
 	};
 
@@ -93,7 +93,7 @@ namespace graph_std_lib
 	};
 
 	template<typename V, typename E>
-	requires Vertex<V> && Edge<E> && matching_vertices_edges<E, V> 
+	requires Vertex<V> && Edge<E> && Matching_vertices_edges<E, V> 
 	struct dg_graph {
 		using graph_type = DG;
 		using edge_type = E;
@@ -105,7 +105,7 @@ namespace graph_std_lib
 	};
 
 	template<typename V, typename E>
-	requires Vertex<V> && Edge<E> && matching_vertices_edges<E, V> 
+	requires Vertex<V> && Edge<E> && Matching_vertices_edges<E, V> 
 	struct dag_graph {
 		using graph_type = DAG;
 		using edge_type = E;
@@ -117,7 +117,7 @@ namespace graph_std_lib
 	};
 
 	template<typename V, typename E>
-	requires Vertex<V> && Edge<E> && matching_vertices_edges<E, V> 
+	requires Vertex<V> && Edge<E> && Matching_vertices_edges<E, V> 
 	struct dt_graph {
 		using graph_type = DT;
 		using edge_type = E;
@@ -136,7 +136,7 @@ namespace std
 		{
 			size_t operator()(const vertex& n) const noexcept
 			{
-				return std::hash<int>()(n.id);
+				return std::hash<int>()(n.vertex_id);
 			}
 		};
 }

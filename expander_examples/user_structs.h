@@ -16,6 +16,7 @@ ostream& operator<<(ostream& os, const Node& n);
 class Node : public std::enable_shared_from_this<Node>
 {
 	public:
+		int vertex_id;
 		using cost_type = int;
 		Node(vector<vector<int>>, int, shared_ptr<Node>);
 		vector<shared_ptr<Node>> expand();

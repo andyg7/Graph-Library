@@ -171,8 +171,7 @@ void generic_dg_example()
 	vector<V> vertices_by_value = get_vertices_by_value(my_graph);
 	cout << "vertices by value: " << '\n';
 	for (auto v : vertices_by_value) {
-		shared_ptr<V> t_p { new V };
-		*t_p = v;
+		shared_ptr<V> t_p = make_shared<V>(v);
 		Value val = value(my_graph, t_p);
 		cout << val.first << " " << val.second << ", ";
 	}	
@@ -420,7 +419,7 @@ void generic_dt_example()
 	auto neighbors_1 = neighbors(my_graph, v2);
 	for (auto n : neighbors_1) {
 		shared_ptr<V> t_p { new V };
-		(*t_p) = n;
+		*t_p = n;
 		Value v = value(my_graph, t_p);
 		cout << v.first << ", ";
 	};

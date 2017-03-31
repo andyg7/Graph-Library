@@ -13,7 +13,7 @@ using namespace std;
 using namespace graph_std_lib;
 
 template<typename G, typename V>
-requires Graph_and_Vertex_ptr<G, V> && Edge_cost<typename G::edge_type>
+requires Graph<G> && Vertex_ptr<V>
 shared_ptr<path_state<G, typename G::edge_type::cost_type>> generate_state(G& g, V x)
 {
 	typedef typename G::vertex_type vertex_type;
@@ -50,7 +50,7 @@ bool cycle_exists(G& g)
 }
 
 template<typename G, typename V>
-requires Graph_and_Vertex_ptr<G, V>
+requires Graph<G> && Vertex_ptr<V>
 bool cycle_exists(G& g, V v)
 {
 	typedef typename G::edge_type::cost_type cost_type;
@@ -64,7 +64,7 @@ bool cycle_exists(G& g, V v)
 }
 
 template<typename G, typename V>
-requires Graph_and_Vertex_ptr<G, V> && Edge_cost<typename G::edge_type>
+requires Graph<G> && Vertex_ptr<V>
 bool path_exists(G& g, V x, V y)
 {
 	typedef typename G::vertex_type vertex_type;
@@ -81,7 +81,7 @@ bool path_exists(G& g, V x, V y)
    Uses DFS to find a path (not optimal)
  */
 template<typename G, typename V>
-requires Graph_and_Vertex_ptr<G, V>
+requires Graph<G> && Vertex_ptr<V>
 shared_ptr<struct path_data<typename G::vertex_type, typename G::edge_type::cost_type>> find_path_dfs(G& g, V x, V y)
 {
 	typedef typename G::vertex_type vertex_type;
@@ -108,7 +108,7 @@ shared_ptr<struct path_data<typename G::vertex_type, typename G::edge_type::cost
    Uses BFS to find a path (not optimal)
  */
 template<typename G, typename V>
-requires Graph_and_Vertex_ptr<G, V>
+requires Graph<G> && Vertex_ptr<V>
 shared_ptr<struct path_data<typename G::vertex_type, typename G::edge_type::cost_type>> find_path_bfs(G& g, V x, V y)
 {
 	typedef typename G::vertex_type vertex_type;
@@ -160,7 +160,7 @@ shared_ptr<struct path_data<typename G::vertex_type, typename G::edge_type::cost
    Uses AST to find shortest path
  */
 template<typename G, typename V>
-requires Heuristic_graph_and_Vertex_ptr<G, V> && Edge_cost<typename G::edge_type>
+requires Heuristic_graph_and_Vertex_ptr<G, V> && Edge<typename G::edge_type>
 shared_ptr<struct path_data<typename G::vertex_type, typename G::edge_type::cost_type>> find_path_ast(G& g, V x, V y)
 {
 	typedef typename G::vertex_type vertex_type;

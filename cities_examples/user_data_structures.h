@@ -23,6 +23,7 @@ class city {
 		bool operator> (const city&) const;
 		heuristic_function_type heuristic_func() const;
 		string to_string() const;
+		int vertex_id;
 	private:
 		string name;
 		int population;
