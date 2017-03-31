@@ -7,19 +7,19 @@
 using namespace graph_std_lib;
 
 struct my_vertex {
-	int id;
+	int vertex_id;
 	bool operator==(const my_vertex& rhs) const {
-		return id == rhs.id;
+		return vertex_id == rhs.vertex_id;
 	}
 	int get_key() const {
-		return id;
+		return vertex_id;
 	}
-	int set_key(int a) {
-		id = a;
+	void set_key(int a) {
+		vertex_id = a;
 	}
 
 	string to_string() {
-		return std::to_string(id);
+		return std::to_string(vertex_id);
 	}
 
 };
@@ -31,7 +31,7 @@ namespace std
 		{
 			size_t operator()(const my_vertex& n) const noexcept
 			{
-				return std::hash<int>()(n.id);
+				return std::hash<int>()(n.vertex_id);
 			}
 		};
 }
@@ -45,30 +45,30 @@ struct my_edge {
 };
 
 struct user_vertex_1 {
-	int my_id;
+	int vertex_id;
 	bool operator==(const user_vertex_1& rhs) const {
-		return my_id == rhs.my_id;
+		return vertex_id == rhs.vertex_id;
 	}
 	bool operator!=(const user_vertex_1& rhs) const {
-		return my_id != rhs.my_id;
+		return vertex_id != rhs.vertex_id;
 	}
 	bool operator< (const user_vertex_1& rhs) const {
-		return my_id < rhs.my_id;
+		return vertex_id < rhs.vertex_id;
 	}
 	bool operator> (const user_vertex_1& rhs) const {
-		return my_id > rhs.my_id;
+		return vertex_id > rhs.vertex_id;
 	}
 
 	int get_key() const {
-		return my_id;
+		return vertex_id;
 	}
-	int set_key(int a) {
-		my_id = a;
+	void set_key(int a) {
+		vertex_id = a;
 	}
 	string name;
 
 	string to_string() {
-		return std::to_string(my_id);
+		return std::to_string(vertex_id);
 	}
 };
 
@@ -79,7 +79,7 @@ namespace std
 		{
 			size_t operator()(const user_vertex_1& n) const noexcept
 			{
-				return std::hash<int>()(n.my_id);
+				return std::hash<int>()(n.vertex_id);
 			}
 		};
 }
@@ -92,33 +92,33 @@ struct user_edge_1 {
 };
 
 struct user_vertex_2 {
-	int my_id;
+	int vertex_id;
 	using cost_type = int;
 	bool operator==(const user_vertex_2& rhs) const {
-		return my_id == rhs.my_id;
+		return vertex_id == rhs.vertex_id;
 	}
 	bool operator!=(const user_vertex_2& rhs) const {
-		return my_id != rhs.my_id;
+		return vertex_id != rhs.vertex_id;
 	}
 	bool operator< (const user_vertex_2& rhs) const {
-		return my_id < rhs.my_id;
+		return vertex_id < rhs.vertex_id;
 	}
 	bool operator> (const user_vertex_2& rhs) const {
-		return my_id > rhs.my_id;
+		return vertex_id > rhs.vertex_id;
 	}
 
 	int get_key() const {
-		return my_id;
+		return vertex_id;
 	}
-	int set_key(int a) {
-		my_id = a;
+	void set_key(int a) {
+		vertex_id = a;
 	}
 	string name;
 	string city;
 	string counter;
 	int population;
 	string to_string() {
-		return std::to_string(my_id);
+		return std::to_string(vertex_id);
 	}
 };
 
@@ -129,7 +129,7 @@ namespace std
 		{
 			size_t operator()(const user_vertex_2& n) const noexcept
 			{
-				return std::hash<int>()(n.my_id);
+				return std::hash<int>()(n.vertex_id);
 			}
 		};
 }

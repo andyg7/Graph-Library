@@ -49,7 +49,7 @@ shared_ptr<typename G::vertex_type> create_vertex(G& g)
 }
 
 template<typename G, typename V>
-requires Graph_and_Vertex_ptr<G, V>
+requires Graph<G> && Vertex_ptr<V>
 shared_ptr<typename G::edge_type> create_edge(G& g, V x, V y)
 {
 	typedef typename G::edge_type edge_type;
@@ -61,7 +61,7 @@ shared_ptr<typename G::edge_type> create_edge(G& g, V x, V y)
 }
 
 template<typename G, typename V, typename C>
-requires Graph_and_Vertex_ptr<G, V> && Edge_cost<typename G::edge_type>
+requires Graph<G> && Vertex_ptr<V> && Numeric<C>
 shared_ptr<typename G::edge_type> create_edge(G& g, V x, V y, C c)
 {
 	typedef typename G::edge_type edge_type;
@@ -71,4 +71,5 @@ shared_ptr<typename G::edge_type> create_edge(G& g, V x, V y, C c)
 	new_edge->cost = c;
 	return new_edge;
 }
+
 #endif
