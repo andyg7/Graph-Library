@@ -6,12 +6,12 @@ that we have to support.
 
 The basic operations provided by a graph data structure G usually include:[1]
 
-adjacent(G, x, y): tests whether there is an edge from the vertex x to the vertex y;
-neighbors(G, x): lists all vertices y such that there is an edge from the vertex x to the vertex y;
+*adjacent(G, x, y): tests whether there is an edge from the vertex x to the vertex y;
+*neighbors(G, x): lists all vertices y such that there is an edge from the vertex x to the vertex y;
 add_vertex(G, x): adds the vertex x, if it is not there;
-remove_vertex(G, x): removes the vertex x, if it is there;
-add_edge(G, x, y): adds the edge from the vertex x to the vertex y, if it is not there;
-remove_edge(G, x, y): removes the edge from the vertex x to the vertex y, if it is there;
+*remove_vertex(G, x): removes the vertex x, if it is there;
+*add_edge(G, x, y): adds the edge from the vertex x to the vertex y, if it is not there;
+*remove_edge(G, x, y): removes the edge from the vertex x to the vertex y, if it is there;
 get_vertex_value(G, x): returns the value associated with the vertex x;
 set_vertex_value(G, x, v): sets the value associated with the vertex x to v.
 
@@ -56,6 +56,86 @@ class Graph{
 
 class GraphAM{
 
+	
+	//Lock lock_graph;
+	bool adjacent(Node& src, Node& dst){
+		// Index into the matrix using the internal ids
+		return (bool) m[id_map.find(src.id)][id_map.find(dst.id)];
+	}
+
+	// Function return the neighbours of the node
+	vector<Pointer<Node>>& neighbours(Node& src){
+		int internal_id = get_internal_id(src);
+		vector<Pointer<Node>> neighbours;
+		// Not sure how to express it proprly, but you get the idea
+		for(int i = 0; i < m.columns(); i++){
+			if(m[internal_id][i] == NO_EDGE)
+				continue;
+			neighbours.add(get_user_node(i));
+		}
+		return neighbours;
+	}
+
+	// Should we throw an exception if the nodes are not part of the graph,
+	// or should we quietly add them? 
+	bool add_edge(Edge& e){
+		int row = get_internal_id(e.src.internal_id);
+		int column = get_internal_id(e.dst.internal_id);
+		m[row][column] = e.weight;
+		return true;
+
+	}
+	bool add_edge(Node& src, Number weight, Node& dst){
+		add_edge(Edge e(src, weight, dst));
+	}
+
+
+	bool remove_edge(Node& src, Number weight, Node& dst){
+		remove_edge(Edge e(src, weight, dst));
+	}
+	bool remove_edge(Edge& e){
+		int row = get_internal_id(e.src.internal_id);
+		int column = get_internal_id(e.dst.internal_id);
+		m[row][column] = NO_EDGE; // need to figure out what is this no edge
+		return true;
+
+	}
+
+
+	// Should it maybe throw an exception the node was not in 
+	// the graph for starters
+	bool remove_node(Node& n){
+		Pointer<NodeAM> _n = get_wrapper(n);
+		int internal_id = _src->internal_id;
+
+		// We want to zero out the column and the row
+		for(int i = 0; i < m.columns(); i++){
+			// Call routine here to zero out row internal_id
+		}
+		for(int i = 0; i < m.rows(); i++){
+			// To zero out a column here
+		}
+		// Puts the id beack into the list of free ids for id recycle
+		return_id(internal_id);
+
+		// The destructor of the wrapper should destroy the wrapper at this
+		// point
+		return true;
+		
+	}
+
+	bool add_node(Node& n){
+		// Get the constructor of NodeAM to init everything
+		Pointer<NodeAM> nam = new NodeAM(next_unique_id++, n);
+		
+		// Resize the matrix
+		m.add_row();
+		m.add_column();
+
+		return true;
+	}
+
+private:
 	id_type user_type;
 
 	/* The adjacency matrix, where each entry is a numeric weight(?) */
@@ -74,31 +154,18 @@ class GraphAM{
 	// Map internal id back to the user node 
 	map<int, Pointer<Node>> node_map;
 
-	
-	/* Bjarne said to move the locking responsibility ontp the user,
-	 * so we do not need this lock. But that is a conscious choice of
-	 * ours */
-	/* Lock protecting the graph for multithreaded user code. Think 
-	additions and deletions*/
-	
-	//Lock lock_graph;
-	bool adjacent(Node& src, Node& dst){
-		// Index into the matrix using the internal ids
-		return (bool) m[id_map.find(src.id)][id_map.find(dst.id)];
+	Pointer<GraphAM> get_wrapper(Node& n){
+		return id_map.find(n.id);
 	}
 
-	// Function return the neighbours of the node
-	vector<Pointer<Node>>& neighbours(Node& src){
-		Pointer<NodeAM> _src = id_map.find(src.id);
-		int internal_id = _src->internal_id;
-		vector<Pointer<Node>> neighbours;
-		// Not sure how to express it proprly, but you get the idea
-		for(int i = 0; i M m.columns(); i++){
-			if(m[internal_id][i] == NO_EDGE)
-				continue;
-			neighbours.add(node_map.find(i));
-		}
-		return neighbours;
+	Pointer<Node> get_user_node(int internal_id){
+		return node_map.find(internal_id);
+	}
+	int get_internal_id(Node& n){
+		return get_wrapper(src)->internal_id
+	}
+	bool return_id(internal_id){
+		free_ids.add(internal_id);
 	}
 }
 
