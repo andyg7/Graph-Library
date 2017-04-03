@@ -3,21 +3,21 @@
 
 namespace std
 {
-	template<typename T, typename C>
+	template<typename G, typename C>
 	class path_state;
 
-	template<typename T, typename C>
-	class path_state : public std::enable_shared_from_this<path_state<T, C>> 
+	template<typename G, typename C>
+	class path_state : public std::enable_shared_from_this<path_state<G, C>> 
 	{
 		public:
-			using vertex_wrapper_type = typename T::vertex_wrapper_type;
+			using vertex_wrapper_type = typename G::element_type::vertex_wrapper_type;
 			using cost_type = C;
 			shared_ptr<vertex_wrapper_type> vertex_wrapper_data;
-			shared_ptr<path_state<T, cost_type>> parent;
+			shared_ptr<path_state<G, cost_type>> parent;
 			C cost;
-			T graph_data;
+			G graph_data;
 
-			path_state(shared_ptr<vertex_wrapper_type> v, C c, shared_ptr<path_state<T, cost_type>> p, T g) {
+			path_state(shared_ptr<vertex_wrapper_type> v, C c, shared_ptr<path_state<G, cost_type>> p, G g) {
 				vertex_wrapper_data = make_shared<vertex_wrapper_type>(*v);	
 				cost = c;
 				parent = p;
@@ -53,11 +53,11 @@ namespace std
 				return (vertex_wrapper_data->vertex_data).heuristic_func();
 			}
 
-			vector<shared_ptr<path_state<T, C>>> expand()
+			vector<shared_ptr<path_state<G, C>>> expand()
 			{
-				vector<shared_ptr<path_state<T, C>>> children;
-				auto it = graph_data.underlying_data.begin();
-				auto it_end = graph_data.underlying_data.end();
+				vector<shared_ptr<path_state<G, C>>> children;
+				auto it = graph_data->underlying_data.begin();
+				auto it_end = graph_data->underlying_data.end();
 				for (; it != it_end; it++) {
 					if (*(it->vertex_wrapper_data) == *vertex_wrapper_data) {
 						break;
@@ -68,7 +68,7 @@ namespace std
 				for (auto e : edges) {
 					for (auto n : neighbors) {
 						if (n->vertex_data == e->edge.v2) {
-							shared_ptr<path_state<T, C>> new_helper = make_shared<path_state<T, C>>(n, cost + e->edge.cost, this->shared_from_this(), graph_data);
+							shared_ptr<path_state<G, C>> new_helper = make_shared<path_state<G, C>>(n, cost + e->edge.cost, this->shared_from_this(), graph_data);
 							children.push_back(new_helper);
 						}
 					}
@@ -95,12 +95,12 @@ namespace std
 		}
 	};
 
-	template <typename T, typename C>
-		struct hash<path_state<T, C>>
+	template <typename G, typename C>
+		struct hash<path_state<G, C>>
 		{
-			size_t operator()(const path_state<T, C>& n) const noexcept
+			size_t operator()(const path_state<G, C>& n) const noexcept
 			{
-				return std::hash<typename T::vertex_type>()((n.vertex_wrapper_data)->vertex_data);
+				return std::hash<typename G::element_type::vertex_type>()((n.vertex_wrapper_data)->vertex_data);
 			}
 		};
 }
