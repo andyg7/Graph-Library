@@ -6,12 +6,12 @@ that we have to support.
 
 The basic operations provided by a graph data structure G usually include:[1]
 
-*adjacent(G, x, y): tests whether there is an edge from the vertex x to the vertex y;
-*neighbors(G, x): lists all vertices y such that there is an edge from the vertex x to the vertex y;
+adjacent(G, x, y): tests whether there is an edge from the vertex x to the vertex y;
+neighbors(G, x): lists all vertices y such that there is an edge from the vertex x to the vertex y;
 add_vertex(G, x): adds the vertex x, if it is not there;
-*remove_vertex(G, x): removes the vertex x, if it is there;
-*add_edge(G, x, y): adds the edge from the vertex x to the vertex y, if it is not there;
-*remove_edge(G, x, y): removes the edge from the vertex x to the vertex y, if it is there;
+remove_vertex(G, x): removes the vertex x, if it is there;
+add_edge(G, x, y): adds the edge from the vertex x to the vertex y, if it is not there;
+remove_edge(G, x, y): removes the edge from the vertex x to the vertex y, if it is there;
 get_vertex_value(G, x): returns the value associated with the vertex x;
 set_vertex_value(G, x, v): sets the value associated with the vertex x to v.
 
@@ -25,6 +25,7 @@ set_edge_value(G, x, y, v): sets the value associated with the edge (x, y) to v.
 #define AL 0
 #define AM 1
 #define NO_EDGE 0
+
 
 class Graph{
 
@@ -193,34 +194,37 @@ class NodeAM{
 	/* Our internal numeric id used to index into adjacency matrix */
 	int internal_id;
 
-	Pointer<Node> node; 
+	//Pointer<Node> node; 
+	Pointer<IdType> data; 
 }
 
 // Adjacency list implementation node
 class NodeAL{
 	// Necessary to distinguis the wrappers withing the graph implementation
 	int internal_id;
-	vector<NodeAL> neighbors;
+	vector<Pointer<NodeAL>> neighbours;
 
-	Pointer<Node> node;
+	Pointer<IdType> data; 
 }
+
+
 
 // General node, that is used by the implementations
 // DataType must be comparable
-template <typename IdType>
-requires Comparable // we want == defined
-class Node{
-	Pointer<IdType> id;
-	/* Not sure this makes an sense. I think a node 
-	shoudly contain the payload? Anyhow, there must be
-	a field that is comparable. The way I see this, if I
-	were to associate data (say state) with a node, I would have
-	a struct{ string id; void * data;} and define == on string.*/
-	bool operator==(Node& rhs){
-		// Therefore its up to the user to define the equality of nodes
-		return this.id==rhs.id;
-	}
-}
+// template <typename IdType>
+// requires Comparable // we want == defined
+// class Node{
+// 	Pointer<IdType> id;
+// 	//  Not sure this makes an sense. I think a node 
+// 	// shoudly contain the payload? Anyhow, there must be
+// 	// a field that is comparable. The way I see this, if I
+// 	// were to associate data (say state) with a node, I would have
+// 	// a struct{ string id; void * data;} and define == on string.
+// 	bool operator==(Node& rhs){
+// 		// Therefore its up to the user to define the equality of nodes
+// 		return this.id==rhs.id;
+// 	}
+// }
 
 /* We need to think about this a litle more. An edge can exist without 
 a graph coming with it. I can say add this edge, created long before, to

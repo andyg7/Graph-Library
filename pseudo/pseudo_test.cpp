@@ -1,7 +1,10 @@
 int main(){
 	
 	// Lets assume my nodes have id a simple string
-	Node<string> n1("A");
+	City c = City("NYC");
+	
+
+
 	Node<string> n2("B");
 	Node<string> n3("C");
 	Node<string> n4("D");
@@ -9,9 +12,10 @@ int main(){
 	// These onject right now exist simply as nodes. Asking what
 	// are the neghobors of n1 is nonsensical.
 
-	Graph<string> g1(AM);
+	Graph<City> g1(AM);
 	// Lets add the nodes in
-	g1.add_node(n1);
+	g1.add_node(c);
+
 	g1.add_node(n2);
 	g1.add_node(n3); 
 
