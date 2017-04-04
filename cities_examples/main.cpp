@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 
 	using namespace graph_std_lib;
 
-	shared_ptr<dg_graph<city, road>> my_graph = make_shared<dg_graph<city, road>>();
+	shared_ptr<matrix_graph<city, road>> my_graph = make_shared<matrix_graph<city, road>>(10);
 	auto v0 = create_vertex(my_graph);
 	v0->set_name("New York");
 	v0->set_population(8406000);
@@ -104,33 +104,37 @@ int main(int argc, char *argv[])
 	e12->cost = 10;
 	add_edge(my_graph, e12);
 
+	/*
 	auto edges = get_edges(my_graph);
 	for (auto& e : edges) {
 		//cout << e.v1.get_name() << "->" << e.v2.get_name() << '\n';
 	}
+	*/
 	auto path_v0_v1 = find_path_dfs(my_graph, v0, v1);
 	cout << "dfs: \n";
 	for (auto& p : path_v0_v1->path_v) {
 		cout << p.get_name() << ", ";
 	}
-	cout << '\n';
+	cout << "cost " << path_v0_v1->cost << '\n';
 	path_v0_v1 = find_path_bfs(my_graph, v0, v1);
 	cout << "bfs: \n";
 	for (auto& p : path_v0_v1->path_v) {
 		cout << p.get_name() << ", ";
 	}
-	cout << '\n';
+	cout << "cost " << path_v0_v1->cost << '\n';
 	path_v0_v1 = find_path_ucs(my_graph, v0, v1);
 	cout << "ucs: \n";
 	for (auto& p : path_v0_v1->path_v) {
 		cout << p.get_name() << ", ";
 	}
+	cout << "cost " << path_v0_v1->cost << '\n';
 	cout << '\n';
 	path_v0_v1 = find_path_ast(my_graph, v0, v1);
 	cout << "ast: \n";
 	for (auto& p : path_v0_v1->path_v) {
 		cout << p.get_name() << ", ";
 	}
+	cout << "cost " << path_v0_v1->cost << '\n';
 	cout << '\n';
 	cout << "path from chicago to Austin?\n";
 	auto path_ex = path_exists(my_graph, v2, v3);

@@ -268,6 +268,19 @@ bool add_edge(G g, E e)
 	return added_edge;
 }
 
+template<typename G, typename E>
+requires Matrix_Graph<G> && Edge_ptr<E>
+bool add_edge(G g, E e)
+{
+	int cost = e->cost;
+	int v1_index = (e->v1).vertex_id;
+	int v2_index = (e->v2).vertex_id;
+	auto v_l = (g->underlying_data)[v1_index];
+	v_l[v2_index] = cost;
+	(g->underlying_data)[v1_index][v2_index] = cost;
+	return true;
+}
+
 template<typename G, typename V>
 requires DAG_Graph<G> && Vertex_ptr<V>
 bool add_edge(G g, V x, V y)
@@ -608,6 +621,35 @@ vector<typename G::element_type::edge_type> get_edges_for_vertex(G g, V v)
 	}
 	return edges;
 }
+
+template<typename G, typename V>
+requires Matrix_Graph<G> && Vertex_ptr<V>
+vector<typename G::element_type::edge_type> get_edges_for_vertex(G g, V v)
+{
+	typedef typename G::element_type::edge_type edge_type;
+	typedef typename G::element_type::vertex_header_type::edge_wrapper_type edge_wrapper_type;
+
+	vector<edge_type> edges;
+	int id = v->vertex_id;
+	auto vector_edges = (g->underlying_data)[id];
+	auto it_w = vector_edges.begin();
+	auto it_w_end = vector_edges.end();
+	int counter = 0;
+	for (; it_w != it_w_end; it_w++) {
+		int curr_cost = *it_w;
+		if (curr_cost != 0) {
+			edge_type new_edge;
+			new_edge.v1 = *v;
+			auto v_w = (g->id_to_wrapper)[counter];
+			new_edge.v2 = v_w->vertex_data;
+			new_edge.cost = curr_cost;
+			edges.push_back(new_edge);
+		}
+		counter++;
+	}
+	return edges;
+}
+
 template<typename G>
 requires Graph<G> 
 vector<typename G::element_type::edge_type> get_edges_by_value(G g)
@@ -640,7 +682,7 @@ vector<typename G::element_type::edge_type> get_edges_by_value(G g)
 }
 
 template<typename G, typename V>
-requires Graph<G> && Vertex<V>
+requires Graph<G> && Vertex_ptr<V>
 shared_ptr<typename G::element_type::vertex_wrapper_type> get_vertex_wrapper(G g, V v)
 {
 	auto it = g->underlying_data.begin();
@@ -649,11 +691,22 @@ shared_ptr<typename G::element_type::vertex_wrapper_type> get_vertex_wrapper(G g
 	for (; it != it_end; it++) {
 		auto curr_v_h = *it;
 		auto curr_v = curr_v_h.vertex_wrapper_data->vertex_data;
-		if (curr_v == v) {
+		if (curr_v == *v) {
 			return curr_v_h.vertex_wrapper_data;
 		}
 	}
 	throw invalid_argument{"Unknown vertex"};
+}
+
+template<typename G, typename V>
+requires Matrix_Graph<G> && Vertex_ptr<V>
+shared_ptr<typename G::element_type::vertex_wrapper_type> get_vertex_wrapper(G g, V v)
+{
+	auto it = (g->id_to_wrapper).find(v->vertex_id);
+	if (it == (g->id_to_wrapper).end()) {
+		throw invalid_argument{"Unknown vertex"};
+	} 
+	return it->second;
 }
 
 #endif

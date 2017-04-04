@@ -487,12 +487,96 @@ template<typename V, typename E>
 void generic_matrix_example()
 {
 	using namespace graph_std_lib;
-	shared_ptr<matrix_graph<V, E>> my_graph = make_shared<matrix_graph<V, E>>();
+	shared_ptr<matrix_graph<V, E>> my_graph = make_shared<matrix_graph<V, E>>(10);
 
 	auto v0 = create_vertex(my_graph);
 	add(my_graph, v0);
 	auto v1 = create_vertex(my_graph);
 	add(my_graph, v1);
+	auto v2 = create_vertex(my_graph);
+	add(my_graph, v2);
+	auto v3 = create_vertex(my_graph);
+	add(my_graph, v3);
+	auto v4 = create_vertex(my_graph);
+	add(my_graph, v4);
+	auto v5 = create_vertex(my_graph);
+	add(my_graph, v5);
+	auto v6 = create_vertex(my_graph);
+	add(my_graph, v6);
+	auto v7 = create_vertex(my_graph);
+	add(my_graph, v7);
+	auto v8 = create_vertex(my_graph);
+	add(my_graph, v8);
+	auto v9 = create_vertex(my_graph);
+	add(my_graph, v9);
+	auto v10 = create_vertex(my_graph);
+	add(my_graph, v10);
+
+	auto e1 = create_edge(my_graph, v0, v1);
+	add_edge(my_graph, e1);
+
+	auto e2 = create_edge(my_graph, v1, v2);
+	add_edge(my_graph, e2);
+
+	auto e3 = create_edge(my_graph, v1, v4);
+	add_edge(my_graph, e3);
+
+	auto e4 = create_edge(my_graph, v3, v4);
+	add_edge(my_graph, e4);
+
+	auto e5 = create_edge(my_graph, v2, v3);
+	add_edge(my_graph, e5);
+
+	auto e6 = create_edge(my_graph, v2, v5);;
+	add_edge(my_graph, e6);
+
+	auto e7 = create_edge(my_graph, v5, v6);
+	add_edge(my_graph, e7);
+
+	auto e8 = create_edge(my_graph, v6, v2);
+	add_edge(my_graph, e8);
+
+	auto e9 = create_edge(my_graph, v6, v7);
+	add_edge(my_graph, e9);
+
+	auto e10 = create_edge(my_graph, v7, v8);
+	add_edge(my_graph, e10);
+
+	auto e11 = create_edge(my_graph, v8, v6);
+	add_edge(my_graph, e11);
+
+	auto e12 = create_edge(my_graph, v2, v0);
+	add_edge(my_graph, e12);
+
+	auto e13 = create_edge(my_graph, v8, v9);
+	cout << "my edge cost " << e13->cost << '\n';
+	add_edge(my_graph, e13);
+
+	bool path_e = path_exists(my_graph, v1, v0);
+	cout << "path dfs\n";
+	shared_ptr<path_data<V, int>> path_info = find_path_dfs(my_graph, v0, v3);
+	vector<V> path = path_info->path_v;
+	string s = path_info->to_string();
+	int c = path_info->cost;
+	cout << s << '\n';
+	cout << "cost\n";
+	cout << c << '\n';
+	cout << "path bfs\n";
+	path_info = find_path_bfs(my_graph, v0, v3);
+	path = path_info->path_v;
+	s = path_info->to_string();
+	c = path_info->cost;
+	cout << s << '\n';
+	cout << "cost\n";
+	cout << c << '\n';
+	cout << "path ucs\n";
+	path_info = find_path_ucs(my_graph, v0, v3);
+	path = path_info->path_v;
+	s = path_info->to_string();
+	c = path_info->cost;
+	cout << s << '\n';
+	cout << "cost\n";
+	cout << c << '\n';
 }
 
 template<typename T>

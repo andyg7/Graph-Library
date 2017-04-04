@@ -125,7 +125,7 @@ shared_ptr<struct path_data<typename V::element_type, typename V::element_type::
 		for (auto c : children) {
 			if (visited_nodes.find(*c) == visited_nodes.end()) {
 				in(frontier, c);
-			}
+			} 		
 		}
 	}
 	shared_ptr<struct path_data<element_type, cost_type>> found_path_data = make_shared<path_data<element_type, cost_type>>();

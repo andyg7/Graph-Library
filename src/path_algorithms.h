@@ -6,6 +6,7 @@
 #include "graph_concepts.h"
 #include "graph_structs.h"
 #include "function_objs.h"
+#include "graph_lib.h"
 #include "node_expander_path_algorithms.h"
 
 using namespace std;
@@ -13,34 +14,40 @@ using namespace graph_std_lib;
 
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
-shared_ptr<path_state<G, typename G::element_type::edge_type::cost_type>> generate_state(G& g, V x)
+shared_ptr<path_state<G, typename G::element_type::edge_type::cost_type>> generate_state(G g, V x)
 {
 	typedef typename G::element_type::vertex_type vertex_type;
 	typedef typename G::element_type::edge_type::cost_type cost_type;
 	typedef path_state<G, cost_type> path_state_type;
-	auto it = g->underlying_data.begin();
-	auto it_end = g->underlying_data.end();
-	for (; it != it_end; it++) {
-		if (((*it).vertex_wrapper_data)->vertex_data == *x) {
-			break;
-		}
-	}
-	shared_ptr<path_state_type> state = make_shared<path_state_type>(it->vertex_wrapper_data, 0, nullptr, g);
+	auto v_w = get_vertex_wrapper(g, x);
+	shared_ptr<path_state_type> state = make_shared<path_state_type>(v_w, 0, nullptr, g);
+	return state;
+}
+
+template<typename G, typename V>
+requires Matrix_Graph<G> && Vertex_ptr<V>
+shared_ptr<path_state<G, typename G::element_type::edge_type::cost_type>> generate_state(G g, V x)
+{
+	typedef typename G::element_type::vertex_type vertex_type;
+	typedef typename G::element_type::edge_type::cost_type cost_type;
+	typedef path_state<G, cost_type> path_state_type;
+	auto v_w = get_vertex_wrapper(g, x);
+	shared_ptr<path_state_type> state = make_shared<path_state_type>(v_w, 0, nullptr, g);
 	return state;
 }
 
 template<typename G>
 requires Graph<G>
-bool cycle_exists(G& g)
+bool cycle_exists(G g)
 {
 	typedef typename G::element_type::vertex_type vertex_type;
 	typedef typename G::element_type::edge_type::cost_type cost_type;
 	typedef path_state<G, cost_type> path_state_type;
-	auto it = g->underlying_data.begin();
-	auto it_end = g->underlying_data.end();
 
-	for (; it != it_end; it++) {
-		shared_ptr<path_state_type> start_state = make_shared<path_state_type>(it->vertex_wrapper_data, 0, nullptr, g);
+	auto all_vertices = get_vertices(g);
+	for (auto v : all_vertices) {
+		shared_ptr<vertex_type> t_v = make_shared<vertex_type>(v);
+		auto start_state = generate_state(g, t_v);
 		if (path_exists(start_state, start_state)) {
 			return true;
 		}
@@ -50,7 +57,7 @@ bool cycle_exists(G& g)
 
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
-bool cycle_exists(G& g, V v)
+bool cycle_exists(G g, V v)
 {
 	typedef typename G::element_type::edge_type::cost_type cost_type;
 	typedef path_state<G, cost_type> path_state_type;
@@ -64,7 +71,7 @@ bool cycle_exists(G& g, V v)
 
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
-bool path_exists(G& g, V x, V y)
+bool path_exists(G g, V x, V y)
 {
 	typedef typename G::element_type::vertex_type vertex_type;
 	typedef typename G::element_type::edge_type::cost_type cost_type;
@@ -76,12 +83,26 @@ bool path_exists(G& g, V x, V y)
 	return path_exists(start_state, goal_state);
 }
 
+template<typename G, typename V>
+requires Matrix_Graph<G> && Vertex_ptr<V>
+bool path_exists(G g, V x, V y)
+{
+
+	typedef typename G::element_type::vertex_type vertex_type;
+	typedef typename G::element_type::edge_type::cost_type cost_type;
+	typedef path_state<G, cost_type> path_state_type;
+
+	shared_ptr<path_state_type> start_state = generate_state(g, x);
+	shared_ptr<path_state_type> goal_state = generate_state(g, y);
+	return path_exists(start_state, goal_state);
+}
+
 /*
    Uses DFS to find a path (not optimal)
  */
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
-shared_ptr<struct path_data<typename G::element_type::vertex_type, typename G::element_type::edge_type::cost_type>> find_path_dfs(G& g, V x, V y)
+shared_ptr<struct path_data<typename G::element_type::vertex_type, typename G::element_type::edge_type::cost_type>> find_path_dfs(G g, V x, V y)
 {
 	typedef typename G::element_type::vertex_type vertex_type;
 	typedef typename G::element_type::edge_type::cost_type cost_type;
@@ -108,7 +129,7 @@ shared_ptr<struct path_data<typename G::element_type::vertex_type, typename G::e
  */
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
-shared_ptr<struct path_data<typename G::element_type::vertex_type, typename G::element_type::edge_type::cost_type>> find_path_bfs(G& g, V x, V y)
+shared_ptr<struct path_data<typename G::element_type::vertex_type, typename G::element_type::edge_type::cost_type>> find_path_bfs(G g, V x, V y)
 {
 	typedef typename G::element_type::vertex_type vertex_type;
 	typedef typename G::element_type::edge_type::cost_type cost_type;
@@ -135,7 +156,7 @@ shared_ptr<struct path_data<typename G::element_type::vertex_type, typename G::e
  */
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
-shared_ptr<struct path_data<typename G::element_type::vertex_type, typename G::element_type::edge_type::cost_type>> find_path_ucs(G& g, V x, V y)
+shared_ptr<struct path_data<typename G::element_type::vertex_type, typename G::element_type::edge_type::cost_type>> find_path_ucs(G g, V x, V y)
 {
 	typedef typename G::element_type::vertex_type vertex_type;
 	typedef typename G::element_type::edge_type::cost_type cost_type;
@@ -161,7 +182,7 @@ shared_ptr<struct path_data<typename G::element_type::vertex_type, typename G::e
  */
 template<typename G, typename V>
 requires Heuristic_graph<G> && Vertex_ptr<V>
-shared_ptr<struct path_data<typename G::element_type::vertex_type, typename G::element_type::edge_type::cost_type>> find_path_ast(G& g, V x, V y)
+shared_ptr<struct path_data<typename G::element_type::vertex_type, typename G::element_type::edge_type::cost_type>> find_path_ast(G g, V x, V y)
 {
 	typedef typename G::element_type::vertex_type vertex_type;
 	typedef typename G::element_type::edge_type::cost_type cost_type;

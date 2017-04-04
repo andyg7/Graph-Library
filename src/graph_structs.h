@@ -119,7 +119,13 @@ namespace graph_std_lib
 		unordered_map<shared_ptr<vertex_wrapper_type>, int> wrapper_to_id;
 		matrix_graph(int n) 
 		{
-			underlying_data(n);
+			for (int i = 0; i < n; i++) {
+				underlying_data.push_back(vector<int>(n));
+				auto c_v = underlying_data[i];
+				for (int j = 0; j < n; j++) {
+					c_v[j] = 0;
+				}
+			}
 		}
 		matrix_graph() {}
 	};

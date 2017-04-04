@@ -2,11 +2,19 @@
 #define PATH_ALGORITHMS_STRUCTS
 
 template<typename G, typename V>
-requires Graph<G> && Vertex<V>
+requires Graph<G> && Vertex_ptr<V>
+shared_ptr<typename G::element_type::vertex_wrapper_type> get_vertex_wrapper(G g, V v);
+
+template<typename G, typename V>
+requires Matrix_Graph<G> && Vertex_ptr<V>
 shared_ptr<typename G::element_type::vertex_wrapper_type> get_vertex_wrapper(G g, V v);
 
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
+vector<typename G::element_type::edge_type> get_edges_for_vertex(G g, V v);
+
+template<typename G, typename V>
+requires Matrix_Graph<G> && Vertex_ptr<V>
 vector<typename G::element_type::edge_type> get_edges_for_vertex(G g, V v);
 
 namespace std
@@ -18,6 +26,7 @@ namespace std
 	class path_state : public std::enable_shared_from_this<path_state<G, C>> 
 	{
 		public:
+			using vertex_type = typename G::element_type::vertex_type;
 			using vertex_wrapper_type = typename G::element_type::vertex_wrapper_type;
 			using cost_type = C;
 			shared_ptr<vertex_wrapper_type> vertex_wrapper_data;
@@ -64,12 +73,11 @@ namespace std
 			vector<shared_ptr<path_state<G, C>>> expand()
 			{
 				vector<shared_ptr<path_state<G, C>>> children;
-				auto it = graph_data->underlying_data.begin();
-				auto it_end = graph_data->underlying_data.end();
 				shared_ptr<typename G::element_type::vertex_type> tmp_v = make_shared<typename G::element_type::vertex_type>(vertex_wrapper_data->vertex_data);
 				auto edges = get_edges_for_vertex(graph_data, tmp_v);
 				for (auto e : edges) {
-					auto v_w = get_vertex_wrapper(graph_data, e.v2);
+					shared_ptr<vertex_type> t_p = make_shared<vertex_type>(e.v2);
+					auto v_w = get_vertex_wrapper(graph_data, t_p);
 					shared_ptr<path_state<G, C>> new_helper = make_shared<path_state<G, C>>(v_w, cost + e.cost, this->shared_from_this(), graph_data);
 					children.push_back(new_helper);
 				}
