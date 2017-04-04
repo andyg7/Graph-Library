@@ -53,19 +53,19 @@ public:
 		}
 
 		/* Create the wrapper and add it to adjacency list */
-		shared_ptr<NodeAL<IdType>> vertex_sp(new NodeAL<IdType>(*this, x));
-		int internal_id = vertex_sp->internal_id;
+		NodeAL<IdType>* vertex_p = new NodeAL<IdType>(*this, x);
+		int internal_id = vertex_p->internal_id;
 
 		//TODO: factor this out into a helper?
 		if(internal_id == next_unique_id - 1){
-			adjacency_list.push_back(vertex_sp);
+			adjacency_list.push_back(vertex_p);
 		}else{
-			adjacency_list[internal_id] = vertex_sp;
+			adjacency_list[internal_id] = vertex_p;
 		}
 		
 		/* Add the new mapping into the map */
-		id_map[x] = vertex_sp;
-		assert(id_map.find(x)->second == vertex_sp); //ASSERT
+		id_map[x] = vertex_p;
+		assert(id_map.find(x)->second == vertex_p); //ASSERT
 		return true;
 	}
 
@@ -78,29 +78,33 @@ public:
 
 		/* Get the internal id of the wrapper of x */
 		int internal_id = id_map.find(x)->second->internal_id;
-		cout << internal_id << " HELLO\n";
 
 		/* Remove all outgoing endes from the vertex */
-		for(auto node_sp: adjacency_list[internal_id]->neighbours){
-			node_sp.reset();
-		}
+		adjacency_list[internal_id]->neighbours.clear();
 
 		/* Destroy incoming edges */
-		for(auto node_sp : adjacency_list){
-			for(auto neighbour_sp : node_sp->neighbours){
-				if(neighbour_sp == adjacency_list[internal_id])
-					neighbour_sp.reset();
+		for(auto node_p : adjacency_list){
+			for(int i = 0; i < node_p->neighbours.size(); ++i){
+				if(node_p->neighbours[i] == node_p)
+					node_p->neighbours.erase(node_p->neighbours.begin() + i);
 			}
 		}
 
-		/* Remove the vertex from the adjacency list */
-		//TODO: Segfault happens here. Doing something wrong with sp.
-		adjacency_list[internal_id].reset();
+		/* Delete the wrapper */
+		delete adjacency_list[internal_id];
+
+		/* This slot is going t be resused when id recycling kicks in*/
+		adjacency_list[internal_id] = nullptr;
+
 
 		/* Get the unique id back for id recycling */
 		return_id(internal_id);
+
+		/* Erase the vertex from the wrapper map */
+		id_map.erase(x);
 		return true;
 	}
+
 	bool add_edge(IdType x, IdType y){
 		return true;
 	}
@@ -109,10 +113,11 @@ public:
 	}
 
 	void print_graph() {
-		for(auto node_sp : this->adjacency_list){
-			cout << *(node_sp->user_id_p) << ": ";
-			for(auto neighbour_sp : node_sp->neighbours){
-				cout << *(neighbour_sp->user_id_p) << " ";
+		for(auto node_p : this->adjacency_list){
+			if(node_p == nullptr) continue;
+			cout << *(node_p->user_id_p) << ": ";
+			for(auto neighbour_p : node_p->neighbours){
+				cout << *(neighbour_p->user_id_p) << " ";
 			}
 			cout << endl;
 		}
@@ -125,9 +130,9 @@ private:
 	/* Vector of smart pointers to wrappers. This allows direct access
 	to the neighbours of the node from its wrapper. The penalty – vertex
 	removal */
-	vector<shared_ptr<NodeAL<IdType>>> adjacency_list;
+	vector<NodeAL<IdType>*> adjacency_list;
 	// Need this map to go from Node -> NodeAL
-	map<IdType, shared_ptr<NodeAL<IdType>> > id_map;
+	map<IdType, NodeAL<IdType>*> id_map;
 
 	/* Same idea as for GraphAM here */
 	long next_unique_id;
@@ -165,7 +170,7 @@ public:
 		internal_id = graph.get_new_id();
 		
 		/* No neighbours yet, so empty vector */
-		neighbours = vector<shared_ptr<NodeAL<IdType>>>();
+		neighbours = vector<NodeAL<IdType>*>();
 
 		user_id_p = &user_id;
 	}
@@ -174,7 +179,7 @@ private:
 	/* Necessary to distinguish the node within the graph*/
 	long internal_id;
 	/* This way, we avoid indexing into the adjacency list*/
-	vector<shared_ptr<NodeAL<IdType>>> neighbours;
+	vector<NodeAL<IdType>*> neighbours;
 	
 	/* Smart pointer to the user created object, my be comparable */
 	IdType* user_id_p;
