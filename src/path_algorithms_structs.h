@@ -1,6 +1,14 @@
 #ifndef PATH_ALGORITHMS_STRUCTS
 #define PATH_ALGORITHMS_STRUCTS
 
+template<typename G, typename V>
+requires Graph<G> && Vertex<V>
+shared_ptr<typename G::element_type::vertex_wrapper_type> get_vertex_wrapper(G g, V v);
+
+template<typename G, typename V>
+requires Graph<G> && Vertex_ptr<V>
+vector<typename G::element_type::edge_type> get_edges_for_vertex(G g, V v);
+
 namespace std
 {
 	template<typename G, typename C>
@@ -58,20 +66,12 @@ namespace std
 				vector<shared_ptr<path_state<G, C>>> children;
 				auto it = graph_data->underlying_data.begin();
 				auto it_end = graph_data->underlying_data.end();
-				for (; it != it_end; it++) {
-					if (*(it->vertex_wrapper_data) == *vertex_wrapper_data) {
-						break;
-					}
-				}
-				auto edges = it->edges;
-				auto neighbors = it->neighbors;
+				shared_ptr<typename G::element_type::vertex_type> tmp_v = make_shared<typename G::element_type::vertex_type>(vertex_wrapper_data->vertex_data);
+				auto edges = get_edges_for_vertex(graph_data, tmp_v);
 				for (auto e : edges) {
-					for (auto n : neighbors) {
-						if (n->vertex_data == e->edge.v2) {
-							shared_ptr<path_state<G, C>> new_helper = make_shared<path_state<G, C>>(n, cost + e->edge.cost, this->shared_from_this(), graph_data);
-							children.push_back(new_helper);
-						}
-					}
+					auto v_w = get_vertex_wrapper(graph_data, e.v2);
+					shared_ptr<path_state<G, C>> new_helper = make_shared<path_state<G, C>>(v_w, cost + e.cost, this->shared_from_this(), graph_data);
+					children.push_back(new_helper);
 				}
 				return children;
 			}
