@@ -3,10 +3,19 @@
 
 #include <memory>
 #include "graph_concepts.h"
+#include "graph_lib.h"
+
+template<typename G>
+requires Graph<G>
+vector<typename G::element_type::vertex_type> get_vertices(G g);
+
+template<typename G>
+requires Matrix_Graph<G>
+vector<typename G::element_type::vertex_type> get_vertices(G g);
 
 template<typename G>
 requires Vertex_numeric_id<typename G::element_type::vertex_type>
-int get_unique_id(G& g)
+int get_unique_id(G g)
 {
 	int max_id = 0;
 	int sum_id = 0;
@@ -17,8 +26,9 @@ int get_unique_id(G& g)
 	if (it == it_end) {
 		return 0;
 	}
-	for (; it != it_end; it++) {
-		int curr_id = (*it).vertex_wrapper_data->vertex_data.get_key();
+	vector<typename G::element_type::vertex_type> curr_vertices = get_vertices(g);
+	for (auto n : curr_vertices) {
+		int curr_id = n.get_key();
 		sum_id = sum_id + curr_id;
 		if (curr_id > max_id) {
 			max_id = curr_id;
@@ -39,7 +49,7 @@ int get_unique_id(G& g)
 
 template<typename G>
 requires Graph<G> && Vertex_numeric_id<typename G::element_type::vertex_type>
-shared_ptr<typename G::element_type::vertex_type> create_vertex(G& g)
+shared_ptr<typename G::element_type::vertex_type> create_vertex(G g)
 {
 	typedef typename G::element_type::vertex_type vertex_type;
 	int unique_id = get_unique_id(g);
@@ -50,7 +60,7 @@ shared_ptr<typename G::element_type::vertex_type> create_vertex(G& g)
 
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
-shared_ptr<typename G::element_type::edge_type> create_edge(G& g, V x, V y)
+shared_ptr<typename G::element_type::edge_type> create_edge(G g, V x, V y)
 {
 	typedef typename G::element_type::edge_type edge_type;
 	shared_ptr<edge_type> new_edge = make_shared<edge_type>(); 
@@ -62,7 +72,7 @@ shared_ptr<typename G::element_type::edge_type> create_edge(G& g, V x, V y)
 
 template<typename G, typename V, typename C>
 requires Graph<G> && Vertex_ptr<V> && Numeric<C>
-shared_ptr<typename G::element_type::edge_type> create_edge(G& g, V x, V y, C c)
+shared_ptr<typename G::element_type::edge_type> create_edge(G g, V x, V y, C c)
 {
 	typedef typename G::element_type::edge_type edge_type;
 	shared_ptr<edge_type> new_edge = make_shared<edge_type>();

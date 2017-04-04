@@ -25,6 +25,7 @@ struct Graph {};
 struct DAG : Graph {};
 struct DG : Graph {};
 struct DT : DG {};
+struct Matrix_graph {};
 
 template<typename X> 
 using Value_type = typename X::value_type;
@@ -160,6 +161,11 @@ requires (G g) {
 	{ g } -> DG;
 };
 
+template<typename G>
+concept bool is_matrix = 
+requires (G g) {
+	{ g } -> Matrix_graph;
+};
 /*
 Graph concept
 - must have certain member types
@@ -225,4 +231,11 @@ requires (G g) {
 	requires Numeric<typename G::element_type::vertex_type::heuristic_function_type>;
 };
 
+template<typename G>
+concept bool Matrix_Graph = 
+requires (G g) {
+	g->id_to_wrapper;
+	requires Graph<G>;
+	requires is_matrix<typename G::element_type::graph_type>;
+};
 #endif

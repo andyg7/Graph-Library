@@ -17,7 +17,7 @@ using namespace graph_std_lib;
 
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
-bool vertex_exists(G& g, V x)
+bool vertex_exists(G g, V x)
 {
 	auto it = g->underlying_data.begin();
 	auto it_end = g->underlying_data.end();
@@ -32,7 +32,7 @@ bool vertex_exists(G& g, V x)
 
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
-bool add(G& g, V x)
+bool add(G g, V x)
 {
 	typedef typename G::element_type::vertex_header_type vertex_header_type;
 	if (vertex_exists(g, x)) {
@@ -48,7 +48,7 @@ bool add(G& g, V x)
 
 template <typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
-bool adjacent(G& g, V x, V y)
+bool adjacent(G g, V x, V y)
 {
 	auto it_x = g->underlying_data.begin();
 	auto it_x_end = g->underlying_data.end();
@@ -71,7 +71,7 @@ bool adjacent(G& g, V x, V y)
 
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
-void remove(G& g, V x)
+void remove(G g, V x)
 {
 	auto it = g->underlying_data.begin();
 	auto it_end = g->underlying_data.end();
@@ -108,7 +108,7 @@ void remove(G& g, V x)
 
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V> 
-Value value(G& g, V x)
+Value value(G g, V x)
 {
 	Value v;
 	auto it = g->underlying_data.begin();
@@ -123,7 +123,7 @@ Value value(G& g, V x)
 
 template<typename G, typename E>
 requires Graph<G> && Edge_ptr<E>
-Value value(G& g, E e)
+Value value(G g, E e)
 {
 	Value v;
 	auto it = g->underlying_data.begin();
@@ -145,7 +145,7 @@ Value value(G& g, E e)
 
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
-void set_value(G& g, V x, Value v)
+void set_value(G g, V x, Value v)
 {
 	auto it = g->underlying_data.begin();
 	auto it_end = g->underlying_data.end();
@@ -164,7 +164,7 @@ void set_value(G& g, V x, Value v)
 
 template<typename G, typename E>
 requires Graph<G> && Edge_ptr<E> && Same_type<typename G::element_type::edge_type, typename E::element_type>
-void set_value(G& g, E e, Value v)
+void set_value(G g, E e, Value v)
 {
 	auto it = g->underlying_data.begin();
 	auto it_end = g->underlying_data.end();
@@ -181,7 +181,7 @@ void set_value(G& g, E e, Value v)
 }
 
 template<typename G, typename V>
-bool add_edge_blindly(G& g, V x, V y)
+bool add_edge_blindly(G g, V x, V y)
 {
 	typedef typename G::element_type::edge_type edge_type;
 	typedef typename G::element_type::vertex_type vertex_type;
@@ -205,7 +205,7 @@ bool add_edge_blindly(G& g, V x, V y)
 }
 
 template<typename G, typename E>
-bool add_edge_blindly_w_edge(G& g, E e)
+bool add_edge_blindly_w_edge(G g, E e)
 {
 	typedef typename G::element_type::edge_type edge_type;
 	typedef typename G::element_type::vertex_type vertex_type;
@@ -228,7 +228,7 @@ bool add_edge_blindly_w_edge(G& g, E e)
 
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
-bool add_edge(G& g, V x, V y)
+bool add_edge(G g, V x, V y)
 {
 	bool added_edge = add_edge_blindly(g, x, y);
 	return added_edge;
@@ -236,7 +236,7 @@ bool add_edge(G& g, V x, V y)
 
 template<typename G, typename E>
 requires Graph<G> && Edge_ptr<E>
-bool add_edge(G& g, E e)
+bool add_edge(G g, E e)
 {
 	bool added_edge = add_edge_blindly_w_edge(g, e);
 	return added_edge;
@@ -244,7 +244,7 @@ bool add_edge(G& g, E e)
 
 template<typename G, typename V>
 requires DAG_Graph<G> && Vertex_ptr<V>
-bool add_edge(G& g, V x, V y)
+bool add_edge(G g, V x, V y)
 {
 	bool path_ex = path_exists(g, y, x);
 	if (path_ex == true) {
@@ -256,7 +256,7 @@ bool add_edge(G& g, V x, V y)
 
 template<typename G, typename E>
 requires DAG_Graph<G> && Edge_ptr<E>
-bool add_edge(G& g, E e)
+bool add_edge(G g, E e)
 {
 
 	typedef typename G::element_type::vertex_type vertex_type;
@@ -272,7 +272,7 @@ bool add_edge(G& g, E e)
 
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
-bool has_parent(G& g, V x)
+bool has_parent(G g, V x)
 {
 	auto nodes = g->underlying_data;
 	auto it = g->underlying_data.begin();
@@ -291,7 +291,7 @@ bool has_parent(G& g, V x)
 
 template<typename G, typename V>
 requires DT_Graph<G> && Vertex_ptr<V>
-bool add_edge(G& g, V x, V y)
+bool add_edge(G g, V x, V y)
 {
 	bool path_ex = path_exists(g, y, x);
 	if (path_ex == true) {
@@ -308,7 +308,7 @@ bool add_edge(G& g, V x, V y)
 
 template<typename G, typename E>
 requires DT_Graph<G> && Edge_ptr<E>
-bool add_edge(G& g, E e)
+bool add_edge(G g, E e)
 {
 	typedef typename G::element_type::vertex_type vertex_type;
 	shared_ptr<vertex_type> tmp_v1 = make_shared<vertex_type>(e->v1);
@@ -327,7 +327,7 @@ bool add_edge(G& g, E e)
 
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
-bool has_child(G& g, V x)
+bool has_child(G g, V x)
 {
 	auto nodes = g->underlying_data;
 	auto it = g->underlying_data.begin();
@@ -344,7 +344,7 @@ bool has_child(G& g, V x)
 
 template<typename G>
 requires Graph<G>
-shared_ptr<typename G::element_type::vertex_type> top(G& g)
+shared_ptr<typename G::element_type::vertex_type> top(G g)
 {
 	typedef typename G::element_type::vertex_type vertex_type;
 	auto it = g->underlying_data.begin();
@@ -363,9 +363,36 @@ shared_ptr<typename G::element_type::vertex_type> top(G& g)
 	return tmp_p;
 }
 
+template<typename G>
+requires Graph<G>
+vector<typename G::element_type::vertex_type> get_vertices(G g)
+{
+	typedef typename G::element_type::vertex_type vertex_type;
+	auto it = g->underlying_data.begin();
+	auto it_end = g->underlying_data.end();
+	vector<typename G::element_type::vertex_type> vertices;
+
+	for (; it != it_end; it++) {
+		auto curr_v_h = (*it);
+		auto curr_v = curr_v_h.vertex_wrapper_data->vertex_data;
+		vertices.push_back(curr_v);
+	}
+	return vertices;
+}
+
+template<typename G>
+requires Matrix_Graph<G>
+vector<typename G::element_type::vertex_type> get_vertices(G g)
+{
+	typedef typename G::element_type::vertex_type vertex_type;
+	vector<typename G::element_type::vertex_type> vertices;
+
+	return vertices;
+}
+
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
-vector<typename G::element_type::vertex_type> neighbors(G& g, V x)
+vector<typename G::element_type::vertex_type> neighbors(G g, V x)
 {
 	typedef typename G::element_type::vertex_type vertex_type;
 	vector<vertex_type> neighbors(0);
@@ -389,14 +416,14 @@ vector<typename G::element_type::vertex_type> neighbors(G& g, V x)
 
 template<typename G>
 requires Graph<G>
-int num_vertices(G& g)
+int num_vertices(G g)
 {
 	return g->underlying_data.size();
 }
 
 template<typename G>
 requires Graph<G>
-int num_edges(G& g)
+int num_edges(G g)
 {
 	int num_edges = 0;
 	auto it = g->underlying_data.begin();
@@ -411,7 +438,7 @@ int num_edges(G& g)
 
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
-bool reachable_from_top(G& g, V x)
+bool reachable_from_top(G g, V x)
 {
 	auto curr_top = top(g);
 	auto it = g->underlying_data.begin();
@@ -427,7 +454,7 @@ bool reachable_from_top(G& g, V x)
 
 template<typename G>
 requires Graph<G>
-bool all_reachable_from_top(G& g)
+bool all_reachable_from_top(G g)
 {
 	typedef typename G::element_type::vertex_type vertex_type;
 	auto curr_top = top(g);
@@ -454,7 +481,7 @@ bool compare_vertex_wrapper(typename G::element_type::vertex_header_type::vertex
 
 template<typename G>
 requires Graph<G> 
-vector<typename G::element_type::vertex_type> get_vertices_by_value(G& g)
+vector<typename G::element_type::vertex_type> get_vertices_by_value(G g)
 {
 	typedef typename G::element_type::vertex_type vertex_type;
 	typedef typename G::element_type::vertex_header_type::vertex_wrapper_type vertex_wrapper_type;
@@ -488,7 +515,7 @@ bool compare_edge_wrapper(typename G::element_type::vertex_header_type::edge_wra
 
 template<typename G>
 requires Graph<G> 
-vector<typename G::element_type::edge_type> get_edges(G& g)
+vector<typename G::element_type::edge_type> get_edges(G g)
 {
 	typedef typename G::element_type::edge_type edge_type;
 	typedef typename G::element_type::vertex_header_type::edge_wrapper_type edge_wrapper_type;
@@ -510,17 +537,40 @@ vector<typename G::element_type::edge_type> get_edges(G& g)
 	auto it_w = edge_w.begin();
 	auto it_end_w = edge_w.end();
 	for (; it_w != it_end_w; it_w++) {
-		edge_type tmp_e;
-		tmp_e.v1 = (*it_w)->edge.v1;
-		tmp_e.v2 = (*it_w)->edge.v2;
+		edge_type tmp_e = (*it_w)->edge;
 		edges.push_back(tmp_e);
 	}
 	return edges;
 }
 
+template<typename G, typename V>
+requires Graph<G> && Vertex_ptr<V>
+vector<typename G::element_type::edge_type> get_edges_for_vertex(G g, V v)
+{
+	typedef typename G::element_type::edge_type edge_type;
+	typedef typename G::element_type::vertex_header_type::edge_wrapper_type edge_wrapper_type;
+
+	auto it = g->underlying_data.begin();
+	auto it_end = g->underlying_data.end();
+
+	for (; it != it_end; it++) {
+		if ((it->vertex_wrapper_data)->vertex_data == *v) {
+			break;
+		}
+	}
+
+	vector<edge_type> edges;
+	auto it_w = it->edges.begin();
+	auto it_w_end = it->edges.end();
+	for (; it_w != it_w_end; it_w++) {
+		edge_type tmp_e = (*it_w)->edge;
+		edges.push_back(tmp_e);
+	}
+	return edges;
+}
 template<typename G>
 requires Graph<G> 
-vector<typename G::element_type::edge_type> get_edges_by_value(G& g)
+vector<typename G::element_type::edge_type> get_edges_by_value(G g)
 {
 	typedef typename G::element_type::edge_type edge_type;
 	typedef typename G::element_type::vertex_header_type::edge_wrapper_type edge_wrapper_type;
@@ -543,12 +593,27 @@ vector<typename G::element_type::edge_type> get_edges_by_value(G& g)
 	auto it_end_w = edge_w.end();
 	vector<edge_type> edges;
 	for (; it_w != it_end_w; it_w++) {
-		edge_type tmp_e;
-		tmp_e.v1 = (*it_w)->edge.v1;
-		tmp_e.v2 = (*it_w)->edge.v2;
+		edge_type tmp_e = (*it_w)->edge;
 		edges.push_back(tmp_e);
 	}
 	return edges;
+}
+
+template<typename G, typename V>
+requires Graph<G> && Vertex<V>
+shared_ptr<typename G::element_type::vertex_wrapper_type> get_vertex_wrapper(G g, V v)
+{
+	auto it = g->underlying_data.begin();
+	auto it_end = g->underlying_data.end();
+
+	for (; it != it_end; it++) {
+		auto curr_v_h = *it;
+		auto curr_v = curr_v_h.vertex_wrapper_data->vertex_data;
+		if (curr_v == v) {
+			return curr_v_h.vertex_wrapper_data;
+		}
+	}
+	throw invalid_argument{"Unknown vertex"};
 }
 
 #endif

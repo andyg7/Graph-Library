@@ -12,6 +12,9 @@ void generic_dag_example();
 template<typename V, typename E>
 void generic_dt_example();
 
+template<typename V, typename E>
+void generic_matrix_example();
+
 template<typename T>
 void pretty_print( T& l);
 
@@ -41,6 +44,9 @@ int main(int argc, char *argv[])
 	 */
 	cout << "********DT********\n";
 	generic_dt_example<vertex, edge>();
+
+	cout << "********Matrix********\n";
+	generic_matrix_example<vertex, edge>();
 	return 0;
 }
 
@@ -475,6 +481,15 @@ void generic_dt_example()
 	cout << s << '\n';
 	cout << "cost\n";
 	cout << c << '\n';
+}
+
+template<typename V, typename E>
+void generic_matrix_example()
+{
+	using namespace graph_std_lib;
+	shared_ptr<matrix_graph<V, E>> my_graph = make_shared<matrix_graph<V, E>>();
+
+	auto v0 = create_vertex(my_graph);
 }
 
 template<typename T>

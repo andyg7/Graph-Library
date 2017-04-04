@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include <unordered_map>
 
 using Value = std::pair<string,int>;
 using namespace std;
@@ -106,6 +107,25 @@ namespace graph_std_lib
 
 	template<typename V, typename E>
 	requires Vertex<V> && Edge<E> && Matching_vertices_edges<E, V> 
+	struct matrix_graph {
+		using graph_type = Matrix_graph;
+		using edge_type = E;
+		using vertex_type = V;
+		using vertex_header_type = vertex_header<V, E>;
+		using vertex_wrapper_type = vertex_wrapper<V>;
+		using underlying_data_type = vector<vector<vertex_wrapper_type>>;
+		underlying_data_type underlying_data;
+		unordered_map<int, vertex_wrapper_type> id_to_wrapper;
+		unordered_map<vertex_wrapper_type, int> wrapper_to_id;
+		matrix_graph(int n) 
+		{
+			underlying_data(n);
+		}
+		matrix_graph() {}
+	};
+
+	template<typename V, typename E>
+	requires Vertex<V> && Edge<E> && Matching_vertices_edges<E, V> 
 	struct dag_graph {
 		using graph_type = DAG;
 		using edge_type = E;
@@ -128,6 +148,7 @@ namespace graph_std_lib
 		underlying_data_type underlying_data;
 	};
 }
+
 using namespace graph_std_lib;
 namespace std
 {
@@ -139,5 +160,15 @@ namespace std
 				return std::hash<int>()(n.vertex_id);
 			}
 		};
+
+	template <typename T>
+	struct hash<vertex_wrapper<T>>
+		{
+			size_t operator()(const vertex_wrapper<T>& n) const noexcept
+			{
+				return std::hash<T>()(n.vertex_data);
+			}
+		};
 }
+
 #endif
