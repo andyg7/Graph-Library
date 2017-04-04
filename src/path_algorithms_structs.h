@@ -1,21 +1,7 @@
 #ifndef PATH_ALGORITHMS_STRUCTS
 #define PATH_ALGORITHMS_STRUCTS
 
-template<typename G, typename V>
-requires Graph<G> && Vertex_ptr<V>
-shared_ptr<typename G::element_type::vertex_wrapper_type> get_vertex_wrapper(G g, V v);
-
-template<typename G, typename V>
-requires Matrix_Graph<G> && Vertex_ptr<V>
-shared_ptr<typename G::element_type::vertex_wrapper_type> get_vertex_wrapper(G g, V v);
-
-template<typename G, typename V>
-requires Graph<G> && Vertex_ptr<V>
-vector<typename G::element_type::edge_type> get_edges_for_vertex(G g, V v);
-
-template<typename G, typename V>
-requires Matrix_Graph<G> && Vertex_ptr<V>
-vector<typename G::element_type::edge_type> get_edges_for_vertex(G g, V v);
+#include "graph_lib_header_helper.h"
 
 namespace std
 {
