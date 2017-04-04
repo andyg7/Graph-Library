@@ -490,6 +490,9 @@ void generic_matrix_example()
 	shared_ptr<matrix_graph<V, E>> my_graph = make_shared<matrix_graph<V, E>>();
 
 	auto v0 = create_vertex(my_graph);
+	add(my_graph, v0);
+	auto v1 = create_vertex(my_graph);
+	add(my_graph, v1);
 }
 
 template<typename T>

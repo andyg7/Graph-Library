@@ -14,16 +14,21 @@ requires Matrix_Graph<G>
 vector<typename G::element_type::vertex_type> get_vertices(G g);
 
 template<typename G>
+requires Graph<G>
+int num_vertices(G g);
+
+template<typename G>
+requires Matrix_Graph<G>
+int num_vertices(G g);
+
+template<typename G>
 requires Vertex_numeric_id<typename G::element_type::vertex_type>
 int get_unique_id(G g)
 {
 	int max_id = 0;
 	int sum_id = 0;
 	int count_id = 0;
-	auto it = g->underlying_data.begin();
-	auto it_end = g->underlying_data.end();
-
-	if (it == it_end) {
+	if (num_vertices(g) == 0) {
 		return 0;
 	}
 	vector<typename G::element_type::vertex_type> curr_vertices = get_vertices(g);

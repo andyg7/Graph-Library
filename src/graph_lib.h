@@ -31,6 +31,17 @@ bool vertex_exists(G g, V x)
 }
 
 template<typename G, typename V>
+requires Matrix_Graph<G> && Vertex_ptr<V>
+bool vertex_exists(G g, V x)
+{
+	auto it = (g->id_to_wrapper).find(x->vertex_id);
+	if (it == (g->id_to_wrapper).end()) {
+		return false;
+	} 
+	return true;
+}
+
+template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
 bool add(G g, V x)
 {
@@ -43,6 +54,21 @@ bool add(G g, V x)
 	auto it = g->underlying_data.begin();
 	advance(it, container_size);
 	g->underlying_data.insert(it, new_header);
+	return true;
+}
+
+template<typename G, typename V>
+requires Matrix_Graph<G> && Vertex_ptr<V>
+bool add(G g, V x)
+{
+	typedef typename G::element_type::vertex_wrapper_type vertex_wrapper_type;
+	if (vertex_exists(g, x)) {
+		return false;
+	}
+	shared_ptr<vertex_wrapper_type> new_wrapper = make_shared<vertex_wrapper_type>(*x);
+	int tmp_id = x->vertex_id;
+	(g->id_to_wrapper).insert(make_pair(tmp_id, new_wrapper));
+	(g->wrapper_to_id).insert(make_pair(new_wrapper, tmp_id));
 	return true;
 }
 
@@ -386,7 +412,14 @@ vector<typename G::element_type::vertex_type> get_vertices(G g)
 {
 	typedef typename G::element_type::vertex_type vertex_type;
 	vector<typename G::element_type::vertex_type> vertices;
+	auto it = (g->id_to_wrapper).begin();
+	auto it_end = (g->id_to_wrapper).end();
 
+	for (; it != it_end; it++) {
+		int id = it->first;
+		vertex_type v_d = (it->second)->vertex_data;
+		vertices.push_back(v_d);
+	}
 	return vertices;
 }
 
@@ -419,6 +452,13 @@ requires Graph<G>
 int num_vertices(G g)
 {
 	return g->underlying_data.size();
+}
+
+template<typename G>
+requires Matrix_Graph<G>
+int num_vertices(G g)
+{
+	return (g->id_to_wrapper).size();
 }
 
 template<typename G>

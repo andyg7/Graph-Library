@@ -113,10 +113,10 @@ namespace graph_std_lib
 		using vertex_type = V;
 		using vertex_header_type = vertex_header<V, E>;
 		using vertex_wrapper_type = vertex_wrapper<V>;
-		using underlying_data_type = vector<vector<vertex_wrapper_type>>;
+		using underlying_data_type = vector<vector<int>>;
 		underlying_data_type underlying_data;
-		unordered_map<int, vertex_wrapper_type> id_to_wrapper;
-		unordered_map<vertex_wrapper_type, int> wrapper_to_id;
+		unordered_map<int, shared_ptr<vertex_wrapper_type>> id_to_wrapper;
+		unordered_map<shared_ptr<vertex_wrapper_type>, int> wrapper_to_id;
 		matrix_graph(int n) 
 		{
 			underlying_data(n);
