@@ -51,7 +51,7 @@ void generic_dg_example()
 	/* 
 	   Create a DG graph
 	 */
-	dg_graph<V, E> my_graph;
+	shared_ptr<dg_graph<V, E>> my_graph = make_shared<dg_graph<V, E>>();
 
 	/*
 	   Create and add a bunch of vertices to graph
@@ -191,7 +191,7 @@ template<typename V, typename E>
 void generic_dag_example()
 {
 	using namespace graph_std_lib;
-	dag_graph<V, E> my_graph;
+	shared_ptr<dag_graph<V, E>> my_graph = make_shared<dag_graph<V, E>>();
 
 	auto v0 = create_vertex(my_graph);
 	add(my_graph, v0);
@@ -325,7 +325,7 @@ template<typename V, typename E>
 void generic_dt_example()
 {
 	using namespace graph_std_lib;
-	dt_graph<V, E> my_graph;
+	shared_ptr<dt_graph<V, E>> my_graph = make_shared<dt_graph<V, E>>();
 
 	auto v0 = create_vertex(my_graph);
 	add(my_graph, v0);
@@ -481,8 +481,8 @@ template<typename T>
 void pretty_print(T& l)
 {
 	cout << "Printing graph:" << "\n";
-	auto it = l.underlying_data.begin();
-	auto it_end = l.underlying_data.end();
+	auto it = l->underlying_data.begin();
+	auto it_end = l->underlying_data.end();
 
 	int counter = 0;
 	for (; it != it_end; it++) {

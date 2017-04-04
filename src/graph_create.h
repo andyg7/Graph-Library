@@ -5,14 +5,14 @@
 #include "graph_concepts.h"
 
 template<typename G>
-requires Vertex_numeric_id<typename G::vertex_type>
+requires Vertex_numeric_id<typename G::element_type::vertex_type>
 int get_unique_id(G& g)
 {
 	int max_id = 0;
 	int sum_id = 0;
 	int count_id = 0;
-	auto it = g.underlying_data.begin();
-	auto it_end = g.underlying_data.end();
+	auto it = g->underlying_data.begin();
+	auto it_end = g->underlying_data.end();
 
 	if (it == it_end) {
 		return 0;
@@ -38,10 +38,10 @@ int get_unique_id(G& g)
 }
 
 template<typename G>
-requires Graph<G> && Vertex_numeric_id<typename G::vertex_type>
-shared_ptr<typename G::vertex_type> create_vertex(G& g)
+requires Graph<G> && Vertex_numeric_id<typename G::element_type::vertex_type>
+shared_ptr<typename G::element_type::vertex_type> create_vertex(G& g)
 {
-	typedef typename G::vertex_type vertex_type;
+	typedef typename G::element_type::vertex_type vertex_type;
 	int unique_id = get_unique_id(g);
 	shared_ptr<vertex_type> new_vertex = make_shared<vertex_type>();
 	new_vertex->set_key(unique_id);
@@ -50,9 +50,9 @@ shared_ptr<typename G::vertex_type> create_vertex(G& g)
 
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
-shared_ptr<typename G::edge_type> create_edge(G& g, V x, V y)
+shared_ptr<typename G::element_type::edge_type> create_edge(G& g, V x, V y)
 {
-	typedef typename G::edge_type edge_type;
+	typedef typename G::element_type::edge_type edge_type;
 	shared_ptr<edge_type> new_edge = make_shared<edge_type>(); 
 	new_edge->v1 = *x;
 	new_edge->v2 = *y;
@@ -62,9 +62,9 @@ shared_ptr<typename G::edge_type> create_edge(G& g, V x, V y)
 
 template<typename G, typename V, typename C>
 requires Graph<G> && Vertex_ptr<V> && Numeric<C>
-shared_ptr<typename G::edge_type> create_edge(G& g, V x, V y, C c)
+shared_ptr<typename G::element_type::edge_type> create_edge(G& g, V x, V y, C c)
 {
-	typedef typename G::edge_type edge_type;
+	typedef typename G::element_type::edge_type edge_type;
 	shared_ptr<edge_type> new_edge = make_shared<edge_type>();
 	new_edge->v1 = *x;
 	new_edge->v2 = *y;

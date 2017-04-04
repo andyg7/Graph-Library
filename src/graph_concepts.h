@@ -169,21 +169,22 @@ Graph concept
 template<typename G>
 concept bool Graph = 
 requires (G g) {
-	typename G::graph_type;
-	typename G::edge_type;
-	typename G::vertex_type;
-	typename G::vertex_wrapper_type;
-	typename G::vertex_header_type;
-	typename G::underlying_data_type;
+	typename G::element_type;
+	typename G::element_type::graph_type;
+	typename G::element_type::edge_type;
+	typename G::element_type::vertex_type;
+	typename G::element_type::vertex_wrapper_type;
+	typename G::element_type::vertex_header_type;
+	typename G::element_type::underlying_data_type;
 
-	{ g.underlying_data } -> typename G::underlying_data_type;
-	requires Sequence<typename G::underlying_data_type>
-	requires Same_type<typename G::edge_type::vertex_type, typename G::vertex_type>;
+	{ g->underlying_data } -> typename G::element_type::underlying_data_type;
+	requires Sequence<typename G::element_type::underlying_data_type>
+	requires Same_type<typename G::element_type::edge_type::vertex_type, typename G::element_type::vertex_type>;
 
-	requires std::experimental::ranges::Constructible<G>();
-	requires std::experimental::ranges::Assignable<G&, G>();
-	requires std::experimental::ranges::Copyable<G>();
-	requires std::experimental::ranges::Movable<G>();
+	requires std::experimental::ranges::Constructible<typename G::element_type>();
+	requires std::experimental::ranges::Assignable<typename G::element_type&, typename G::element_type>();
+	requires std::experimental::ranges::Copyable<typename G::element_type>();
+	requires std::experimental::ranges::Movable<typename G::element_type>();
 };
 
 /*
@@ -193,7 +194,7 @@ template<typename G>
 concept bool DAG_Graph = 
 requires (G g) {
 	requires Graph<G>;
-	requires is_dag<typename G::graph_type>;
+	requires is_dag<typename G::element_type::graph_type>;
 };
 
 /*
@@ -203,7 +204,7 @@ template<typename G>
 concept bool DG_Graph = 
 requires (G g) {
 	requires Graph<G>;
-	requires is_dg<typename G::graph_type>;
+	requires is_dg<typename G::element_type::graph_type>;
 };
 
 /*
@@ -213,15 +214,15 @@ template<typename G>
 concept bool DT_Graph = 
 requires (G g) {
 	requires Graph<G>;
-	requires is_dt<typename G::graph_type>;
+	requires is_dt<typename G::element_type::graph_type>;
 };
 
 template<typename G>
 concept bool Heuristic_graph = 
 requires (G g) {
 	requires Graph<G>;
-	typename G::vertex_type::heuristic_function_type;
-	requires Numeric<typename G::vertex_type::heuristic_function_type>;
+	typename G::element_type::vertex_type::heuristic_function_type;
+	requires Numeric<typename G::element_type::vertex_type::heuristic_function_type>;
 };
 
 #endif

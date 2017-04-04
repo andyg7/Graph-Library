@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 
 	using namespace graph_std_lib;
 
-	dg_graph<city, road> my_graph;
+	shared_ptr<dg_graph<city, road>> my_graph = make_shared<dg_graph<city, road>>();
 	auto v0 = create_vertex(my_graph);
 	v0->set_name("New York");
 	v0->set_population(8406000);
