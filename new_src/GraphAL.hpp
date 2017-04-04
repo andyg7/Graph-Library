@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <vector>
 #include <memory>
+#include <map>
 
 
 //typedef std::shared_ptr<IdType> IdPtr;
@@ -43,7 +44,7 @@ private:
 	/* Necessary to distinguish the node within the graph*/
 	long internal_id;
 	/* This way, we avoid indexing into the adjacency list*/
-	vector<shared_ptr<NodeAL<IdType>>> neighbors;
+	vector<shared_ptr<NodeAL<IdType>>> neighbours;
 	
 	/* Smart pointer to the user created object, my be comparable */
 	IdType* user_id_p;
@@ -97,7 +98,7 @@ private:
 	/* Vector of smart pointers to wrappers */
 	vector<shared_ptr<NodeAL<IdType>>> adjacency_list;
 	// Need this map to go from Node -> NodeAL
-	std::map<IdType, shared_ptr<NodeAL<IdType>> > id_map;
+	map<IdType, shared_ptr<NodeAL<IdType>> > id_map;
 
 	/* Same idea as for GraphAM here */
 	long next_unique_id;
