@@ -105,10 +105,48 @@ public:
 		return true;
 	}
 
-	bool add_edge(IdType x, IdType y){
+	bool add_edge(IdType* n1, IdType* n2){
+		verifyExistingNode(n1, "addEdge");
+    	verifyExistingNode(n2, "addEdge");
+    	Edge* edge = getEdge(n1, n2);
+    	if (edge) {
+    	    return edge;
+    	} else {
+    	    edge = new Edge();
+    	    edge->start = n1;
+    	    edge->finish = n2;
+    	    return addEdge(edge);
+    	}
+
 		return true;
 	}
+
+	// verify existing node
+	bool verifyExistingNode(n1, "addEdge");
+    	{	// returning true for now
+    		return true;
+    	}
+
+
+
 	bool remove_edge(IdType x, IdType y){
+		if (!isExistingNode(n1) || !isExistingNode(n2)) {
+        return;
+    	}
+        if (edge->start == n1 && edge->finish == n2) {
+            	if (!isExistingArc(arc)) {
+        			return;
+    			}
+    			edge->start->edge.remove(edge);
+    			edge.remove(edge);
+    			delete edge;
+        }
+
+    }
+
+
+
+
 		return true;
 	}
 
@@ -190,4 +228,38 @@ private:
 };
 
 
+class Edge {
+public:
+    NodeAL* start;    // edge's starting vertex (required by Graph)
+    NodeAL* finish;   // edge's ending vertex (required by Graph)
+    double cost;      // edge weight (required by Graph)
+    double& weight;   // alias of cost; they are the same field
+    bool visited;     // whether this edge has been visited before (initally false; you can set this)
+
+    Edge(Vertex* start = nullptr, NodeAL* finish = nullptr, double cost = 0.0) : start(start),
+    finish(finish), cost(cost), weight(this->cost)
+    {
+    this->extraData = nullptr;
+    this->resetData();
+    }
+
+    /*
+     * Frees up any memory dynamically allocated by this edge.
+     */
+	~Edge() {
+    if (this->extraData != nullptr) {
+        // delete this->extraData;
+    	}
+	}
+
+
+    /*
+     * Wipes the supplementary data of this vertex back to its initial state.
+     * Specifically, sets visited to false.
+     */
+    void resetData(){
+    	this->visited = false;
+    }
+
+};
 #endif
