@@ -105,50 +105,82 @@ public:
 		return true;
 	}
 
-	bool add_edge(IdType* n1, IdType* n2){
-		verifyExistingNode(n1, "addEdge");
-    	verifyExistingNode(n2, "addEdge");
-    	Edge* edge = getEdge(n1, n2);
-    	if (edge) {
-    	    return edge;
-    	} else {
-    	    edge = new Edge();
-    	    edge->start = n1;
-    	    edge->finish = n2;
-    	    return addEdge(edge);
-    	}
+	bool add_edge(const IdType& src, const IdType& dst){
+		/* All we need to do here is to add a pointer
+		to n2 to the neighbours of n1*/
+
+
+		/* First we need to check if the nodes are in the graph */
+		if(!(vertex_in_graph(src) && vertex_in_graph(dst))){
+			throw std::invalid_argument("src or dst of the edge not in the graph");
+		}
+
+		/* Get hold of the wrappers */
+		NodeAL<IdType> * src_p = get_wrapper_p(src);
+		NodeAL<IdType> * dst_p = get_wrapper_p(dst);
+
+		/* Check if the edge already exists, if it does, 
+		throw an exception */
+		if(find(src_p->neighbours.begin(), 
+			src_p->neighbours.end(), dst_p) != src_p->neighbours.end()){
+			throw std::invalid_argument("edge already exists");
+		}
+
+		/* Now we are sure the edge is not already represented,
+		so lets just add it to the back of the vector */
+		src_p->neighbours.push_back(dst_p);
 
 		return true;
+		/* @somya. there is no need to create an edge pbject here,
+		we can just the pointer to the neighbours of src */
+		// verifyExistingNode(n1, "addEdge");
+  //   	verifyExistingNode(n2, "addEdge");
+  //   	Edge* edge = getEdge(n1, n2);
+  //   	if (edge) {
+  //   	    return edge;
+  //   	} else {
+  //   	    edge = new Edge();
+  //   	    edge->start = n1;
+  //   	    edge->finish = n2;
+  //   	    return addEdge(edge);
+  //   	}
+
+		// return true;
 	}
+
+
+
+
 
 	// verify existing node
-	bool verifyExistingNode(n1, "addEdge");
-    	{	// returning true for now
-    		return true;
-    	}
+	// bool verifyExistingNode(n1, "addEdge");
+ //    	{	// returning true for now
+ //    		return true;
+ //    	}
 
 
 
-	bool remove_edge(IdType x, IdType y){
-		if (!isExistingNode(n1) || !isExistingNode(n2)) {
-        return;
-    	}
-        if (edge->start == n1 && edge->finish == n2) {
-            	if (!isExistingArc(arc)) {
-        			return;
-    			}
-    			edge->start->edge.remove(edge);
-    			edge.remove(edge);
-    			delete edge;
-        }
+	// bool remove_edge(IdType x, IdType y){
+	// 	if (!isExistingNode(n1) || !isExistingNode(n2)) {
+ //        	return;
+ //    	}
+        
+ //        if (edge->start == n1 && edge->finish == n2) {
+ //            	if (!isExistingArc(arc)) {
+ //        			return;
+ //    			}
+ //    			edge->start->edge.remove(edge);
+ //    			edge.remove(edge);
+ //    			delete edge;
+ //        }
 
-    }
+ //    }
 
 
 
 
-		return true;
-	}
+	// 	return true;
+	// }
 
 	void print_graph() {
 		for(auto node_p : this->adjacency_list){
@@ -191,6 +223,17 @@ private:
 		free_ids.push_back(internal_id);
 	}
 
+	bool vertex_in_graph(const IdType& x){
+		if(id_map.find(x) != id_map.end()){
+			return true;
+		}
+		return false;
+	}
+
+	NodeAL<IdType>* get_wrapper_p(const IdType& x){
+		return id_map.find(x)->second;
+	}
+
 };
 
 /************************* NodeAL Class ****************************/
@@ -228,38 +271,38 @@ private:
 };
 
 
-class Edge {
-public:
-    NodeAL* start;    // edge's starting vertex (required by Graph)
-    NodeAL* finish;   // edge's ending vertex (required by Graph)
-    double cost;      // edge weight (required by Graph)
-    double& weight;   // alias of cost; they are the same field
-    bool visited;     // whether this edge has been visited before (initally false; you can set this)
+// class Edge {
+// public:
+//     NodeAL* start;    // edge's starting vertex (required by Graph)
+//     NodeAL* finish;   // edge's ending vertex (required by Graph)
+//     double cost;      // edge weight (required by Graph)
+//     double& weight;   // alias of cost; they are the same field
+//     bool visited;     // whether this edge has been visited before (initally false; you can set this)
 
-    Edge(Vertex* start = nullptr, NodeAL* finish = nullptr, double cost = 0.0) : start(start),
-    finish(finish), cost(cost), weight(this->cost)
-    {
-    this->extraData = nullptr;
-    this->resetData();
-    }
+//     Edge(Vertex* start = nullptr, NodeAL* finish = nullptr, double cost = 0.0) : start(start),
+//     finish(finish), cost(cost), weight(this->cost)
+//     {
+//     this->extraData = nullptr;
+//     this->resetData();
+//     }
 
-    /*
-     * Frees up any memory dynamically allocated by this edge.
-     */
-	~Edge() {
-    if (this->extraData != nullptr) {
-        // delete this->extraData;
-    	}
-	}
+//     /*
+//      * Frees up any memory dynamically allocated by this edge.
+//      */
+// 	~Edge() {
+//     if (this->extraData != nullptr) {
+//         // delete this->extraData;
+//     	}
+// 	}
 
 
-    /*
-     * Wipes the supplementary data of this vertex back to its initial state.
-     * Specifically, sets visited to false.
-     */
-    void resetData(){
-    	this->visited = false;
-    }
+//     /*
+//      * Wipes the supplementary data of this vertex back to its initial state.
+//      * Specifically, sets visited to false.
+//      */
+//     void resetData(){
+//     	this->visited = false;
+//     }
 
-};
+// };
 #endif

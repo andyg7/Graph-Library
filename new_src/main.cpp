@@ -18,6 +18,9 @@ int main(){
 	g1.add_vertex("A");
 	g1.print_graph();
 
+	g1.add_edge("A", "B");
+	g1.print_graph();
+
 	// //BUG
 	// int a = 10;
 	// int b = 20;
