@@ -45,9 +45,23 @@ public:
 /* 	TODO: For these we need to decide what we do if the operation 
  *	is already true. ex. add_vertex when the vertex is already there.
  *	Exception? return false? */
-	bool adjacent(IdType x, IdType y){
-		return true;
+	bool adjacent(const IdType& src, const IdType& dst){
+
+		if(!vertices_in_graph(src, dst)){
+			throw std::invalid_argument("vertex not in the graph");
+		}
+
+		/* Get hold of the wrappers */
+		NodeAL<IdType> * src_p = get_wrapper_p(src);
+		NodeAL<IdType> * dst_p = get_wrapper_p(dst);
+
+		if(find(src_p->neighbours.begin(), 
+			src_p->neighbours.end(), dst_p) != src_p->neighbours.end()){
+			return true;
+		}
+		return false;
 	}
+	
 	bool add_vertex(IdType x){
 		
 		/* Check if the vertex is already in the graph */
@@ -87,6 +101,7 @@ public:
 
 		/* Destroy incoming edges */
 		for(auto node_p : adjacency_list){
+			//TODO: BUG, node_p can equal to nullptr
 			for(int i = 0; i < node_p->neighbours.size(); ++i){
 				if(node_p->neighbours[i] == node_p)
 					node_p->neighbours.erase(node_p->neighbours.begin() + i);
@@ -94,6 +109,7 @@ public:
 		}
 
 		/* Delete the wrapper */
+		//TODO: discuss the naked delete and smart pointers and etc
 		delete adjacency_list[internal_id];
 
 		/* This slot is going t be resused when id recycling kicks in*/
@@ -108,13 +124,14 @@ public:
 		return true;
 	}
 
+	/* notice how these functions avoid the adjacency list structure
+	in the graph all together*/
 	bool add_edge(const IdType& src, const IdType& dst){
 		/* All we need to do here is to add a pointer
 		to n2 to the neighbours of n1*/
 
-
 		/* First we need to check if the nodes are in the graph */
-		if(!(vertex_in_graph(src) && vertex_in_graph(dst))){
+		if(!vertices_in_graph(src, dst)){
 			throw std::invalid_argument("src or dst of the edge not in the graph");
 		}
 
@@ -124,8 +141,7 @@ public:
 
 		/* Check if the edge already exists, if it does, 
 		throw an exception */
-		if(find(src_p->neighbours.begin(), 
-			src_p->neighbours.end(), dst_p) != src_p->neighbours.end()){
+		if(adjacent(src_p, dst_p)){
 			throw std::invalid_argument("edge already exists");
 		}
 
@@ -163,27 +179,28 @@ public:
 
 
 
-	// bool remove_edge(IdType x, IdType y){
-	// 	if (!isExistingNode(n1) || !isExistingNode(n2)) {
- //        	return;
- //    	}
-        
- //        if (edge->start == n1 && edge->finish == n2) {
- //            	if (!isExistingArc(arc)) {
- //        			return;
- //    			}
- //    			edge->start->edge.remove(edge);
- //    			edge.remove(edge);
- //    			delete edge;
- //        }
+	bool remove_edge(const IdType& src, const IdType& dst){
 
- //    }
+		if(!vertices_in_graph(src, dst)){
+			throw std::invalid_argument("src or dst of the edge not in the graph");
+		}
 
+		/* Get hold of the wrappers */
+		NodeAL<IdType> * src_p = get_wrapper_p(src);
+		NodeAL<IdType> * dst_p = get_wrapper_p(dst);
 
+		/* If they are already not adjacent, nothing to remove*/
+		if(!adjacent(src_p, dst_p)){
+			throw std::invalid_argument("edge does not exist");
+		}
 
+		/* Erase the neighbour element. Should not fail
+		since we know they are adjacent */
+		src_p->neighbours.erase((find(src_p->neighbours.begin(), 
+			src_p->neighbours.end(), dst_p)));
 
-	// 	return true;
-	// }
+		return true;
+	}
 
 	void print_graph() {
 		for(auto node_p : this->adjacency_list){
@@ -233,10 +250,23 @@ private:
 		return false;
 	}
 
+	bool vertices_in_graph(const IdType& x, const IdType& y){
+		return (vertex_in_graph(x) && vertex_in_graph(y));
+	}
+
+	/* NOTE: Assumes x is in the graph */
 	NodeAL<IdType>* get_wrapper_p(const IdType& x){
 		return id_map.find(x)->second;
 	}
 
+	bool adjacent(const NodeAL<IdType> * src_p, 
+		const NodeAL<IdType> * dst_p){
+		if(find(src_p->neighbours.begin(), 
+			src_p->neighbours.end(), dst_p) != src_p->neighbours.end()){
+			return true;
+		}
+		return false;
+	}
 };
 
 /************************* NodeAL Class ****************************/

@@ -18,8 +18,21 @@ int main(){
 	g1.add_vertex("A");
 	g1.print_graph();
 
+	cout << "Add an edge from A to B\n";
 	g1.add_edge("A", "B");
 	g1.print_graph();
+
+	cout << "Is A adjacent to B?\n";
+	cout << g1.adjacent("A", "B") << endl;
+
+	cout << "Remove an edge from A to B\n";
+	g1.remove_edge("A", "B");
+	g1.print_graph();
+
+	cout << "Is A still adjacent to B?\n";
+	cout << g1.adjacent("A", "B") << endl;
+
+
 
 	// //BUG
 	// int a = 10;
