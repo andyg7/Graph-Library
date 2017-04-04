@@ -3,7 +3,9 @@
 CC=g++
 FLAGS= -fconcepts -std=c++1z -g -O2
 CURR_DIR= $(shell pwd)
-INCLUDE=
+GRAPH_LIB_DIR=/home/ubuntu/safe_dir/Graph-Library/new_src
+THIRD_PARTY_CODE= $(CURR_DIR)/../new_src/cmcstl2/include
+INCLUDE=-I$(THIRD_PARTY_CODE) -I$(GRAPH_LIB_DIR)
 EXE=main
 DEBUG_EXE=debug
 VALGRIND_TARGET=valgrind

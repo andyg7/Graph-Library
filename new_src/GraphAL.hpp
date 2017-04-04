@@ -8,6 +8,7 @@
 #include <map>
 #include <assert.h>
 #include <stdexcept>
+#include "graph_concepts.h"
 
 //typedef std::shared_ptr<IdType> IdPtr;
 // template <typename IdType>
@@ -20,10 +21,12 @@ using namespace std;
 template <typename IdType>
 class NodeAL;
 template <typename IdType>
+requires Comparable<IdType>
 class GraphAL;
 
 /************************* GraphAL Class ****************************/
 template <typename IdType>
+requires Comparable<IdType>
 class GraphAL{
 friend class NodeAL<IdType>;
 public:
