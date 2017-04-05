@@ -101,7 +101,7 @@ public:
 		for(auto node_p : adjacency_list){
 			if(node_p == nullptr) continue;
 			for(int i = 0; i < node_p->neighbours.size(); ++i){
-				if((node_p->neighbours[i]).first == node_p)
+				if((node_p->neighbours[i]).first == get_wrapper_p(x))
 					node_p->neighbours.erase(node_p->neighbours.begin() + i);
 			}
 		}

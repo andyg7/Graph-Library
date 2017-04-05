@@ -50,14 +50,24 @@ int main(){
 	cout << "Is A still adjacent to B?\n";
 	cout << g1.adjacent("A", "B") << endl;
 
+	cout << "Add edges A-B, A-C\n";
+	g1.add_edge("A", 1, "B");
+	g1.add_edge("A", 1, "C");
+	g1.print_graph();
+
+	cout << "Lets remove B and see if edge disappears\n";
+	g1.remove_vertex("B");
+	g1.print_graph();
+
+
 
 
 	// //BUG
 	// int a = 10;
 	// int b = 20;
-	// GraphAL<int> g2;
-	// g2.add_vertex(10);
-	// g2.add_vertex(20);
+	// GraphAL<int, int> g2;
+	// g2.add_vertex(a);
+	// g2.add_vertex(b);
 	// g2.print_graph();
 	// cout << "Hello world!\n";
 
