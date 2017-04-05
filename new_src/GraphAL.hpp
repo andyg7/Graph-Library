@@ -59,7 +59,7 @@ public:
 		return false;
 	}
 
-	bool add_vertex(IdType x){
+	bool add_vertex(const IdType& x){
 		
 		/* Check if the vertex is already in the graph */
 		if(id_map.find(x) != id_map.end()){
@@ -70,6 +70,9 @@ public:
 		NodeAL<IdType, WeightType>* vertex_p = 
 			new NodeAL<IdType, WeightType>(*this, x);
 		int internal_id = vertex_p->internal_id;
+
+		cout << "address of id: ";
+		cout << &x << endl;
 
 		//TODO: factor this out into a helper?
 		if(internal_id == next_unique_id - 1){
@@ -84,7 +87,8 @@ public:
 		return true;
 	}
 
-	bool remove_vertex(IdType x){
+
+	bool remove_vertex(const IdType& x){
 
 		/* Check if the vertex is not in the graph */
 		if(id_map.find(x) == id_map.end()){
@@ -271,13 +275,14 @@ friend class GraphAL<IdType, WeightType>;
 public:
 	/* Need to think about other constructors here a little */
 	/* Existance of NodeAL only makes sense in the context of a graph */
-	NodeAL(GraphAL<IdType, WeightType>& graph, IdType& user_id){
+	NodeAL(GraphAL<IdType, WeightType>& graph, const IdType& user_id){
 		/* Get the new internal id */
 		internal_id = graph.get_new_id();
 		
 		/* No neighbours yet, so empty vector */
 		//neighbours = vector<NodeAL<IdType, WeightType>*>();
-
+		cout << "address of id in constructor: ";
+		cout << &user_id << endl;
 		user_id_p = &user_id;
 	}
 
@@ -290,7 +295,7 @@ private:
 	vector<pair<NodeAL<IdType, WeightType>*, WeightType>> neighbours;
 	
 	/* Smart pointer to the user created object, my be comparable */
-	IdType* user_id_p;
+	const IdType* user_id_p;
 
 	bool operator==(const NodeAL& rhs){
 		return (*(this->user_id_p))==(*(rhs.user_id_p));
