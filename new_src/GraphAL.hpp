@@ -52,15 +52,7 @@ public:
 			throw std::invalid_argument("vertex not in the graph");
 		}
 
-		/* Get hold of the wrappers */
-		NodeAL<IdType, WeightType>* src_p = get_wrapper_p(src);
-		NodeAL<IdType, WeightType>* dst_p = get_wrapper_p(dst);
-
-		// if(find(src_p->neighbours.begin(), 
-		// 	src_p->neighbours.end(), dst_p) != src_p->neighbours.end()){
-		// 	return true;
-		// }
-		if(adjacent(src_p, dst_p)){
+		if(adjacent(get_wrapper_p(src), get_wrapper_p(dst))){
 			return true;
 		}
 
@@ -107,7 +99,7 @@ public:
 
 		/* Destroy incoming edges */
 		for(auto node_p : adjacency_list){
-			//TODO: BUG, node_p can equal to nullptr
+			if(node_p == nullptr) continue;
 			for(int i = 0; i < node_p->neighbours.size(); ++i){
 				if((node_p->neighbours[i]).first == node_p)
 					node_p->neighbours.erase(node_p->neighbours.begin() + i);
@@ -163,34 +155,7 @@ public:
 		src_p->neighbours.push_back(make_pair(dst_p, w));
 
 		return true;
-		/* @somya. there is no need to create an edge pbject here,
-		we can just the pointer to the neighbours of src */
-		// verifyExistingNode(n1, "addEdge");
-  //   	verifyExistingNode(n2, "addEdge");
-  //   	Edge* edge = getEdge(n1, n2);
-  //   	if (edge) {
-  //   	    return edge;
-  //   	} else {
-  //   	    edge = new Edge();
-  //   	    edge->start = n1;
-  //   	    edge->finish = n2;
-  //   	    return addEdge(edge);
-  //   	}
-
-		// return true;
 	}
-
-
-
-
-
-	// verify existing node
-	// bool verifyExistingNode(n1, "addEdge");
- //    	{	// returning true for now
- //    		return true;
- //    	}
-
-
 
 	bool remove_edge(const IdType& src, const IdType& dst){
 
