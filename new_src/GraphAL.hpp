@@ -8,6 +8,7 @@
 #include <map>
 #include <assert.h>
 #include <stdexcept>
+#include <utility>
 #include "graph_concepts.h"
 
 //typedef std::shared_ptr<IdType> IdPtr;
@@ -18,17 +19,17 @@
 
 using namespace std;
 
-template <typename IdType>
+template <typename IdType, typename WeightType>
 class NodeAL;
-template <typename IdType>
+template <typename IdType, typename WeightType>
 requires Comparable<IdType>
 class GraphAL;
 
 /************************* GraphAL Class ****************************/
-template <typename IdType>
+template <typename IdType, typename WeightType>
 requires Comparable<IdType>
 class GraphAL{
-friend class NodeAL<IdType>;
+friend class NodeAL<IdType, WeightType>;
 public:
 	/* Need to add more constructors such as list initialization here*/
 	GraphAL(){
@@ -52,16 +53,20 @@ public:
 		}
 
 		/* Get hold of the wrappers */
-		NodeAL<IdType> * src_p = get_wrapper_p(src);
-		NodeAL<IdType> * dst_p = get_wrapper_p(dst);
+		NodeAL<IdType, WeightType>* src_p = get_wrapper_p(src);
+		NodeAL<IdType, WeightType>* dst_p = get_wrapper_p(dst);
 
-		if(find(src_p->neighbours.begin(), 
-			src_p->neighbours.end(), dst_p) != src_p->neighbours.end()){
+		// if(find(src_p->neighbours.begin(), 
+		// 	src_p->neighbours.end(), dst_p) != src_p->neighbours.end()){
+		// 	return true;
+		// }
+		if(adjacent(src_p, dst_p)){
 			return true;
 		}
+
 		return false;
 	}
-	
+
 	bool add_vertex(IdType x){
 		
 		/* Check if the vertex is already in the graph */
@@ -70,7 +75,8 @@ public:
 		}
 
 		/* Create the wrapper and add it to adjacency list */
-		NodeAL<IdType>* vertex_p = new NodeAL<IdType>(*this, x);
+		NodeAL<IdType, WeightType>* vertex_p = 
+			new NodeAL<IdType, WeightType>(*this, x);
 		int internal_id = vertex_p->internal_id;
 
 		//TODO: factor this out into a helper?
@@ -103,7 +109,7 @@ public:
 		for(auto node_p : adjacency_list){
 			//TODO: BUG, node_p can equal to nullptr
 			for(int i = 0; i < node_p->neighbours.size(); ++i){
-				if(node_p->neighbours[i] == node_p)
+				if((node_p->neighbours[i]).first == node_p)
 					node_p->neighbours.erase(node_p->neighbours.begin() + i);
 			}
 		}
@@ -126,7 +132,14 @@ public:
 
 	/* notice how these functions avoid the adjacency list structure
 	in the graph all together*/
+	//TODO: figure out how to give a WeightType a default value
 	bool add_edge(const IdType& src, const IdType& dst){
+		throw std::invalid_argument("NEED DEFAULT VALUE DECISION HERE!");
+		return true;
+	}
+
+	bool add_edge(const IdType& src, const WeightType w, 
+		const IdType& dst){
 		/* All we need to do here is to add a pointer
 		to n2 to the neighbours of n1*/
 
@@ -136,8 +149,8 @@ public:
 		}
 
 		/* Get hold of the wrappers */
-		NodeAL<IdType> * src_p = get_wrapper_p(src);
-		NodeAL<IdType> * dst_p = get_wrapper_p(dst);
+		NodeAL<IdType, WeightType> * src_p = get_wrapper_p(src);
+		NodeAL<IdType, WeightType> * dst_p = get_wrapper_p(dst);
 
 		/* Check if the edge already exists, if it does, 
 		throw an exception */
@@ -147,7 +160,7 @@ public:
 
 		/* Now we are sure the edge is not already represented,
 		so lets just add it to the back of the vector */
-		src_p->neighbours.push_back(dst_p);
+		src_p->neighbours.push_back(make_pair(dst_p, w));
 
 		return true;
 		/* @somya. there is no need to create an edge pbject here,
@@ -186,8 +199,8 @@ public:
 		}
 
 		/* Get hold of the wrappers */
-		NodeAL<IdType> * src_p = get_wrapper_p(src);
-		NodeAL<IdType> * dst_p = get_wrapper_p(dst);
+		NodeAL<IdType, WeightType> * src_p = get_wrapper_p(src);
+		NodeAL<IdType, WeightType> * dst_p = get_wrapper_p(dst);
 
 		/* If they are already not adjacent, nothing to remove*/
 		if(!adjacent(src_p, dst_p)){
@@ -195,9 +208,12 @@ public:
 		}
 
 		/* Erase the neighbour element. Should not fail
-		since we know they are adjacent */
-		src_p->neighbours.erase((find(src_p->neighbours.begin(), 
-			src_p->neighbours.end(), dst_p)));
+		since we know they are adjacent. */
+		/* #readability */
+		src_p->neighbours.erase(find_if(src_p->neighbours.begin(), 
+		src_p->neighbours.end(),
+    	[&](const pair<NodeAL<IdType, WeightType>*, WeightType>& element)
+    		{return element.first == dst_p;}));
 
 		return true;
 	}
@@ -206,8 +222,8 @@ public:
 		for(auto node_p : this->adjacency_list){
 			if(node_p == nullptr) continue;
 			cout << *(node_p->user_id_p) << ": ";
-			for(auto neighbour_p : node_p->neighbours){
-				cout << *(neighbour_p->user_id_p) << " ";
+			for(auto edge : node_p->neighbours){
+				cout << *((edge.first)->user_id_p) << " ";
 			}
 			cout << endl;
 		}
@@ -220,9 +236,9 @@ private:
 	/* Vector of smart pointers to wrappers. This allows direct access
 	to the neighbours of the node from its wrapper. The penalty – vertex
 	removal */
-	vector<NodeAL<IdType>*> adjacency_list;
+	vector<NodeAL<IdType, WeightType>*> adjacency_list;
 	// Need this map to go from Node -> NodeAL
-	map<IdType, NodeAL<IdType>*> id_map;
+	map<IdType, NodeAL<IdType, WeightType>*> id_map;
 
 	/* Same idea as for GraphAM here */
 	long next_unique_id;
@@ -255,16 +271,27 @@ private:
 	}
 
 	/* NOTE: Assumes x is in the graph */
-	NodeAL<IdType>* get_wrapper_p(const IdType& x){
+	NodeAL<IdType, WeightType>* get_wrapper_p(const IdType& x){
 		return id_map.find(x)->second;
 	}
 
-	bool adjacent(const NodeAL<IdType> * src_p, 
-		const NodeAL<IdType> * dst_p){
-		if(find(src_p->neighbours.begin(), 
-			src_p->neighbours.end(), dst_p) != src_p->neighbours.end()){
+	bool adjacent(const NodeAL<IdType, WeightType> * src_p, 
+		const NodeAL<IdType, WeightType> * dst_p){
+		// if(find(src_p->neighbours.begin(), 
+		// 	src_p->neighbours.end(), dst_p) != src_p->neighbours.end()){
+		// 	return true;
+		// }
+
+		/* Lets findout if dst_p in in neghbours of src_p */
+		auto it = 
+		find_if(src_p->neighbours.begin(), 
+		src_p->neighbours.end(),
+    	[&](const pair<NodeAL<IdType, WeightType>*, WeightType>& element)
+    		{return element.first == dst_p;});
+
+		if(it != src_p->neighbours.end())
 			return true;
-		}
+		
 		return false;
 	}
 };
@@ -273,18 +300,18 @@ private:
 
 /* Adjacency list implementation node wrapper */
 //TODO: Need Comparable on ID type here
-template <typename IdType>
+template <typename IdType, typename WeightType>
 class NodeAL{
-friend class GraphAL<IdType>;
+friend class GraphAL<IdType, WeightType>;
 public:
 	/* Need to think about other constructors here a little */
 	/* Existance of NodeAL only makes sense in the context of a graph */
-	NodeAL(GraphAL<IdType>& graph, IdType& user_id){
+	NodeAL(GraphAL<IdType, WeightType>& graph, IdType& user_id){
 		/* Get the new internal id */
 		internal_id = graph.get_new_id();
 		
 		/* No neighbours yet, so empty vector */
-		neighbours = vector<NodeAL<IdType>*>();
+		//neighbours = vector<NodeAL<IdType, WeightType>*>();
 
 		user_id_p = &user_id;
 	}
@@ -292,8 +319,10 @@ public:
 private:
 	/* Necessary to distinguish the node within the graph*/
 	long internal_id;
-	/* This way, we avoid indexing into the adjacency list*/
-	vector<NodeAL<IdType>*> neighbours;
+
+	/* This way, we avoid indexing into the adjacency list */
+	/* For now, lets store the Weight by value */
+	vector<pair<NodeAL<IdType, WeightType>*, WeightType>> neighbours;
 	
 	/* Smart pointer to the user created object, my be comparable */
 	IdType* user_id_p;

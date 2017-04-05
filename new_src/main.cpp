@@ -4,7 +4,7 @@
 
 int main(){
 
-	GraphAL<string> g1;
+	GraphAL<string, int> g1;
 	g1.add_vertex("A");
 	g1.add_vertex("B");
 	g1.print_graph();
@@ -19,7 +19,7 @@ int main(){
 	g1.print_graph();
 
 	cout << "Add an edge from A to B\n";
-	g1.add_edge("A", "B");
+	g1.add_edge("A", 1, "B");
 	g1.print_graph();
 
 	cout << "Is A adjacent to B?\n";
@@ -29,8 +29,8 @@ int main(){
 	g1.remove_edge("A", "B");
 	g1.print_graph();
 
-	cout << "Is A still adjacent to B?\n";
-	cout << g1.adjacent("A", "B") << endl;
+	// cout << "Is A still adjacent to B?\n";
+	// cout << g1.adjacent("A", "B") << endl;
 
 
 
