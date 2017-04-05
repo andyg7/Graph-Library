@@ -4,11 +4,11 @@
 
 int main(){
 
-	Node<string, int> n1 = Node<string, int>("hello", nullptr);
-	Node<string, int> n2 = Node<string, int>("bye", nullptr);
-	Node<string, int> n3 = Node<string, int>("and", nullptr);
+	Node<string, int> n1 = Node<string, int>("A", nullptr);
+	Node<string, int> n2 = Node<string, int>("B", nullptr);
+	Node<string, int> n3 = Node<string, int>("C", nullptr);
 
-	Node<string, int>* n4_p = new Node<string, int>("if", nullptr);
+	Node<string, int>* n4_p = new Node<string, int>("D", nullptr);
 
 
 
@@ -20,6 +20,28 @@ int main(){
 	g1.add_vertex(*n4_p);
 
 	g1.print_graph();
+
+	cout << "add edges A-B and A-C\n";
+	g1.add_edge(n1, 1, n2);
+	g1.add_edge(n1, 1, n3);
+	g1.print_graph();
+
+	cout << "Remove C from the graph, should also remove the edge\n";
+	g1.remove_vertex(n3);
+	g1.print_graph();
+
+	cout << "Remove all vertices, and add them back\n";
+	g1.remove_vertex(n1);
+	g1.remove_vertex(*n4_p);
+	g1.remove_vertex(n2);
+	g1.print_graph();
+	cout << "And add back...\n";
+	g1.add_vertex(n1);
+	g1.add_vertex(n2);
+	g1.add_vertex(n3);
+	g1.add_vertex(*n4_p);
+	g1.print_graph();
+
 
 	// string a = "A";
 	// string b = "B";

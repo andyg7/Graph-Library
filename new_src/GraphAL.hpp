@@ -74,7 +74,7 @@ public:
 			new NodeAL<IdType, WeightType, DataType>(*this, x);
 		int internal_id = vertex_p->internal_id;
 
-		cout << "address of id: ";
+		cout << "address of the node: ";
 		cout << &x << endl;
 
 		//TODO: factor this out into a helper?
@@ -132,37 +132,37 @@ public:
 	/* notice how these functions avoid the adjacency list structure
 	in the graph all together*/
 	//TODO: figure out how to give a WeightType a default value
-	// bool add_edge(const IdType& src, const IdType& dst){
-	// 	throw std::invalid_argument("NEED DEFAULT VALUE DECISION HERE!");
-	// 	return true;
-	// }
+	bool add_edge(const Node<IdType, DataType>& src, const Node<IdType, DataType>& dst){
+		throw std::invalid_argument("NEED DEFAULT VALUE DECISION HERE!");
+		return true;
+	}
 
-	// bool add_edge(const IdType& src, const WeightType w, 
-	// 	const IdType& dst){
-	// 	/* All we need to do here is to add a pointer
-	// 	to n2 to the neighbours of n1*/
+	bool add_edge(const Node<IdType, DataType>& src, const WeightType w, 
+		const Node<IdType, DataType>& dst){
+		/* All we need to do here is to add a pointer
+		to n2 to the neighbours of n1*/
 
-	// 	/* First we need to check if the nodes are in the graph */
-	// 	if(!vertices_in_graph(src, dst)){
-	// 		throw std::invalid_argument("src or dst of the edge not in the graph");
-	// 	}
+		/* First we need to check if the nodes are in the graph */
+		if(!vertices_in_graph(src, dst)){
+			throw std::invalid_argument("src or dst of the edge not in the graph");
+		}
 
-	// 	/* Get hold of the wrappers */
-	// 	NodeAL<IdType, WeightType> * src_p = get_wrapper_p(src);
-	// 	NodeAL<IdType, WeightType> * dst_p = get_wrapper_p(dst);
+		/* Get hold of the wrappers */
+		NodeAL<IdType, WeightType, DataType> * src_p = get_wrapper_p(src);
+		NodeAL<IdType, WeightType, DataType> * dst_p = get_wrapper_p(dst);
 
-	// 	/* Check if the edge already exists, if it does, 
-	// 	throw an exception */
-	// 	if(adjacent(src_p, dst_p)){
-	// 		throw std::invalid_argument("edge already exists");
-	// 	}
+		/* Check if the edge already exists, if it does, 
+		throw an exception */
+		if(adjacent(src_p, dst_p)){
+			throw std::invalid_argument("edge already exists");
+		}
 
-	// 	 Now we are sure the edge is not already represented,
-	// 	so lets just add it to the back of the vector 
-	// 	src_p->neighbours.push_back(make_pair(dst_p, w));
+		/* Now we are sure the edge is not already represented,
+		so lets just add it to the back of the vector */
+		src_p->neighbours.push_back(make_pair(dst_p, w));
 
-	// 	return true;
-	// }
+		return true;
+	}
 
 	// bool remove_edge(const IdType& src, const IdType& dst){
 
@@ -231,41 +231,42 @@ private:
 		free_ids.push_back(internal_id);
 	}
 
-	bool vertex_in_graph(const IdType& x){
-		if(id_map.find(x) != id_map.end()){
+	bool vertex_in_graph(const Node<IdType,DataType>& x){
+		if(id_map.find(x.id) != id_map.end()){
 			return true;
 		}
 		return false;
 	}
 
-	bool vertices_in_graph(const IdType& x, const IdType& y){
+	bool vertices_in_graph(const Node<IdType, DataType>& x,
+	const Node<IdType, DataType>& y){
 		return (vertex_in_graph(x) && vertex_in_graph(y));
 	}
 
 	/* NOTE: Assumes x is in the graph */
-	// NodeAL<IdType, WeightType, DataType>* get_wrapper_p(const IdType& x){
-	// 	return id_map.find(x)->second;
-	// }
+	NodeAL<IdType, WeightType, DataType>* get_wrapper_p(const Node<IdType, DataType>& x){
+		return id_map.find(x.id)->second;
+	}
 
-	// bool adjacent(const NodeAL<IdType, WeightType> * src_p, 
-	// 	const NodeAL<IdType, WeightType> * dst_p){
-	// 	// if(find(src_p->neighbours.begin(), 
-	// 	// 	src_p->neighbours.end(), dst_p) != src_p->neighbours.end()){
-	// 	// 	return true;
-	// 	// }
+	bool adjacent(const NodeAL<IdType, WeightType, DataType> * src_p, 
+		const NodeAL<IdType, WeightType, DataType> * dst_p){
+		// if(find(src_p->neighbours.begin(), 
+		// 	src_p->neighbours.end(), dst_p) != src_p->neighbours.end()){
+		// 	return true;
+		// }
 
-	// 	 Lets findout if dst_p in in neghbours of src_p 
-	// 	auto it = 
-	// 	find_if(src_p->neighbours.begin(), 
-	// 	src_p->neighbours.end(),
- //    	[&](const pair<NodeAL<IdType, WeightType>*, WeightType>& element)
- //    		{return element.first == dst_p;});
+		/*Lets findout if dst_p in in neghbours of src_p */
+		auto it = 
+		find_if(src_p->neighbours.begin(), 
+		src_p->neighbours.end(),
+    	[&](const pair<NodeAL<IdType, WeightType, DataType>*, WeightType>& element)
+    		{return element.first == dst_p;});
 
-	// 	if(it != src_p->neighbours.end())
-	// 		return true;
+		if(it != src_p->neighbours.end())
+			return true;
 		
-	// 	return false;
-	// }
+		return false;
+	}
 };
 
 /************************* NodeAL Class ****************************/
