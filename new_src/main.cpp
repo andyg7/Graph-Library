@@ -1,141 +1,116 @@
 #include "GraphAL.hpp"
+#include "Graph.hpp"
 #include <string>
 #include <iostream>
 
 int main(){
 
-	Node<string, int> n1 = Node<string, int>("A", nullptr);
-	Node<string, int> n2 = Node<string, int>("B", nullptr);
-	Node<string, int> n3 = Node<string, int>("C", nullptr);
-
-	Node<string, int>* n4_p = new Node<string, int>("D", nullptr);
+	// Create the vertices
+	auto* n1 = create_node<string, int>("A", nullptr);
+	auto* n2 = create_node<string, int>("B", nullptr);
+	auto* n3 = create_node<string, int>("C", nullptr);
+	auto* n4 = create_node<string, int>("D", nullptr);
 
 
 
 
 	GraphAL<string, int, int> g1;
-	g1.add_vertex(n1);
-	g1.add_vertex(n2);
-	g1.add_vertex(n3);
-	g1.add_vertex(*n4_p);
-
+	g1.add_node(*n1);
+	g1.add_node(*n2);
+	g1.add_node(*n3);
+	g1.add_node(*n4);
 	g1.print_graph();
 
 	cout << "add edges A-B and A-C\n";
-	g1.add_edge(n1, 1, n2);
-	g1.add_edge(n1, 1, n3);
+	g1.add_edge(*n1, 1, *n2);
+	g1.add_edge(*n1, 1, *n3);
 	g1.print_graph();
 
 	cout << "Remove C from the graph, should also remove the edge\n";
-	g1.remove_vertex(n3);
+	g1.remove_node(*n3);
 	g1.print_graph();
 
 	cout << "Remove all vertices, and add them back\n";
-	g1.remove_vertex(n1);
-	g1.remove_vertex(*n4_p);
-	g1.remove_vertex(n2);
+	g1.remove_node(*n1);
+	g1.remove_node(*n4);
+	g1.remove_node(*n2);
 	g1.print_graph();
 	cout << "And add back...\n";
-	g1.add_vertex(n1);
-	g1.add_vertex(n2);
-	g1.add_vertex(n3);
-	g1.add_vertex(*n4_p);
+	g1.add_node(*n1);
+	g1.add_node(*n2);
+	g1.add_node(*n3);
+	g1.add_node(*n4);
 	g1.print_graph();
 
+	cout << "Add few edges\n";
+	g1.add_edge(*n1, 1, *n2);
+	g1.add_edge(*n1, 1, *n3);
+	g1.add_edge(*n4, 1, *n3);
+	g1.add_edge(*n3, 1, *n4);
+	g1.print_graph();
 
-	// string a = "A";
-	// string b = "B";
-	// string c = "C";
+	cout << "Remove few edges\n";
+	g1.remove_edge(*n1, *n2);
+	g1.remove_edge(*n4, *n3);
+	g1.print_graph();
 
-	// GraphAL<string, int> g1;
-	// g1.add_vertex(a);
-	// g1.add_vertex(b);
-	// g1.print_graph();
-	// cout << "Hello world!\n";
+	cout << "Add an Edge if you know what i mean\n";
+	auto * e1 = create_edge<string, int, int>(*n2, 7, *n3);
+	g1.add_edge(*e1);
+	g1.print_graph();
 
-	// cout << "Add C through a variable\n";
-	// g1.add_vertex(c);
-	// g1.print_graph();
- 
-	// cout << "Removing vertex A and C\n";
-	// g1.remove_vertex(a);
-	// g1.remove_vertex(c);
-	// g1.print_graph();
+	cout << "Is B adjacent to C?\n";
+	cout << g1.adjacent(*n2, *n3) << endl;
+	cout << "Is C adjacent to B?\n";
+	cout << g1.adjacent(*n3, *n2) << endl;
 
-	// cout << "Add them in inverse order, represenation shoud be\n";
-	// cout << "the same since stack of unique ids\n";
-	// g1.add_vertex(c);
-	// g1.add_vertex(a);
 
-	// g1.print_graph();
-
-	// cout << "Add vertex A again, should catch an exception\n";
 	
-	// try{
-	// 	g1.add_vertex(a);
-	// 	g1.print_graph();
-	// }catch(...){
-	// 	cout << "exception caught\n";
-	// }
-
-	// cout << "Add an edge from A to B\n";
-	// g1.add_edge(a, 1, b);
-	// g1.print_graph();
-
-	// cout << "Is A adjacent to B?\n";
-	// cout << g1.adjacent(a, b) << endl;
-
-	// cout << "Remove an edge from A to B\n";
-	// g1.remove_edge(a, b);
-	// g1.print_graph();
-
-	// cout << "Is A still adjacent to B?\n";
-	// cout << g1.adjacent(a, b) << endl;
-
-	// cout << "Add edges A-B, A-C\n";
-	// g1.add_edge(a, 1, b);
-	// g1.add_edge(a, 1, c);
-	// g1.print_graph();
-
-	// cout << "Lets remove B and see if edge disappears\n";
-	// g1.remove_vertex(b);
-	// g1.print_graph();
 
 
-	// char a1 = 'A';
-	// char b1 = 'B';
-	// GraphAL<char, int> g2;
-	// g2.add_vertex(a1);
-	// g2.add_vertex(b1);
-	// g2.print_graph();
-	// cout << "Hello world!\n";
+	// WHAT WE TALKED ABOUT BELOW 
 
+	// Node<string, int> n1 = Node<string, int>("A", );
+	// Node<string, int> n2 = Node<string, int>("B", nullptr);
+	// Node<string, int> n3 = Node<string, int>("C", nullptr);
 
-	// int n1 = 1;
-	// int n2 = 2;
-	// int n3 = 3;
+// 	create_graph(types)
+// 	auto n1 = create_vertex(types, city.id, &City("nyc", 100)); // somewhere on the heap
+// 	auto n2 = create_vertex(types, city.id, &city);
+// 	auto n3 = n1;
 
-	// GraphAL<int, int> g3;
-	// g3.add_vertex(n1);
-	// g3.add_vertex(n2);
-	// g3.add_vertex(n3);
+// 	vector<Nodes> = create_vertices(vector<Cars>);
 
-	// g3.add_edge(n1, 1, n2);
-	// g3.add_edge(n1, 1, n3);
-	// g3.add_edge(n2, 1, n1);
+// 	g1.add(n1);
+// 	g2.add(n3);  
 
-	// g3.print_graph();
+// 	auto e1 = create_edge(types, n1, n2);
+// 	g1.add_edge(e1);
+// 	g2.add_edge(e2);
 
-	// // Uncoment the code below to expose the problem
-	// cout << "graph created using constants\n";
-	// GraphAL<int, int> g4;
-	// g4.add_vertex(1);
-	// g4.add_vertex(2);
-	// g4.add_vertex(3);
-	// g4.print_graph();
+// 	Car* my_car = new Car("389983", "Volvol", "red", 1000);
+// 	Car* your_car = copy(my_car);
+// 	g1.add(id, my_car);
+// 	g2.add(id, my_car);
 
 
 
+// 	Node<string, int>* n4_p = new Node<string, int>("D", nullptr);
+// 	foo(g1);
+
+// }
+
+
+
+// 	add(shared_ptr<type> newNOde) {
+// 		wrapepr = new wrapper.
+// 		wrapper.dat a= newNOde;
+
+// 	}
+
+// 	void foo(Graph g) {
+// 		access n1;
+// 	}
 
 
 

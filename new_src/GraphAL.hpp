@@ -1,5 +1,5 @@
-#ifndef GRAPH_AL
-#define GRAPH_AL
+#ifndef GRAPH_AL_H
+#define GRAPH_AL_H
 
 #include <iostream>
 #include <algorithm>
@@ -9,7 +9,9 @@
 #include <assert.h>
 #include <stdexcept>
 #include <utility>
+
 #include "graph_concepts.h"
+#include "Graph.hpp"
 
 //typedef std::shared_ptr<IdType> IdPtr;
 // template <typename IdType>
@@ -24,8 +26,6 @@ class NodeAL;
 template <typename IdType, typename WeightType, typename DataType>
 requires Comparable<IdType>
 class GraphAL;
-template <typename IdType, typename DataType>
-class Node;
 
 
 /************************* GraphAL Class ****************************/
@@ -49,20 +49,20 @@ public:
 /* 	TODO: For these we need to decide what we do if the operation 
  *	is already true. ex. add_vertex when the vertex is already there.
  *	Exception? return false? */
-	// bool adjacent(const IdType& src, const IdType& dst){
+	bool adjacent(const Node<IdType, DataType>& src, const Node<IdType, DataType>& dst){
 
-	// 	if(!vertices_in_graph(src, dst)){
-	// 		throw std::invalid_argument("vertex not in the graph");
-	// 	}
+		if(!vertices_in_graph(src, dst)){
+			throw std::invalid_argument("vertex not in the graph");
+		}
 
-	// 	if(adjacent(get_wrapper_p(src), get_wrapper_p(dst))){
-	// 		return true;
-	// 	}
+		if(adjacent(get_wrapper_p(src), get_wrapper_p(dst))){
+			return true;
+		}
 
-	// 	return false;
-	// }
+		return false;
+	}
 
-	bool add_vertex(const Node<IdType, DataType>& x){
+	bool add_node(const Node<IdType, DataType>& x){
 		
 		/* Check if the vertex is already in the graph */
 		if(id_map.find(x.id) != id_map.end()){
@@ -73,9 +73,6 @@ public:
 		NodeAL<IdType, WeightType, DataType>* vertex_p = 
 			new NodeAL<IdType, WeightType, DataType>(*this, x);
 		int internal_id = vertex_p->internal_id;
-
-		cout << "address of the node: ";
-		cout << &x << endl;
 
 		//TODO: factor this out into a helper?
 		if(internal_id == next_unique_id - 1){
@@ -91,7 +88,7 @@ public:
 	}
 
 
-	bool remove_vertex(const Node<IdType, DataType>& x){
+	bool remove_node(const Node<IdType, DataType>& x){
 
 		/* Check if the vertex is not in the graph */
 		if(id_map.find(x.id) == id_map.end()){
@@ -137,6 +134,10 @@ public:
 		return true;
 	}
 
+	bool add_edge(Edge<IdType, WeightType, DataType>& e){
+		return add_edge(*e.src, e.w, *e.dst);
+	}
+
 	bool add_edge(const Node<IdType, DataType>& src, const WeightType w, 
 		const Node<IdType, DataType>& dst){
 		/* All we need to do here is to add a pointer
@@ -164,38 +165,40 @@ public:
 		return true;
 	}
 
-	// bool remove_edge(const IdType& src, const IdType& dst){
+	bool remove_edge(const Node<IdType, DataType>& src,
+		const Node<IdType, DataType>& dst){
 
-	// 	if(!vertices_in_graph(src, dst)){
-	// 		throw std::invalid_argument("src or dst of the edge not in the graph");
-	// 	}
+		if(!vertices_in_graph(src, dst)){
+			throw std::invalid_argument("src or dst of the edge not in the graph");
+		}
 
-	// 	/* Get hold of the wrappers */
-	// 	NodeAL<IdType, WeightType> * src_p = get_wrapper_p(src);
-	// 	NodeAL<IdType, WeightType> * dst_p = get_wrapper_p(dst);
+		/* Get hold of the implementation wrappers */
+		NodeAL<IdType, WeightType, DataType> * src_p = get_wrapper_p(src);
+		NodeAL<IdType, WeightType, DataType> * dst_p = get_wrapper_p(dst);
 
-	// 	/* If they are already not adjacent, nothing to remove*/
-	// 	if(!adjacent(src_p, dst_p)){
-	// 		throw std::invalid_argument("edge does not exist");
-	// 	}
+		/* If they are already not adjacent, nothing to remove*/
+		if(!adjacent(src_p, dst_p)){
+			throw std::invalid_argument("edge does not exist");
+		}
 
-	// 	/* Erase the neighbour element. Should not fail
-	// 	since we know they are adjacent. */
-	// 	/* #readability */
-	// 	src_p->neighbours.erase(find_if(src_p->neighbours.begin(), 
-	// 	src_p->neighbours.end(),
- //    	[&](const pair<NodeAL<IdType, WeightType>*, WeightType>& element)
- //    		{return element.first == dst_p;}));
+		/* Erase the neighbour element. Should not fail
+		since we know they are adjacent. */
+		/* #readability */
+		src_p->neighbours.erase(find_if(src_p->neighbours.begin(), 
+		src_p->neighbours.end(),
+    	[&](const pair<NodeAL<IdType, WeightType, DataType>*, WeightType>& element)
+    		{return element.first == dst_p;}));
 
-	// 	return true;
-	// }
+		return true;
+	}
 
 	void print_graph() {
 		for(auto node_p : this->adjacency_list){
 			if(node_p == nullptr) continue;
-			cout << (node_p->user_node_p->id) << ": ";
+			cout << (node_p->user_node_p->id) << "-> ";
 			for(auto edge : node_p->neighbours){
-				cout << (edge.first)->user_node_p->id << " ";
+				cout << "(" << (edge.first)->user_node_p->id << 
+				":" << edge.second << "), ";
 			}
 			cout << endl;
 		}
@@ -250,10 +253,6 @@ private:
 
 	bool adjacent(const NodeAL<IdType, WeightType, DataType> * src_p, 
 		const NodeAL<IdType, WeightType, DataType> * dst_p){
-		// if(find(src_p->neighbours.begin(), 
-		// 	src_p->neighbours.end(), dst_p) != src_p->neighbours.end()){
-		// 	return true;
-		// }
 
 		/*Lets findout if dst_p in in neghbours of src_p */
 		auto it = 
@@ -309,56 +308,4 @@ private:
 	}
 };
 
-template <typename IdType, typename DataType>
-class Node{
-	IdType id;
-	DataType* data;
-	/* We can add other bookeeping field here to boost
-	performace of some algorithms */
-	Node(IdType id, DataType* data){
-		this->id = id;
-		this->data = data;
-	}
-
-	bool operator==(const Node& rhs){
-		return (this->id==rhs.id);
-	}
-
-};
-
-
-// class Edge {
-// public:
-//     NodeAL* start;    // edge's starting vertex (required by Graph)
-//     NodeAL* finish;   // edge's ending vertex (required by Graph)
-//     double cost;      // edge weight (required by Graph)
-//     double& weight;   // alias of cost; they are the same field
-//     bool visited;     // whether this edge has been visited before (initally false; you can set this)
-
-//     Edge(Vertex* start = nullptr, NodeAL* finish = nullptr, double cost = 0.0) : start(start),
-//     finish(finish), cost(cost), weight(this->cost)
-//     {
-//     this->extraData = nullptr;
-//     this->resetData();
-//     }
-
-//     /*
-//      * Frees up any memory dynamically allocated by this edge.
-//      */
-// 	~Edge() {
-//     if (this->extraData != nullptr) {
-//         // delete this->extraData;
-//     	}
-// 	}
-
-
-//     /*
-//      * Wipes the supplementary data of this vertex back to its initial state.
-//      * Specifically, sets visited to false.
-//      */
-//     void resetData(){
-//     	this->visited = false;
-//     }
-
-// };
 #endif

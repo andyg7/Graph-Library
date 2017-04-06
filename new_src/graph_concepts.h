@@ -108,33 +108,33 @@ requires (V v1, V v2) {
    Edge concept
    Must consist of two fields v1 v2, each of which are vertices
  */
-template<typename E>
-concept bool Edge =
-requires (E e1, E e2) {
-	e1.v1;
-	e1.v2;
-	e1.cost;
-	typename E::vertex_type;	
-	typename E::cost_type;	
-	{ e1.v1 } -> typename E::vertex_type;
-	{ e1.v2 } -> typename E::vertex_type;
-	{ e1.cost } -> typename E::cost_type;
+// template<typename E>
+// concept bool Edge =
+// requires (E e1, E e2) {
+// 	e1.v1;
+// 	e1.v2;
+// 	e1.cost;
+// 	typename E::vertex_type;	
+// 	typename E::cost_type;	
+// 	{ e1.v1 } -> typename E::vertex_type;
+// 	{ e1.v2 } -> typename E::vertex_type;
+// 	{ e1.cost } -> typename E::cost_type;
 
-	requires Vertex<typename E::vertex_type>;	
-	requires Numeric<typename E::cost_type>;
+// 	requires Vertex<typename E::vertex_type>;	
+// 	requires Numeric<typename E::cost_type>;
 
-	requires std::experimental::ranges::Assignable<E&, E>();
-	requires std::experimental::ranges::Constructible<E>();
-	requires std::experimental::ranges::Copyable<E>();
-	requires std::experimental::ranges::Movable<E>();
-};
+// 	requires std::experimental::ranges::Assignable<E&, E>();
+// 	requires std::experimental::ranges::Constructible<E>();
+// 	requires std::experimental::ranges::Copyable<E>();
+// 	requires std::experimental::ranges::Movable<E>();
+// };
 
-template<typename E>
-concept bool Edge_ptr =
-requires (E e1, E e2) {
-	typename E::element_type;
-	requires Edge<typename E::element_type>;
-};
+// template<typename E>
+// concept bool Edge_ptr =
+// requires (E e1, E e2) {
+// 	typename E::element_type;
+// 	requires Edge<typename E::element_type>;
+// };
 
 template<typename E, typename V>
 concept bool Matching_vertices_edges =
