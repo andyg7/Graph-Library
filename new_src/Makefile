@@ -1,7 +1,7 @@
 #Andrew's Makefile
 
 CC=g++
-FLAGS= -fconcepts -std=c++1z -g -O2
+FLAGS= -fconcepts -std=c++1z -g
 CURR_DIR= $(shell pwd)
 GRAPH_LIB_DIR=/home/ubuntu/safe_dir/Graph-Library/new_src
 THIRD_PARTY_CODE= $(CURR_DIR)/../new_src/cmcstl2/include

@@ -1,6 +1,8 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
+#include <iostream>
+using namespace std;
 
 /* THE TODO LIST 
 1) Fix the move, assignment adn copy constructors of Node.
@@ -48,9 +50,23 @@ void delete_node(Node<IdType, DataType>& node){
 
 template <typename IdType, typename WeightType, typename DataType>
 class Edge{
-	const Node<IdType, DataType>* src;
-	const Node<IdType, DataType>* dst;
-	WeightType w;
+public:
+
+	const Node<IdType, DataType>* get_src() const {
+		return src;
+	}
+
+	const Node<IdType, DataType>* get_dst() const {
+		return dst;
+	}
+
+	WeightType get_weight() const {
+		return w;
+	}
+
+	WeightType set_weight(WeightType new_w){
+		w = new_w;
+	}
 
 	Edge(const Node<IdType, DataType>& src, WeightType w,
 	 const Node<IdType, DataType>& dst){
@@ -58,6 +74,11 @@ class Edge{
 		this->dst = &dst;
 		this->w = w;
 	}
+
+private:
+	const Node<IdType, DataType>* src;
+	const Node<IdType, DataType>* dst;
+	WeightType w;
 };
 
 template <typename IdType, typename DataType>

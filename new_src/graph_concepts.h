@@ -5,13 +5,13 @@
 /*
    The included files from here...
  */
-#include <stl2/detail/concepts/object.hpp>
-#include <stl2/detail/fwd.hpp>
-#include <stl2/detail/meta.hpp>
-#include <stl2/detail/concepts/core.hpp>
-#include <stl2/detail/concepts/object/assignable.hpp>
-#include <stl2/detail/concepts/object/regular.hpp>
-#include <stl2/iterator.hpp>
+//#include <stl2/detail/concepts/object.hpp> *compiles
+//#include <stl2/detail/fwd.hpp> does not
+//#include <stl2/detail/meta.hpp> does not
+//#include <stl2/detail/concepts/core.hpp> does not
+//#include <stl2/detail/concepts/object/assignable.hpp> compiles
+//#include <stl2/detail/concepts/object/regular.hpp> *compiles
+//#include <stl2/iterator.hpp> *compiles 
 /*
    ... to here are from https://github.com/CaseyCarter/cmcstl2
  */
@@ -61,15 +61,15 @@ requires (A a, B b) {
 	{ b } -> A;
 };
 
-template<typename T>
-concept bool Sequence =
-requires(T t) {
-	typename T::value_type;
-	typename T::iterator;
-	{ begin(t) } -> typename T::iterator;
-	{ end(t) } -> typename T::iterator;
-	requires std::experimental::ranges::Iterator<typename T::iterator>();
-};
+// template<typename T>
+// concept bool Sequence =
+// requires(T t) {
+// 	typename T::value_type;
+// 	typename T::iterator;
+// 	{ begin(t) } -> typename T::iterator;
+// 	{ end(t) } -> typename T::iterator;
+// 	requires std::experimental::ranges::Iterator<typename T::iterator>();
+// };
 
 /*
    Vertex concept
@@ -80,10 +80,10 @@ concept bool Vertex =
 requires (V v1, V v2) {
 	v1.vertex_id;
 	{ v1 == v2 } -> bool;
-	requires std::experimental::ranges::Assignable<V&, V>();
-	requires std::experimental::ranges::Constructible<V>();
-	requires std::experimental::ranges::Copyable<V>();
-	requires std::experimental::ranges::Movable<V>();
+	// requires std::experimental::ranges::Assignable<V&, V>();
+	// requires std::experimental::ranges::Constructible<V>();
+	// requires std::experimental::ranges::Copyable<V>();
+	// requires std::experimental::ranges::Movable<V>();
 };
 
 template<typename V>
@@ -184,13 +184,13 @@ requires (G g) {
 	typename G::element_type::underlying_data_type;
 
 	{ g->underlying_data } -> typename G::element_type::underlying_data_type;
-	requires Sequence<typename G::element_type::underlying_data_type>
+	//requires Sequence<typename G::element_type::underlying_data_type>
 	requires Same_type<typename G::element_type::edge_type::vertex_type, typename G::element_type::vertex_type>;
 
-	requires std::experimental::ranges::Constructible<typename G::element_type>();
-	requires std::experimental::ranges::Assignable<typename G::element_type&, typename G::element_type>();
-	requires std::experimental::ranges::Copyable<typename G::element_type>();
-	requires std::experimental::ranges::Movable<typename G::element_type>();
+	// requires std::experimental::ranges::Constructible<typename G::element_type>();
+	// requires std::experimental::ranges::Assignable<typename G::element_type&, typename G::element_type>();
+	// requires std::experimental::ranges::Copyable<typename G::element_type>();
+	// requires std::experimental::ranges::Movable<typename G::element_type>();
 };
 
 /*

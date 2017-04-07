@@ -3,19 +3,28 @@
 #include <string>
 #include <iostream>
 
+#include "graph_concepts.h"
+
+
+// class PrivateMF{
+// private:
+// 	int priv;
+// public:
+// 	PrivateMF(int a){ priv = a;}
+
+// };
 
 int main(){
+
+	// auto x = PrivateMF(3);
+	// x.priv = 17;
+
 
 	//Create the vertices
 	auto n1 = create_node<string, int>("A", nullptr);
 	auto n2 = create_node<string, int>("B", nullptr);
 	auto n3 = create_node<string, int>("C", nullptr);
 	auto n4 = create_node<string, int>("D", nullptr);
-
-	cout << n5.id << " and " << n4.id <<endl;
-
-
-
 
 	GraphAL<string, int, int> g1;
 	g1.add_node(n1);
@@ -76,55 +85,6 @@ int main(){
 	print_nodes<string, int>(v);
 
 	// auto n1 = create_node<string, int>("A", nullptr);
-
-
-	
-
-
-	// WHAT WE TALKED ABOUT BELOW 
-
-	// Node<string, int> n1 = Node<string, int>("A", );
-	// Node<string, int> n2 = Node<string, int>("B", nullptr);
-	// Node<string, int> n3 = Node<string, int>("C", nullptr);
-
-// 	create_graph(types)
-// 	auto n1 = create_vertex(types, city.id, &City("nyc", 100)); // somewhere on the heap
-// 	auto n2 = create_vertex(types, city.id, &city);
-// 	auto n3 = n1;
-
-// 	vector<Nodes> = create_vertices(vector<Cars>);
-
-// 	g1.add(n1);
-// 	g2.add(n3);  
-
-// 	auto e1 = create_edge(types, n1, n2);
-// 	g1.add_edge(e1);
-// 	g2.add_edge(e2);
-
-// 	Car* my_car = new Car("389983", "Volvol", "red", 1000);
-// 	Car* your_car = copy(my_car);
-// 	g1.add(id, my_car);
-// 	g2.add(id, my_car);
-
-
-
-// 	Node<string, int>* n4_p = new Node<string, int>("D", nullptr);
-// 	foo(g1);
-
-// }
-
-
-
-// 	add(shared_ptr<type> newNOde) {
-// 		wrapepr = new wrapper.
-// 		wrapper.dat a= newNOde;
-
-// 	}
-
-// 	void foo(Graph g) {
-// 		access n1;
-// 	}
-
 
 
 	return 0;
