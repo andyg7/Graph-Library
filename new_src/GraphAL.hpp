@@ -41,18 +41,33 @@ public:
 	}
 
 	// Function return the neighbours of the node
-	// vector<shared_ptr<NodeAL<IdType>>>& neighbours(IdType& src){
-	// 	Pointer<NodeAL> _src = id_map.find(src.id);
-	// 	return _src->neighbours;
-	// }
+	vector<const Node<IdType, DataType>*> neighbours(const Node<IdType, DataType>& src){
+
+		/* Check if the node is in the graph */
+		if(!node_in_graph(src))
+			throw std::invalid_argument("node not in the graph");
+
+		/* Get the vector of neighbours that is stored in the wrapper */
+		auto edges = get_wrapper_p(src)->neighbours;
+		vector<const Node<IdType, DataType>*> temp;
+
+		/* Get the pointers to all the edges */
+		for(auto edge : edges){
+			/* There is an implicit cast here */
+			temp.push_back((edge.first)->user_node_p);
+		}
+
+		/* RVO should be performed her */
+		return temp;
+	}
 
 /* 	TODO: For these we need to decide what we do if the operation 
  *	is already true. ex. add_vertex when the vertex is already there.
  *	Exception? return false? */
 	bool adjacent(const Node<IdType, DataType>& src, const Node<IdType, DataType>& dst){
 
-		if(!vertices_in_graph(src, dst)){
-			throw std::invalid_argument("vertex not in the graph");
+		if(!nodes_in_graph(src, dst)){
+			throw std::invalid_argument("node not in the graph");
 		}
 
 		if(adjacent(get_wrapper_p(src), get_wrapper_p(dst))){
@@ -65,8 +80,8 @@ public:
 	bool add_node(const Node<IdType, DataType>& x){
 		
 		/* Check if the vertex is already in the graph */
-		if(id_map.find(x.id) != id_map.end()){
-			throw std::invalid_argument("vertex already added");
+		if(node_in_graph(x)){
+			throw std::invalid_argument("node already added");
 		}
 
 		/* Create the wrapper and add it to adjacency list */
@@ -92,7 +107,7 @@ public:
 
 		/* Check if the vertex is not in the graph */
 		if(id_map.find(x.id) == id_map.end()){
-			throw std::invalid_argument("vertex not in the graph");
+			throw std::invalid_argument("node not in the graph");
 		}
 
 		/* Get the internal id of the wrapper of x */
@@ -144,7 +159,7 @@ public:
 		to n2 to the neighbours of n1*/
 
 		/* First we need to check if the nodes are in the graph */
-		if(!vertices_in_graph(src, dst)){
+		if(!nodes_in_graph(src, dst)){
 			throw std::invalid_argument("src or dst of the edge not in the graph");
 		}
 
@@ -168,7 +183,7 @@ public:
 	bool remove_edge(const Node<IdType, DataType>& src,
 		const Node<IdType, DataType>& dst){
 
-		if(!vertices_in_graph(src, dst)){
+		if(!nodes_in_graph(src, dst)){
 			throw std::invalid_argument("src or dst of the edge not in the graph");
 		}
 
@@ -234,16 +249,16 @@ private:
 		free_ids.push_back(internal_id);
 	}
 
-	bool vertex_in_graph(const Node<IdType,DataType>& x){
+	bool node_in_graph(const Node<IdType,DataType>& x){
 		if(id_map.find(x.id) != id_map.end()){
 			return true;
 		}
 		return false;
 	}
 
-	bool vertices_in_graph(const Node<IdType, DataType>& x,
+	bool nodes_in_graph(const Node<IdType, DataType>& x,
 	const Node<IdType, DataType>& y){
-		return (vertex_in_graph(x) && vertex_in_graph(y));
+		return (node_in_graph(x) && node_in_graph(y));
 	}
 
 	/* NOTE: Assumes x is in the graph */
