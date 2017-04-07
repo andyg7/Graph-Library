@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 
+
 int main(){
 
 	//Create the vertices
@@ -10,6 +11,8 @@ int main(){
 	auto n2 = create_node<string, int>("B", nullptr);
 	auto n3 = create_node<string, int>("C", nullptr);
 	auto n4 = create_node<string, int>("D", nullptr);
+
+	cout << n5.id << " and " << n4.id <<endl;
 
 
 

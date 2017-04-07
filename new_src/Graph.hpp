@@ -21,9 +21,14 @@ class Edge;
 
 /* If we offer this one, we shuld make sure user cannot create a Node using the constructor i.e
    we need to rewrite this function if we decide to go with it */
+// template <typename IdType, typename DataType>
+// Node<IdType, DataType>& create_node(IdType id, DataType* data){
+// 	return *(new Node<IdType, DataType>(id, data)); 
+// }
+
 template <typename IdType, typename DataType>
 Node<IdType, DataType>& create_node(IdType id, DataType* data){
-	return *(new Node<IdType, DataType>(id, data)); 
+		return Node<IdType, DataType>::create_node(id, data);
 }
 
 template <typename IdType, typename WeightType, typename DataType>
@@ -57,15 +62,19 @@ class Edge{
 
 template <typename IdType, typename DataType>
 class Node{
+
+private:
 	IdType id;
 	DataType* data;
-	/* We can add other bookeeping field here to boost
-	performace of some algorithms */
 	Node(IdType id, DataType* data){
 		this->id = id;
 		this->data = data;
 	}
 
+public:
+
+	/* We can add other bookeeping field here to boost
+	performace of some algorithms */
 	IdType get_key() const {
 		return this->id;
 	}
@@ -80,6 +89,10 @@ class Node{
 
 	void print_node() const {
 		cout << get_key();
+	}
+
+	static Node<IdType, DataType>& create_node(IdType id, DataType* data){
+		return *(new Node<IdType, DataType>(id, data));
 	}
 
 };
