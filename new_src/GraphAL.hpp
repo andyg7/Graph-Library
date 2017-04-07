@@ -41,7 +41,7 @@ public:
 	}
 
 	// Function return the neighbours of the node
-	vector<const Node<IdType, DataType>*> neighbours(const Node<IdType, DataType>& src){
+	vector<const Node<IdType, DataType>*> neighbours(const Node<IdType, DataType>* src){
 
 		/* Check if the node is in the graph */
 		if(!node_in_graph(src))
@@ -64,7 +64,7 @@ public:
 /* 	TODO: For these we need to decide what we do if the operation 
  *	is already true. ex. add_vertex when the vertex is already there.
  *	Exception? return false? */
-	bool adjacent(const Node<IdType, DataType>& src, const Node<IdType, DataType>& dst){
+	bool adjacent(const Node<IdType, DataType>* src, const Node<IdType, DataType>* dst){
 
 		if(!nodes_in_graph(src, dst)){
 			throw std::invalid_argument("node not in the graph");
@@ -77,7 +77,7 @@ public:
 		return false;
 	}
 
-	bool add_node(const Node<IdType, DataType>& x){
+	bool add_node(const Node<IdType, DataType>* x){
 		
 		/* Check if the vertex is already in the graph */
 		if(node_in_graph(x)){
@@ -86,7 +86,7 @@ public:
 
 		/* Create the wrapper and add it to adjacency list */
 		NodeAL<IdType, WeightType, DataType>* vertex_p = 
-			new NodeAL<IdType, WeightType, DataType>(*this, x);
+			new NodeAL<IdType, WeightType, DataType>(this, x);
 		int internal_id = vertex_p->internal_id;
 
 		//TODO: factor this out into a helper?
@@ -97,13 +97,13 @@ public:
 		}
 		
 		/* Add the new mapping into the map */
-		id_map[x.get_key()] = vertex_p;
-		assert(id_map.find(x.get_key())->second == vertex_p); //ASSERT
+		id_map[x->get_key()] = vertex_p;
+		assert(id_map.find(x->get_key())->second == vertex_p); //ASSERT
 		return true;
 	}
 
 
-	bool remove_node(const Node<IdType, DataType>& x){
+	bool remove_node(const Node<IdType, DataType>* x){
 
 		/* Check if the vertex is not in the graph */
 		if(!node_in_graph(x)){
@@ -111,7 +111,7 @@ public:
 		}
 
 		/* Get the internal id of the wrapper of x */
-		int internal_id = id_map.find(x.get_key())->second->internal_id;
+		int internal_id = id_map.find(x->get_key())->second->internal_id;
 
 		/* Remove all outgoing endes from the vertex */
 		adjacency_list[internal_id]->neighbours.clear();
@@ -137,24 +137,24 @@ public:
 		return_id(internal_id);
 
 		/* Erase the vertex from the wrapper map */
-		id_map.erase(x.get_key());
+		id_map.erase(x->get_key());
 		return true;
 	}
 
 	/* notice how these functions avoid the adjacency list structure
 	in the graph all together*/
 	//TODO: figure out how to give a WeightType a default value
-	bool add_edge(const Node<IdType, DataType>& src, const Node<IdType, DataType>& dst){
+	bool add_edge(const Node<IdType, DataType>* src, const Node<IdType, DataType>* dst){
 		throw std::invalid_argument("NEED DEFAULT VALUE DECISION HERE!");
 		return true;
 	}
 
-	bool add_edge(Edge<IdType, WeightType, DataType>& e){
-		return add_edge(*e.get_src(), e.get_weight(), *e.get_dst());
+	bool add_edge(Edge<IdType, WeightType, DataType>* e){
+		return add_edge(e->get_src(), e->get_weight(), e->get_dst());
 	}
 
-	bool add_edge(const Node<IdType, DataType>& src, const WeightType w, 
-		const Node<IdType, DataType>& dst){
+	bool add_edge(const Node<IdType, DataType>* src, const WeightType w, 
+		const Node<IdType, DataType>* dst){
 		/* All we need to do here is to add a pointer
 		to n2 to the neighbours of n1*/
 
@@ -180,8 +180,8 @@ public:
 		return true;
 	}
 
-	bool remove_edge(const Node<IdType, DataType>& src,
-		const Node<IdType, DataType>& dst){
+	bool remove_edge(const Node<IdType, DataType>* src,
+		const Node<IdType, DataType>* dst){
 
 		if(!nodes_in_graph(src, dst)){
 			throw std::invalid_argument("src or dst of the edge not in the graph");
@@ -249,21 +249,21 @@ private:
 		free_ids.push_back(internal_id);
 	}
 
-	bool node_in_graph(const Node<IdType,DataType>& x){
-		if(id_map.find(x.get_key()) != id_map.end()){
+	bool node_in_graph(const Node<IdType, DataType>* x){
+		if(id_map.find(x->get_key()) != id_map.end()){
 			return true;
 		}
 		return false;
 	}
 
-	bool nodes_in_graph(const Node<IdType, DataType>& x,
-	const Node<IdType, DataType>& y){
+	bool nodes_in_graph(const Node<IdType, DataType>* x,
+	const Node<IdType, DataType>* y){
 		return (node_in_graph(x) && node_in_graph(y));
 	}
 
 	/* NOTE: Assumes x is in the graph */
-	NodeAL<IdType, WeightType, DataType>* get_wrapper_p(const Node<IdType, DataType>& x){
-		return id_map.find(x.get_key())->second;
+	NodeAL<IdType, WeightType, DataType>* get_wrapper_p(const Node<IdType, DataType>* x){
+		return id_map.find(x->get_key())->second;
 	}
 
 	bool adjacent(const NodeAL<IdType, WeightType, DataType> * src_p, 
@@ -294,16 +294,16 @@ public:
 
 	/* Need to think about other constructors here a little */
 	/* Existance of NodeAL only makes sense in the context of a graph */
-	NodeAL(GraphAL<IdType, WeightType, DataType>& graph,
-		const Node<IdType, DataType>& user_node){
+	NodeAL(GraphAL<IdType, WeightType, DataType>* graph,
+		const Node<IdType, DataType>* user_node){
 		/* Get the new internal id */
-		internal_id = graph.get_new_id();
+		internal_id = graph->get_new_id();
 		
 		/* No neighbours yet, so empty vector */
 		//neighbours = vector<NodeAL<IdType, WeightType>*>();
 		// cout << "address of id in constructor: ";
 		// cout << &user_id << endl;
-		user_node_p = &user_node;
+		user_node_p = user_node;
 	}
 
 private:

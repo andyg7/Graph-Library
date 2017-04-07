@@ -84,8 +84,5 @@ int main(){
 	auto v = g1.neighbours(n2);
 	print_nodes<string, int>(v);
 
-	// auto n1 = create_node<string, int>("A", nullptr);
-
-
 	return 0;
 }

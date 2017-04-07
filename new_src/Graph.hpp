@@ -29,22 +29,22 @@ class Edge;
 // }
 
 template <typename IdType, typename DataType>
-Node<IdType, DataType>& create_node(IdType id, DataType* data){
+Node<IdType, DataType>* create_node(IdType id, DataType* data){
 		return Node<IdType, DataType>::create_node(id, data);
 }
 
 template <typename IdType, typename WeightType, typename DataType>
-Edge<IdType, WeightType, DataType>& create_edge(
-	const Node<IdType, DataType>& src,
+Edge<IdType, WeightType, DataType>* create_edge(
+	const Node<IdType, DataType>* src,
 	const WeightType w,
-	const Node<IdType, DataType>& dst){
+	const Node<IdType, DataType>* dst){
 
-	return *(new Edge<IdType, WeightType, DataType>(src, w, dst)); 
+	return (new Edge<IdType, WeightType, DataType>(src, w, dst)); 
 }
 
 //TODO: Decide if we offer this one
 template <typename IdType, typename DataType>
-void delete_node(Node<IdType, DataType>& node){
+void delete_node(Node<IdType, DataType>* node){
 	delete &node; 
 }
 
@@ -68,10 +68,10 @@ public:
 		w = new_w;
 	}
 
-	Edge(const Node<IdType, DataType>& src, WeightType w,
-	 const Node<IdType, DataType>& dst){
-		this->src = &src;
-		this->dst = &dst;
+	Edge(const Node<IdType, DataType>* src, WeightType w,
+	 const Node<IdType, DataType>* dst){
+		this->src = src;
+		this->dst = dst;
 		this->w = w;
 	}
 
@@ -92,7 +92,14 @@ private:
 		this->data = data;
 	}
 
+
+
 public:
+
+	/* We want to enforce existance of these objects in singular form,
+	if somebody tries to copy them, we shall not let them do so!*/
+	Node(Node<IdType, DataType> const&) = delete;
+	void operator=(Node<IdType, DataType> const&) = delete;
 
 	/* We can add other bookeeping field here to boost
 	performace of some algorithms */
@@ -112,8 +119,8 @@ public:
 		cout << get_key();
 	}
 
-	static Node<IdType, DataType>& create_node(IdType id, DataType* data){
-		return *(new Node<IdType, DataType>(id, data));
+	static Node<IdType, DataType>* create_node(IdType id, DataType* data){
+		return (new Node<IdType, DataType>(id, data));
 	}
 
 };
