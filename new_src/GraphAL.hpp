@@ -46,6 +46,22 @@ public:
 		}
 	}
 
+	vector<shared_ptr<Edge<IdType, WeightType, DataType>>> get_edges(){
+		
+		vector<shared_ptr<Edge<IdType, WeightType, DataType>>> temp;
+		for(auto wrapper_p : adjacency_list){
+			if(wrapper_p == nullptr) continue;
+			
+			/* For each edge build an edge object and add it to the temp */
+			for(auto edge : wrapper_p->neighbours){
+				temp.push_back(create_edge(wrapper_p->user_node_p, edge.second, (edge.first)->user_node_p));
+			}
+		}
+
+		/* RVO here again */
+		return temp;
+	}
+
 	vector<const Node<IdType, DataType>*> get_nodes(){
 		vector<const Node<IdType, DataType>*> temp;
 		

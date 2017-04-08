@@ -85,7 +85,12 @@ int main(){
 	// Lets see which nodes participate in g1
 	cout << "Who are the participants of g1?\n";
 	auto pariticipants = g1->get_nodes();
-	print_nodes<string, int>(pariticipants);
+	print_nodes(pariticipants);
+
+	// Lets get the edge list
+	cout << "What are the edges os g1?\n";
+	auto edges = g1->get_edges();
+	print_edges(edges);
 
 	// Set the data pointer of a node, access data, get id
 	int a = 30;
@@ -98,8 +103,6 @@ int main(){
 
 	// Deletions
 	delete_graph(g1);
-
-	//delete_edge(e1);
 
 	delete_node(n1);
 	delete_node(n2);

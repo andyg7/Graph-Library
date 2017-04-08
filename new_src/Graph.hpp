@@ -92,6 +92,10 @@ public:
 		return p;
 	}
 
+	void print_edge() const {
+		cout << "(" << this->src->get_id() << ", " << w << ", " << this->dst->get_id() << ")";
+	}
+
 	Edge(const Node<IdType, DataType>* src, WeightType w,
 	 const Node<IdType, DataType>* dst){
 		this->src = src;
@@ -158,5 +162,15 @@ void print_nodes(vector<const Node<IdType, DataType>*>& node_ps){
 	}
 	cout << endl;
 }
+
+template <typename IdType, typename WeightType, typename DataType>
+void print_edges(vector<shared_ptr<Edge<IdType, WeightType, DataType>>>& edges){
+	for(auto edge : edges){
+		edge->print_edge();
+		cout << " ";
+	}
+	cout << endl;
+}
+
 
 #endif
