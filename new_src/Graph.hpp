@@ -2,6 +2,7 @@
 #define GRAPH_H
 
 #include <iostream>
+#include "Graph.hpp"
 using namespace std;
 
 /* THE TODO LIST 
@@ -32,7 +33,7 @@ class Edge;
 /* CREATOR functions for user types */
 template <typename IdType, typename DataType>
 inline Node<IdType, DataType>* create_node(IdType id, DataType* data){
-		return Node<IdType, DataType>::create_node(id, data);
+	return Node<IdType, DataType>::create_node(id, data);
 }
 
 template <typename IdType, typename WeightType, typename DataType>
@@ -40,9 +41,15 @@ inline Edge<IdType, WeightType, DataType>* create_edge(
 	const Node<IdType, DataType>* src,
 	const WeightType w,
 	const Node<IdType, DataType>* dst){
-
 	return Edge<IdType, WeightType, DataType>::create_edge(src, w, dst); 
 }
+
+//TODO: Add the concepts for GraphType, IdType and WeightType
+template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
+inline GraphType<I, W, D>* create_graph(){
+	return GraphType<I, W, D>::create_graph();
+}
+
 
 /* DELETION functions for user types (might reimplement this as smart poitners later) */ 
 template <typename IdType, typename DataType>
@@ -54,6 +61,11 @@ template <typename IdType, typename WeightType, typename DataType>
 inline void delete_edge(Edge<IdType, WeightType, DataType>* e){
 	delete e;
 }
+template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
+inline void delete_graph(GraphType<I, W, D>* g){
+	delete g;
+}
+
 
 template <typename IdType, typename WeightType, typename DataType>
 class Edge{
@@ -110,8 +122,6 @@ private:
 		this->data = data;
 	}
 
-
-
 public:
 
 	/* We want to enforce existance of these objects in singular form,
@@ -121,7 +131,7 @@ public:
 
 	/* We can add other bookeeping field here to boost
 	performace of some algorithms */
-	inline IdType get_key() const {
+	inline IdType get_id() const {
 		return this->id;
 	}
 
@@ -129,12 +139,16 @@ public:
 		return this->data;
 	}
 
+	inline void set_data(DataType * data){
+		this->data = data;
+	}
+
 	bool operator==(const Node& rhs){
 		return (this->id==rhs.id);
 	}
 
 	void print_node() const {
-		cout << get_key();
+		cout << get_id();
 	}
 
 	static Node<IdType, DataType>* create_node(IdType id, DataType* data){

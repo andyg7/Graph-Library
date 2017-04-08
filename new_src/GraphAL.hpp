@@ -34,10 +34,16 @@ template <typename IdType, typename WeightType, typename DataType>
 class GraphAL{
 friend class NodeAL<IdType, WeightType, DataType>;
 public:
-	/* Need to add more constructors such as list initialization here*/
-	GraphAL(){
-		next_unique_id = 0;
-		cout << "created a graph\n";
+
+	static inline GraphAL<IdType, WeightType, DataType>* create_graph(){
+		return new GraphAL<IdType, WeightType, DataType>();
+	}
+
+	~GraphAL(){
+		for(auto x : adjacency_list){
+			if(x == nullptr) continue;
+			delete x;
+		}
 	}
 
 	// Function return the neighbours of the node
@@ -97,8 +103,8 @@ public:
 		}
 		
 		/* Add the new mapping into the map */
-		id_map[x->get_key()] = vertex_p;
-		assert(id_map.find(x->get_key())->second == vertex_p); //ASSERT
+		id_map[x->get_id()] = vertex_p;
+		assert(id_map.find(x->get_id())->second == vertex_p); //ASSERT
 		return true;
 	}
 
@@ -111,7 +117,7 @@ public:
 		}
 
 		/* Get the internal id of the wrapper of x */
-		int internal_id = id_map.find(x->get_key())->second->internal_id;
+		int internal_id = id_map.find(x->get_id())->second->internal_id;
 
 		/* Remove all outgoing endes from the vertex */
 		adjacency_list[internal_id]->neighbours.clear();
@@ -137,7 +143,7 @@ public:
 		return_id(internal_id);
 
 		/* Erase the vertex from the wrapper map */
-		id_map.erase(x->get_key());
+		id_map.erase(x->get_id());
 		return true;
 	}
 
@@ -210,9 +216,9 @@ public:
 	void print_graph() {
 		for(auto node_p : this->adjacency_list){
 			if(node_p == nullptr) continue;
-			cout << (node_p->user_node_p->get_key()) << "-> ";
+			cout << (node_p->user_node_p->get_id()) << "-> ";
 			for(auto edge : node_p->neighbours){
-				cout << "(" << (edge.first)->user_node_p->get_key() << 
+				cout << "(" << (edge.first)->user_node_p->get_id() << 
 				":" << edge.second << "), ";
 			}
 			cout << endl;
@@ -222,6 +228,12 @@ public:
  *	get_vertex_value(G, x): returns the value associated with the vertex x;
  *	set_vertex_value(G, x, v): sets the value associated with the vertex x to v. */
 private:
+
+	/* Need to add more constructors such as list initialization here*/
+	GraphAL(){
+		next_unique_id = 0;
+		cout << "created a graph\n";
+	}
 	
 	/* Vector of smart pointers to wrappers. This allows direct access
 	to the neighbours of the node from its wrapper. The penalty – vertex
@@ -250,7 +262,7 @@ private:
 	}
 
 	inline bool node_in_graph(const Node<IdType, DataType>* x){
-		if(id_map.find(x->get_key()) != id_map.end()){
+		if(id_map.find(x->get_id()) != id_map.end()){
 			return true;
 		}
 		return false;
@@ -262,8 +274,8 @@ private:
 	}
 
 	/* NOTE: Assumes x is in the graph */
-	inline NodeAL<IdType, WeightType, DataType>* get_wrapper_p(const Node<IdType, DataType>* x){
-		return id_map.find(x->get_key())->second;
+	NodeAL<IdType, WeightType, DataType>* get_wrapper_p(const Node<IdType, DataType>* x){
+		return id_map.find(x->get_id())->second;
 	}
 
 	bool adjacent(const NodeAL<IdType, WeightType, DataType> * src_p, 
