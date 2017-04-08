@@ -22,7 +22,7 @@ class Edge;
 //TODO:Make it a smart pointer
 //TODO:add creation that deduces the id using concepts like Andrew described
 
-/* CREATOR functions for user types */
+/* CREATION functions for user types */
 template <typename IdType, typename DataType>
 inline Node<IdType, DataType>* create_node(IdType id, DataType* data){
 	return Node<IdType, DataType>::create_node(id, data);
@@ -49,16 +49,17 @@ inline void delete_node(Node<IdType, DataType>* node){
 	delete node; 
 }
 
-template <typename IdType, typename WeightType, typename DataType>
-inline void delete_edge(Edge<IdType, WeightType, DataType>* e){
-	delete e;
-}
+// I dont think this is needed anymore due to smart pointers
+// template <typename IdType, typename WeightType, typename DataType>
+// inline void delete_edge(Edge<IdType, WeightType, DataType>* e){
+// 	delete e;
+// }
 template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
 inline void delete_graph(GraphType<I, W, D>* g){
 	delete g;
 }
 
-
+/************************* Edge Class ****************************/
 template <typename IdType, typename WeightType, typename DataType>
 class Edge{
 public:
@@ -108,6 +109,8 @@ private:
 	WeightType w;
 };
 
+
+/************************* Node Class ****************************/
 template <typename IdType, typename DataType>
 class Node{
 
@@ -154,6 +157,7 @@ public:
 
 };
 
+/* PRINTERS */
 template <typename IdType, typename DataType>
 void print_nodes(vector<const Node<IdType, DataType>*>& node_ps){
 	for(auto node_p : node_ps){
