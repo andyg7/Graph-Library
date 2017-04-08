@@ -149,7 +149,7 @@ public:
 		return true;
 	}
 
-	bool add_edge(Edge<IdType, WeightType, DataType>* e){
+	inline bool add_edge(Edge<IdType, WeightType, DataType>* e){
 		return add_edge(e->get_src(), e->get_weight(), e->get_dst());
 	}
 
@@ -235,7 +235,7 @@ private:
 	vector<int> free_ids;
 
 	/* Function hands out the new id when a vertex is added*/
-	long get_new_id(){
+	inline long get_new_id(){
 		if(free_ids.empty()){
 			return next_unique_id++;
 		}else{
@@ -245,24 +245,24 @@ private:
 		}
 	}
 
-	bool return_id(int internal_id){
+	inline bool return_id(int internal_id){
 		free_ids.push_back(internal_id);
 	}
 
-	bool node_in_graph(const Node<IdType, DataType>* x){
+	inline bool node_in_graph(const Node<IdType, DataType>* x){
 		if(id_map.find(x->get_key()) != id_map.end()){
 			return true;
 		}
 		return false;
 	}
 
-	bool nodes_in_graph(const Node<IdType, DataType>* x,
-	const Node<IdType, DataType>* y){
+	inline bool nodes_in_graph(const Node<IdType, DataType>* x,
+		const Node<IdType, DataType>* y){
 		return (node_in_graph(x) && node_in_graph(y));
 	}
 
 	/* NOTE: Assumes x is in the graph */
-	NodeAL<IdType, WeightType, DataType>* get_wrapper_p(const Node<IdType, DataType>* x){
+	inline NodeAL<IdType, WeightType, DataType>* get_wrapper_p(const Node<IdType, DataType>* x){
 		return id_map.find(x->get_key())->second;
 	}
 

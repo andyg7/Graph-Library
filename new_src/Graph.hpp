@@ -28,46 +28,65 @@ class Edge;
 // 	return *(new Node<IdType, DataType>(id, data)); 
 // }
 
+
+/* CREATOR functions for user types */
 template <typename IdType, typename DataType>
-Node<IdType, DataType>* create_node(IdType id, DataType* data){
+inline Node<IdType, DataType>* create_node(IdType id, DataType* data){
 		return Node<IdType, DataType>::create_node(id, data);
 }
 
 template <typename IdType, typename WeightType, typename DataType>
-Edge<IdType, WeightType, DataType>* create_edge(
+inline Edge<IdType, WeightType, DataType>* create_edge(
 	const Node<IdType, DataType>* src,
 	const WeightType w,
 	const Node<IdType, DataType>* dst){
 
-	return (new Edge<IdType, WeightType, DataType>(src, w, dst)); 
+	return Edge<IdType, WeightType, DataType>::create_edge(src, w, dst); 
 }
 
-//TODO: Decide if we offer this one
+/* DELETION functions for user types (might reimplement this as smart poitners later) */ 
 template <typename IdType, typename DataType>
-void delete_node(Node<IdType, DataType>* node){
-	delete &node; 
+inline void delete_node(Node<IdType, DataType>* node){
+	delete node; 
+}
+
+template <typename IdType, typename WeightType, typename DataType>
+inline void delete_edge(Edge<IdType, WeightType, DataType>* e){
+	delete e;
 }
 
 template <typename IdType, typename WeightType, typename DataType>
 class Edge{
 public:
 
-	const Node<IdType, DataType>* get_src() const {
+	/* Same as for edges, we don't want these to be copied by accident */
+	Edge(Edge<IdType, WeightType, DataType> const&) = delete;
+	void operator=(Edge<IdType, WeightType, DataType> const&) = delete;
+
+	inline const Node<IdType, DataType>* get_src() const {
 		return src;
 	}
 
-	const Node<IdType, DataType>* get_dst() const {
+	inline const Node<IdType, DataType>* get_dst() const {
 		return dst;
 	}
 
-	WeightType get_weight() const {
+	inline WeightType get_weight() const {
 		return w;
 	}
 
-	WeightType set_weight(WeightType new_w){
+	inline WeightType set_weight(WeightType new_w){
 		w = new_w;
 	}
 
+	inline static Edge<IdType, WeightType, DataType>* create_edge(
+		const Node<IdType, DataType>* src,
+		const WeightType w,
+		const Node<IdType, DataType>* dst){
+		return (new Edge<IdType, WeightType, DataType>(src, w, dst)); 
+	}
+
+private:
 	Edge(const Node<IdType, DataType>* src, WeightType w,
 	 const Node<IdType, DataType>* dst){
 		this->src = src;
@@ -75,7 +94,6 @@ public:
 		this->w = w;
 	}
 
-private:
 	const Node<IdType, DataType>* src;
 	const Node<IdType, DataType>* dst;
 	WeightType w;
@@ -103,11 +121,11 @@ public:
 
 	/* We can add other bookeeping field here to boost
 	performace of some algorithms */
-	IdType get_key() const {
+	inline IdType get_key() const {
 		return this->id;
 	}
 
-	DataType* get_data(){
+	inline DataType* get_data(){
 		return this->data;
 	}
 
