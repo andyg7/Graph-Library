@@ -232,7 +232,6 @@ private:
 	/* Need to add more constructors such as list initialization here*/
 	GraphAL(){
 		next_unique_id = 0;
-		cout << "created a graph\n";
 	}
 	
 	/* Vector of smart pointers to wrappers. This allows direct access
@@ -310,11 +309,7 @@ public:
 		const Node<IdType, DataType>* user_node){
 		/* Get the new internal id */
 		internal_id = graph->get_new_id();
-		
-		/* No neighbours yet, so empty vector */
-		//neighbours = vector<NodeAL<IdType, WeightType>*>();
-		// cout << "address of id in constructor: ";
-		// cout << &user_id << endl;
+
 		user_node_p = user_node;
 	}
 
