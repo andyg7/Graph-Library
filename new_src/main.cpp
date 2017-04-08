@@ -8,8 +8,6 @@
 
 int main(){
 
-
-
 	// Create few nodes. nullptr is the data pointer
 	auto n1 = create_node<string, int>("A", nullptr);
 	auto n2 = create_node<string, int>("B", nullptr);
@@ -101,7 +99,7 @@ int main(){
 	// Deletions
 	delete_graph(g1);
 
-	delete_edge(e1);
+	//delete_edge(e1);
 
 	delete_node(n1);
 	delete_node(n2);

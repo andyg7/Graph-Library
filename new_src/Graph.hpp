@@ -29,7 +29,7 @@ inline Node<IdType, DataType>* create_node(IdType id, DataType* data){
 }
 
 template <typename IdType, typename WeightType, typename DataType>
-inline Edge<IdType, WeightType, DataType>* create_edge(
+inline shared_ptr<Edge<IdType, WeightType, DataType>> create_edge(
 	const Node<IdType, DataType>* src,
 	const WeightType w,
 	const Node<IdType, DataType>* dst){
@@ -83,21 +83,22 @@ public:
 		w = new_w;
 	}
 
-	inline static Edge<IdType, WeightType, DataType>* create_edge(
+	inline static shared_ptr<Edge<IdType, WeightType, DataType>> create_edge(
 		const Node<IdType, DataType>* src,
 		const WeightType w,
 		const Node<IdType, DataType>* dst){
-		return (new Edge<IdType, WeightType, DataType>(src, w, dst)); 
+		//return (new Edge<IdType, WeightType, DataType>(src, w, dst));
+		shared_ptr<Edge<IdType, WeightType, DataType>> p  = make_shared<Edge<IdType, WeightType, DataType>>(src, w, dst);
+		return p;
 	}
 
-private:
 	Edge(const Node<IdType, DataType>* src, WeightType w,
 	 const Node<IdType, DataType>* dst){
 		this->src = src;
 		this->dst = dst;
 		this->w = w;
 	}
-
+private:
 	const Node<IdType, DataType>* src;
 	const Node<IdType, DataType>* dst;
 	WeightType w;

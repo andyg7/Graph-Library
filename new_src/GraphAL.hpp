@@ -164,7 +164,7 @@ public:
 		return true;
 	}
 
-	inline bool add_edge(Edge<IdType, WeightType, DataType>* e){
+	inline bool add_edge(shared_ptr<Edge<IdType, WeightType, DataType>> e){
 		return add_edge(e->get_src(), e->get_weight(), e->get_dst());
 	}
 
