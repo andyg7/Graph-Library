@@ -22,14 +22,6 @@ class Edge;
 //TODO:Make it a smart pointer
 //TODO:add creation that deduces the id using concepts like Andrew described
 
-/* If we offer this one, we shuld make sure user cannot create a Node using the constructor i.e
-   we need to rewrite this function if we decide to go with it */
-// template <typename IdType, typename DataType>
-// Node<IdType, DataType>& create_node(IdType id, DataType* data){
-// 	return *(new Node<IdType, DataType>(id, data)); 
-// }
-
-
 /* CREATOR functions for user types */
 template <typename IdType, typename DataType>
 inline Node<IdType, DataType>* create_node(IdType id, DataType* data){
@@ -165,8 +157,5 @@ void print_nodes(vector<const Node<IdType, DataType>*>& node_ps){
 	}
 	cout << endl;
 }
-
-
-
 
 #endif
