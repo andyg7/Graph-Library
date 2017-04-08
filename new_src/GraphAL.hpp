@@ -46,6 +46,19 @@ public:
 		}
 	}
 
+	vector<const Node<IdType, DataType>*> get_nodes(){
+		vector<const Node<IdType, DataType>*> temp;
+		
+		/* Walk through adjacency list and extract node pointers */
+		for(auto wrapper_p : adjacency_list){
+			if(wrapper_p == nullptr) continue;
+			temp.push_back(wrapper_p->user_node_p);
+		}
+
+		/* RVO here */
+		return temp;
+	}	
+
 	// Function return the neighbours of the node
 	vector<const Node<IdType, DataType>*> neighbours(const Node<IdType, DataType>* src){
 
@@ -59,7 +72,6 @@ public:
 
 		/* Get the pointers to all the edges */
 		for(auto edge : edges){
-			/* There is an implicit cast here */
 			temp.push_back((edge.first)->user_node_p);
 		}
 
@@ -67,9 +79,6 @@ public:
 		return temp;
 	}
 
-/* 	TODO: For these we need to decide what we do if the operation 
- *	is already true. ex. add_vertex when the vertex is already there.
- *	Exception? return false? */
 	bool adjacent(const Node<IdType, DataType>* src, const Node<IdType, DataType>* dst){
 
 		if(!nodes_in_graph(src, dst)){

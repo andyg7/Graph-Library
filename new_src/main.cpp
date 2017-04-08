@@ -80,14 +80,21 @@ int main(){
 	g1->print_graph();
 
 	// Get neighbours
+	cout << "Who are the neighbours of B?\n";
 	auto v = g1->neighbours(n2);
 	print_nodes<string, int>(v);
+
+	// Lets see which nodes participate in g1
+	cout << "Who are the participants of g1?\n";
+	auto pariticipants = g1->get_nodes();
+	print_nodes<string, int>(pariticipants);
 
 	// Set the data pointer of a node, access data, get id
 	int a = 30;
 	n1->set_data(&a);
 	a = 15;
 	assert(a == *n1->get_data());
+	cout << "Data assosciated with A?\n";
 	cout << n1->get_id() << ", data " << *n1->get_data() << endl;
 
 
