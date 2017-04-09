@@ -35,8 +35,9 @@ class GraphAL{
 friend class NodeAL<IdType, WeightType, DataType>;
 public:
 
-	static inline GraphAL<IdType, WeightType, DataType>* create_graph(){
-		return new GraphAL<IdType, WeightType, DataType>();
+	static inline shared_ptr<GraphAL<IdType, WeightType, DataType>> create_graph(){
+		shared_ptr<GraphAL<IdType, WeightType, DataType>> p = make_shared<GraphAL<IdType, WeightType, DataType>>();
+		return p;
 	}
 
 	~GraphAL(){
@@ -62,8 +63,8 @@ public:
 		return temp;
 	}
 
-	vector<const Node<IdType, DataType>*> get_nodes(){
-		vector<const Node<IdType, DataType>*> temp;
+	vector<shared_ptr<Node<IdType, DataType>>> get_nodes(){
+		vector<shared_ptr<Node<IdType, DataType>>> temp;
 		
 		/* Walk through adjacency list and extract node pointers */
 		for(auto wrapper_p : adjacency_list){
@@ -76,7 +77,7 @@ public:
 	}	
 
 	// Function return the neighbours of the node
-	vector<const Node<IdType, DataType>*> neighbours(const Node<IdType, DataType>* src){
+	vector<shared_ptr<Node<IdType, DataType>>> neighbours(const shared_ptr<Node<IdType, DataType>> src){
 
 		/* Check if the node is in the graph */
 		if(!node_in_graph(src))
@@ -84,7 +85,7 @@ public:
 
 		/* Get the vector of neighbours that is stored in the wrapper */
 		auto edges = get_wrapper_p(src)->neighbours;
-		vector<const Node<IdType, DataType>*> temp;
+		vector<shared_ptr<Node<IdType, DataType>>> temp;
 
 		/* Get the pointers to all the edges */
 		for(auto edge : edges){
@@ -95,7 +96,7 @@ public:
 		return temp;
 	}
 
-	bool adjacent(const Node<IdType, DataType>* src, const Node<IdType, DataType>* dst){
+	bool adjacent(const shared_ptr<Node<IdType, DataType>> src, const shared_ptr<Node<IdType, DataType>> dst){
 
 		if(!nodes_in_graph(src, dst)){
 			throw std::invalid_argument("node not in the graph");
@@ -108,7 +109,7 @@ public:
 		return false;
 	}
 
-	bool add_node(const Node<IdType, DataType>* x){
+	bool add_node(const shared_ptr<Node<IdType, DataType>> x){
 		
 		/* Check if the vertex is already in the graph */
 		if(node_in_graph(x)){
@@ -134,7 +135,7 @@ public:
 	}
 
 
-	bool remove_node(const Node<IdType, DataType>* x){
+	bool remove_node(const shared_ptr<Node<IdType, DataType>> x){
 
 		/* Check if the vertex is not in the graph */
 		if(!node_in_graph(x)){
@@ -175,7 +176,7 @@ public:
 	/* notice how these functions avoid the adjacency list structure
 	in the graph all together*/
 	//TODO: figure out how to give a WeightType a default value
-	bool add_edge(const Node<IdType, DataType>* src, const Node<IdType, DataType>* dst){
+	bool add_edge(const shared_ptr<Node<IdType, DataType>> src, const shared_ptr<Node<IdType, DataType>> dst){
 		throw std::invalid_argument("NEED DEFAULT VALUE DECISION HERE!");
 		return true;
 	}
@@ -184,8 +185,8 @@ public:
 		return add_edge(e->get_src(), e->get_weight(), e->get_dst());
 	}
 
-	bool add_edge(const Node<IdType, DataType>* src, const WeightType w, 
-		const Node<IdType, DataType>* dst){
+	bool add_edge(const shared_ptr<Node<IdType, DataType>> src, const WeightType w, 
+		const shared_ptr<Node<IdType, DataType>> dst){
 		/* All we need to do here is to add a pointer
 		to n2 to the neighbours of n1*/
 
@@ -211,8 +212,8 @@ public:
 		return true;
 	}
 
-	bool remove_edge(const Node<IdType, DataType>* src,
-		const Node<IdType, DataType>* dst){
+	bool remove_edge(const shared_ptr<Node<IdType, DataType>> src,
+		const shared_ptr<Node<IdType, DataType>> dst){
 
 		if(!nodes_in_graph(src, dst)){
 			throw std::invalid_argument("src or dst of the edge not in the graph");
@@ -249,15 +250,15 @@ public:
 			cout << endl;
 		}
 	}
-/*	TODO: Not sure how these factor into our library
- *	get_vertex_value(G, x): returns the value associated with the vertex x;
- *	set_vertex_value(G, x, v): sets the value associated with the vertex x to v. */
-private:
 
 	/* Need to add more constructors such as list initialization here*/
 	GraphAL(){
 		next_unique_id = 0;
 	}
+/*	TODO: Not sure how these factor into our library
+ *	get_vertex_value(G, x): returns the value associated with the vertex x;
+ *	set_vertex_value(G, x, v): sets the value associated with the vertex x to v. */
+private:
 	
 	/* Vector of smart pointers to wrappers. This allows direct access
 	to the neighbours of the node from its wrapper. The penalty – vertex
@@ -285,20 +286,20 @@ private:
 		free_ids.push_back(internal_id);
 	}
 
-	inline bool node_in_graph(const Node<IdType, DataType>* x){
+	inline bool node_in_graph(const shared_ptr<Node<IdType, DataType>> x){
 		if(id_map.find(x->get_id()) != id_map.end()){
 			return true;
 		}
 		return false;
 	}
 
-	inline bool nodes_in_graph(const Node<IdType, DataType>* x,
-		const Node<IdType, DataType>* y){
+	inline bool nodes_in_graph(const shared_ptr<Node<IdType, DataType>> x,
+		const shared_ptr<Node<IdType, DataType>> y){
 		return (node_in_graph(x) && node_in_graph(y));
 	}
 
 	/* NOTE: Assumes x is in the graph */
-	NodeAL<IdType, WeightType, DataType>* get_wrapper_p(const Node<IdType, DataType>* x){
+	NodeAL<IdType, WeightType, DataType>* get_wrapper_p(const shared_ptr<Node<IdType, DataType>> x){
 		return id_map.find(x->get_id())->second;
 	}
 
@@ -331,7 +332,7 @@ public:
 	/* Need to think about other constructors here a little */
 	/* Existance of NodeAL only makes sense in the context of a graph */
 	NodeAL(GraphAL<IdType, WeightType, DataType>* graph,
-		const Node<IdType, DataType>* user_node){
+		const shared_ptr<Node<IdType, DataType>> user_node){
 		/* Get the new internal id */
 		internal_id = graph->get_new_id();
 
@@ -347,7 +348,7 @@ private:
 	vector<pair<NodeAL<IdType, WeightType, DataType>*, WeightType>> neighbours;
 	
 	/* Pointer to the user created node */
-	const Node<IdType, DataType>* user_node_p;
+	shared_ptr<Node<IdType, DataType>> user_node_p;
 
 
 	bool operator==(const NodeAL& rhs){

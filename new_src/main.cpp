@@ -100,16 +100,6 @@ int main(){
 	cout << "Data assosciated with A?\n";
 	cout << n1->get_id() << ", data " << *n1->get_data() << endl;
 
-
-	// Deletions
-	delete_graph(g1);
-
-	delete_node(n1);
-	delete_node(n2);
-	delete_node(n3);
-	delete_node(n4);
-
-
 	cout << "All good!\n";
 
 	return 0;

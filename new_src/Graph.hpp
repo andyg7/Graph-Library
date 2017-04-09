@@ -24,40 +24,40 @@ class Edge;
 
 /* CREATION functions for user types */
 template <typename IdType, typename DataType>
-inline Node<IdType, DataType>* create_node(IdType id, DataType* data){
+inline shared_ptr<Node<IdType, DataType>> create_node(IdType id, DataType* data){
 	return Node<IdType, DataType>::create_node(id, data);
 }
 
 template <typename IdType, typename WeightType, typename DataType>
 inline shared_ptr<Edge<IdType, WeightType, DataType>> create_edge(
-	const Node<IdType, DataType>* src,
+	const shared_ptr<Node<IdType, DataType>> src,
 	const WeightType w,
-	const Node<IdType, DataType>* dst){
+	const shared_ptr<Node<IdType, DataType>> dst){
 	return Edge<IdType, WeightType, DataType>::create_edge(src, w, dst); 
 }
 
 //TODO: Add the concepts for GraphType, IdType and WeightType
 template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
-inline GraphType<I, W, D>* create_graph(){
+inline shared_ptr<GraphType<I, W, D>> create_graph(){
 	return GraphType<I, W, D>::create_graph();
 }
 
 
 /* DELETION functions for user types (might reimplement this as smart poitners later) */ 
-template <typename IdType, typename DataType>
-inline void delete_node(Node<IdType, DataType>* node){
-	delete node; 
-}
+// template <typename IdType, typename DataType>
+// inline void delete_node(shared_ptr<Node<IdType, DataType>> node){
+// 	delete node; 
+// }
 
 // I dont think this is needed anymore due to smart pointers
 // template <typename IdType, typename WeightType, typename DataType>
 // inline void delete_edge(Edge<IdType, WeightType, DataType>* e){
 // 	delete e;
 // }
-template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
-inline void delete_graph(GraphType<I, W, D>* g){
-	delete g;
-}
+// template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
+// inline void delete_graph(GraphType<I, W, D>* g){
+// 	delete g;
+// }
 
 /************************* Edge Class ****************************/
 template <typename IdType, typename WeightType, typename DataType>
@@ -68,11 +68,11 @@ public:
 	Edge(Edge<IdType, WeightType, DataType> const&) = delete;
 	void operator=(Edge<IdType, WeightType, DataType> const&) = delete;
 
-	inline const Node<IdType, DataType>* get_src() const {
+	inline const shared_ptr<Node<IdType, DataType>> get_src() const {
 		return src;
 	}
 
-	inline const Node<IdType, DataType>* get_dst() const {
+	inline const shared_ptr<Node<IdType, DataType>> get_dst() const {
 		return dst;
 	}
 
@@ -85,9 +85,9 @@ public:
 	}
 
 	inline static shared_ptr<Edge<IdType, WeightType, DataType>> create_edge(
-		const Node<IdType, DataType>* src,
+		const shared_ptr<Node<IdType, DataType>> src,
 		const WeightType w,
-		const Node<IdType, DataType>* dst){
+		const shared_ptr<Node<IdType, DataType>> dst){
 		//return (new Edge<IdType, WeightType, DataType>(src, w, dst));
 		shared_ptr<Edge<IdType, WeightType, DataType>> p  = make_shared<Edge<IdType, WeightType, DataType>>(src, w, dst);
 		return p;
@@ -97,15 +97,15 @@ public:
 		cout << "(" << this->src->get_id() << ", " << w << ", " << this->dst->get_id() << ")";
 	}
 
-	Edge(const Node<IdType, DataType>* src, WeightType w,
-	 const Node<IdType, DataType>* dst){
+	Edge(const shared_ptr<Node<IdType, DataType>> src, WeightType w,
+	 const shared_ptr<Node<IdType, DataType>> dst){
 		this->src = src;
 		this->dst = dst;
 		this->w = w;
 	}
 private:
-	const Node<IdType, DataType>* src;
-	const Node<IdType, DataType>* dst;
+	shared_ptr<Node<IdType, DataType>> src;
+	shared_ptr<Node<IdType, DataType>> dst;
 	WeightType w;
 };
 
@@ -117,12 +117,13 @@ class Node{
 private:
 	IdType id;
 	DataType* data;
+
+public:
+
 	Node(IdType id, DataType* data){
 		this->id = id;
 		this->data = data;
 	}
-
-public:
 
 	/* We want to enforce existance of these objects in singular form,
 	if somebody tries to copy them, we shall not let them do so!*/
@@ -151,15 +152,16 @@ public:
 		cout << get_id();
 	}
 
-	static Node<IdType, DataType>* create_node(IdType id, DataType* data){
-		return (new Node<IdType, DataType>(id, data));
+	static shared_ptr<Node<IdType, DataType>> create_node(IdType id, DataType* data){
+		shared_ptr<Node<IdType, DataType>> p = make_shared<Node<IdType, DataType>>(id, data);
+		return p;
 	}
 
 };
 
 /* PRINTERS */
 template <typename IdType, typename DataType>
-void print_nodes(vector<const Node<IdType, DataType>*>& node_ps){
+void print_nodes(vector<shared_ptr<Node<IdType, DataType>>>& node_ps){
 	for(auto node_p : node_ps){
 		node_p->print_node();
 		cout << " ";
