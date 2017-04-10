@@ -100,6 +100,21 @@ int main(){
 	cout << "Data assosciated with A?\n";
 	cout << n1->get_id() << ", data " << *n1->get_data() << endl;
 
+	// Given an edge or a node, lets check if it is in the graph
+	cout << "Is D in the graph?\n";
+	cout << g1->has_node(n4) << endl;
+	cout << "Remove it. Is D in graph now?\n";
+	g1->remove_node(n4);
+	cout << g1->has_node(n4) << endl;
+	cout << "Lets check if there is an edge (A, 1, C)?\n";
+	auto e2 = create_edge<string, int, int>(n1, 1, n3);
+	cout << g1->has_edge(e2) << endl;
+	cout << "Maybe (C, 1, D)? Remember we removed D\n";
+	auto e3 = create_edge<string, int, int>(n3, 1, n4);
+	cout << g1->has_edge(e3) << endl;
+
+
+
 	cout << "All good!\n";
 
 	return 0;

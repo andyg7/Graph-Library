@@ -47,6 +47,49 @@ public:
 		}
 	}
 
+	bool has_node(const shared_ptr<Node<IdType, DataType>> x){
+		return node_in_graph(x);
+	}
+
+	bool has_edge(shared_ptr<Edge<IdType, WeightType, DataType>> e){
+		return has_edge(e->get_src(), e->get_weight(), e->get_dst());
+	}	
+	bool has_edge(const shared_ptr<Node<IdType, DataType>> src, const WeightType w, 
+		const shared_ptr<Node<IdType, DataType>> dst){
+
+		/* First we need to check if the nodes are in the graph */
+		if(!nodes_in_graph(src, dst)){
+			return false;
+		}
+
+		/* Get hold of the wrappers */
+		NodeAL<IdType, WeightType, DataType> * src_p = get_wrapper_p(src);
+		NodeAL<IdType, WeightType, DataType> * dst_p = get_wrapper_p(dst);
+
+		/* Check if the edge already exists, if it does, 
+		throw an exception */
+		if(!adjacent(src_p, dst_p)){
+			return false;
+		}
+
+		auto it = 
+		find_if(src_p->neighbours.begin(), 
+		src_p->neighbours.end(),
+    	[&](const pair<NodeAL<IdType, WeightType, DataType>*, WeightType>& element)
+    		{return element.first == dst_p;});
+
+		if(it == src_p->neighbours.end()){
+			return false;
+		}
+
+		if(it->second != w){
+			return false;
+		}
+		
+		return true;
+
+	}
+
 	vector<shared_ptr<Edge<IdType, WeightType, DataType>>> get_edges(){
 		
 		vector<shared_ptr<Edge<IdType, WeightType, DataType>>> temp;
@@ -61,6 +104,14 @@ public:
 
 		/* RVO here again */
 		return temp;
+	}
+
+	shared_ptr<Edge<IdType, WeightType, DataType>> get_edge(shared_ptr<Node<IdType, DataType>> src,
+		shared_ptr<Node<IdType, DataType>> dst){
+
+		if(!this->adjacent(src, dst))
+			throw std::invalid_argument("edge does not exist");
+
 	}
 
 	vector<shared_ptr<Node<IdType, DataType>>> get_nodes(){
