@@ -103,6 +103,12 @@ public:
 		this->dst = dst;
 		this->w = w;
 	}
+
+	// ~Edge(){
+	// 	cout << "delete ";
+	// 	print_edge();
+	// 	cout << endl;
+	// }
 private:
 	shared_ptr<Node<IdType, DataType>> src;
 	shared_ptr<Node<IdType, DataType>> dst;
@@ -121,6 +127,7 @@ private:
 public:
 
 	Node(IdType id, DataType* data){
+		//cout << id << " created\n";
 		this->id = id;
 		this->data = data;
 	}
