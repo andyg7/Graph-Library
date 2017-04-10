@@ -1,5 +1,6 @@
 #include "GraphAL.hpp"
 #include "Graph.hpp"
+#include "algo.h"
 #include <string>
 #include <iostream>
 
@@ -113,9 +114,26 @@ int main(){
 	auto e3 = create_edge<string, int, int>(n3, 1, n4);
 	cout << g1->has_edge(e3) << endl;
 
+	g1->print_graph();
 
+	// Lets get edges of B and its edges back
+	cout << "Edges of B are?\n";
+	auto edges_of = g1->edges_of_node(n2);
+	print_edges(edges_of);
 
-	cout << "All good!\n";
+	/* Run DFS */
+	cout << "Print DFS rooted at A\n";
+	auto dfsn1 = dfs(g1, n1);
+	dfsn1->print_graph();
+
+	cout << "Print DFS rooted at B\n";
+	auto dfsn2 = dfs(g1, n2);
+	dfsn2->print_graph();
+
+	cout << "Print DFS rooted at C\n";
+	auto dfsn3 = dfs(g1, n3);
+	dfsn2->print_graph();
+
 
 	return 0;
 }

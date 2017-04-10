@@ -90,6 +90,24 @@ public:
 
 	}
 
+	vector<shared_ptr<Edge<IdType, WeightType, DataType>>> edges_of_node(const shared_ptr<Node<IdType, DataType>> x){
+		
+		vector<shared_ptr<Edge<IdType, WeightType, DataType>>> temp;
+		
+		if(!node_in_graph(x))
+			throw std::invalid_argument("node not in the graph");
+
+		auto wrapper_p = get_wrapper_p(x);
+
+		/* Go through the list of pairs constructing Edge objects */
+		for(auto edge : wrapper_p->neighbours){
+			temp.push_back(create_edge(wrapper_p->user_node_p, edge.second, (edge.first)->user_node_p));
+		}
+
+		/* SVO here */
+		return temp;
+	}
+
 	vector<shared_ptr<Edge<IdType, WeightType, DataType>>> get_edges(){
 		
 		vector<shared_ptr<Edge<IdType, WeightType, DataType>>> temp;
@@ -112,6 +130,11 @@ public:
 		if(!this->adjacent(src, dst))
 			throw std::invalid_argument("edge does not exist");
 
+		auto src_wp = get_wrapper_p(src);
+		auto dst_wp = get_wrapper_p(dst);
+
+		auto edge_p = get_edge(src_wp, dst_wp);
+		return create_edge(src, (*edge_p).second, dst);
 	}
 
 	vector<shared_ptr<Node<IdType, DataType>>> get_nodes(){
@@ -368,6 +391,23 @@ private:
 			return true;
 		
 		return false;
+	}
+
+	auto get_edge(const NodeAL<IdType, WeightType, DataType> * src_p, 
+		const NodeAL<IdType, WeightType, DataType> * dst_p){
+
+		/*Lets findout if dst_p in in neghbours of src_p */
+		auto it = 
+		find_if(src_p->neighbours.begin(), 
+		src_p->neighbours.end(),
+    	[&](const pair<NodeAL<IdType, WeightType, DataType>*, WeightType>& element)
+    		{return element.first == dst_p;});
+
+		if(it != src_p->neighbours.end())
+			return it;
+		
+		//TODO: FIX
+		return it;
 	}
 };
 
