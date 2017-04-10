@@ -134,6 +134,15 @@ int main(){
 	auto dfsn3 = dfs(g1, n3);
 	dfsn2->print_graph();
 
+	cout << "Lets build a graph from edges and nodes of g1\n";
+	auto node_v = g1->get_nodes();
+	auto edges_v = g1->get_edges();
+	auto g2 = create_graph<string, int, int, GraphAL>();
+	add_nodes(node_v, g2);
+	add_edges(edges_v, g2);
+	g2->print_graph();
+
+
 
 	return 0;
 }

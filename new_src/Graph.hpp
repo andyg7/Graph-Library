@@ -185,5 +185,29 @@ void print_edges(vector<shared_ptr<Edge<IdType, WeightType, DataType>>>& edges){
 	cout << endl;
 }
 
+/* Utility for creation */
+template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
+inline void add_nodes(vector<shared_ptr<Node<I, D>>>& node_ps, shared_ptr<GraphType<I, W, D>> g){
+
+	for(auto node_p : node_ps){
+		g->add_node(node_p);
+	}
+
+	return;
+}
+
+template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
+inline void add_edges(vector<shared_ptr<Edge<I, W, D>>>& edge_ps, shared_ptr<GraphType<I, W, D>> g){
+
+	for(auto edge_p : edge_ps){
+		g->add_edge(edge_p);
+	}
+
+	return;
+}
+
+
+
+
 
 #endif
