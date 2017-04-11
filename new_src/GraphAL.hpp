@@ -42,10 +42,12 @@ public:
 		}
 	}
 
+	/* Checks if the node is in the graph */
 	bool has_node(const shared_ptr<Node<IdType, DataType>> x){
 		return node_in_graph(x);
 	}
 
+	/* Checks if this particular edge exists, notice that weight is part of the edge */
 	bool has_edge(shared_ptr<Edge<IdType, WeightType, DataType>> e){
 		return has_edge(e->get_src(), e->get_weight(), e->get_dst());
 	}	
@@ -85,6 +87,7 @@ public:
 
 	}
 
+	/* Returns all the outgoing edges from a given node */
 	vector<shared_ptr<Edge<IdType, WeightType, DataType>>> edges_of_node(const shared_ptr<Node<IdType, DataType>> x){
 		
 		vector<shared_ptr<Edge<IdType, WeightType, DataType>>> temp;
@@ -103,6 +106,7 @@ public:
 		return temp;
 	}
 
+	/* Returns a vector of all eges in the graph */
 	vector<shared_ptr<Edge<IdType, WeightType, DataType>>> get_edges(){
 		
 		vector<shared_ptr<Edge<IdType, WeightType, DataType>>> temp;
@@ -119,6 +123,7 @@ public:
 		return temp;
 	}
 
+	/* Returns an edge between two nodes in a graph, if such exists. Throws exp otherwise */
 	shared_ptr<Edge<IdType, WeightType, DataType>> get_edge(shared_ptr<Node<IdType, DataType>> src,
 		shared_ptr<Node<IdType, DataType>> dst){
 
@@ -132,6 +137,7 @@ public:
 		return create_edge(src, (*edge_p).second, dst);
 	}
 
+	/* Returns the nodes of the graph */
 	vector<shared_ptr<Node<IdType, DataType>>> get_nodes(){
 		vector<shared_ptr<Node<IdType, DataType>>> temp;
 		
@@ -145,7 +151,7 @@ public:
 		return temp;
 	}	
 
-	// Function return the neighbours of the node
+	/* Function return the neighbours of the node */
 	vector<shared_ptr<Node<IdType, DataType>>> neighbours(const shared_ptr<Node<IdType, DataType>> src){
 
 		/* Check if the node is in the graph */
@@ -165,6 +171,7 @@ public:
 		return temp;
 	}
 
+	/* Checks if exists a directed edge from src to dst */
 	bool adjacent(const shared_ptr<Node<IdType, DataType>> src, const shared_ptr<Node<IdType, DataType>> dst){
 
 		if(!nodes_in_graph(src, dst)){
@@ -178,6 +185,7 @@ public:
 		return false;
 	}
 
+	/* Adds a node to the graph */
 	bool add_node(const shared_ptr<Node<IdType, DataType>> x){
 		
 		/* Check if the vertex is already in the graph */
@@ -203,7 +211,7 @@ public:
 		return true;
 	}
 
-
+	/* Removes a node from a graph */
 	bool remove_node(const shared_ptr<Node<IdType, DataType>> x){
 
 		/* Check if the vertex is not in the graph */
@@ -242,18 +250,10 @@ public:
 		return true;
 	}
 
-	/* notice how these functions avoid the adjacency list structure
-	in the graph all together*/
-	//TODO: figure out how to give a WeightType a default value
-	bool add_edge(const shared_ptr<Node<IdType, DataType>> src, const shared_ptr<Node<IdType, DataType>> dst){
-		throw std::invalid_argument("NEED DEFAULT VALUE DECISION HERE!");
-		return true;
-	}
-
+	/* Adds an edge to the graph */
 	inline bool add_edge(shared_ptr<Edge<IdType, WeightType, DataType>> e){
 		return add_edge(e->get_src(), e->get_weight(), e->get_dst());
 	}
-
 	bool add_edge(const shared_ptr<Node<IdType, DataType>> src, const WeightType w, 
 		const shared_ptr<Node<IdType, DataType>> dst){
 		/* All we need to do here is to add a pointer
@@ -281,6 +281,7 @@ public:
 		return true;
 	}
 
+	/* Removes an edge from the graph */
 	bool remove_edge(const shared_ptr<Node<IdType, DataType>> src,
 		const shared_ptr<Node<IdType, DataType>> dst){
 
