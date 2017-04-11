@@ -1,10 +1,10 @@
-#include "GraphAL.hpp"
-#include "Graph.hpp"
-#include "algo.h"
 #include <string>
 #include <iostream>
 
-#include "graph_concepts.h"
+#include "GraphAL.hpp"
+#include "Graph.hpp"
+#include "algo.h"
+#include "utility.hpp"
 
 
 int main(){
@@ -113,7 +113,6 @@ int main(){
 	cout << "Maybe (C, 1, D)? Remember we removed D\n";
 	auto e3 = create_edge<string, int, int>(n3, 1, n4);
 	cout << g1->has_edge(e3) << endl;
-
 	g1->print_graph();
 
 	// Lets get edges of B and its edges back
@@ -121,7 +120,7 @@ int main(){
 	auto edges_of = g1->edges_of_node(n2);
 	print_edges(edges_of);
 
-	/* Run DFS */
+	// Run DFS
 	cout << "Print DFS rooted at A\n";
 	auto dfsn1 = dfs(g1, n1);
 	dfsn1->print_graph();
@@ -134,6 +133,7 @@ int main(){
 	auto dfsn3 = dfs(g1, n3);
 	dfsn2->print_graph();
 
+	// Build a graph from multiple edges and nodes (make sure to add nodes first`)
 	cout << "Lets build a graph from edges and nodes of g1\n";
 	auto node_v = g1->get_nodes();
 	auto edges_v = g1->get_edges();
@@ -141,6 +141,11 @@ int main(){
 	add_nodes(node_v, g2);
 	add_edges(edges_v, g2);
 	g2->print_graph();
+
+	// Lets test the undirectification
+	make_undirected_from<string, int, int, GraphAL>(g2, average_combine<string, int, int>);
+
+
 
 
 

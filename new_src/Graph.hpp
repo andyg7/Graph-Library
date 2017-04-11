@@ -109,11 +109,27 @@ public:
 	// 	print_edge();
 	// 	cout << endl;
 	// }
+
+
 private:
 	shared_ptr<Node<IdType, DataType>> src;
 	shared_ptr<Node<IdType, DataType>> dst;
 	WeightType w;
 };
+
+
+
+/* We will need these for sorting on edges */
+// inline bool operator==(const Edge& lhs, const Edge& rhs){ 
+// 	return ((lhs.src == rhs.src ) && (lhs.dst == rhs.dst) && (lhs.w == rhs.w))
+// }
+// inline bool operator!=(const Edge& lhs, const Edge& rhs){return !operator==(lhs,rhs);}
+template <typename IdType, typename Weight, typename DataType>
+inline bool compare_edges(const shared_ptr<Edge<IdType, Weight, DataType>> lhs,
+	const shared_ptr<Edge<IdType, Weight, DataType>> rhs){
+	cout << "hello\n";
+	return lhs->get_weight() < rhs->get_weight();
+}
 
 
 /************************* Node Class ****************************/
@@ -151,15 +167,15 @@ public:
 		this->data = data;
 	}
 
-	bool operator==(const Node& rhs){
+	inline bool operator==(const Node& rhs){
 		return (this->id==rhs.id);
 	}
 
-	void print_node() const {
+	inline void print_node() const {
 		cout << get_id();
 	}
 
-	static shared_ptr<Node<IdType, DataType>> create_node(IdType id, DataType* data){
+	inline static shared_ptr<Node<IdType, DataType>> create_node(IdType id, DataType* data){
 		shared_ptr<Node<IdType, DataType>> p = make_shared<Node<IdType, DataType>>(id, data);
 		return p;
 	}
