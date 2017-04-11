@@ -22,13 +22,33 @@ shared_ptr<GraphType<I, W, D>> make_undirected_from(shared_ptr<GraphType<I, W, D
 
 	auto undirected_graph = create_graph<I, W, D, GraphType>();
 	auto edges = initial_graph->get_edges();
-	print_edges(edges);
-	std::sort(edges.begin(), edges.end(), compare_edges<I, W, D>);
 
-	print_edges(edges);
+	/* Add all nodes to the new graph since they are not influenced by directedness */
+	add_nodes(initial_graph->get_nodes(), undirected_graph);
 
-	return initial_graph;
+	for(auto edge_sp : edges){
 
+		/* If this edge already exists, the connection has been built so we skip */
+		if( undirected_graph->adjacent(edge_sp->get_src(), edge_sp->get_dst())){
+			continue;
+		}
+
+		/* If the back edge exists, we want to combine the two into one, and add that one in both directions */
+		if(initial_graph->adjacent(edge_sp->get_dst(), edge_sp->get_src())){
+			auto back = initial_graph->get_edge(edge_sp->get_dst(), edge_sp->get_src());
+			auto combined_edge = combine(edge_sp, back);
+			undirected_graph->add_edge(combined_edge);
+			undirected_graph->add_edge(combined_edge->get_dst(), combined_edge->get_weight(), combined_edge->get_src());
+			continue;
+		}
+
+		/* Otherwise, if no backward edge exist, add the one we have in both directions */
+		undirected_graph->add_edge(edge_sp);
+		undirected_graph->add_edge(edge_sp->get_dst(), edge_sp->get_weight(), edge_sp->get_src());
+
+	}
+
+	return undirected_graph;
 }
 
 

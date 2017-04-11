@@ -143,7 +143,26 @@ int main(){
 	g2->print_graph();
 
 	// Lets test the undirectification
-	make_undirected_from<string, int, int, GraphAL>(g2, average_combine<string, int, int>);
+	cout << "Lets get the undirected version of a directed graph g2\n";
+	auto ug2 = make_undirected_from<string, int, int, GraphAL>(g2, average_combine<string, int, int>);
+	ug2->print_graph();
+
+	cout << "Lets try a more complicated graph. Here is one:\n";
+	auto g3 = create_graph<string, int, int, GraphAL>();
+	g3->add_node(n1);
+	g3->add_node(n2);
+	g3->add_node(n3);
+	g3->add_node(n4);
+
+	g3->add_edge(n1, 1, n2);
+	g3->add_edge(n2, 8, n1);
+	g3->add_edge(n2, 5, n3);
+	g3->print_graph();
+
+	cout << "Now lets see how it can be made undirected by adding edges according to some rule\n";
+	auto ug3 = make_undirected_from<string, int, int, GraphAL>(g3, average_combine<string, int, int>);
+	ug3->print_graph();
+
 
 
 
