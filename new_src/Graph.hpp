@@ -117,13 +117,6 @@ private:
 	WeightType w;
 };
 
-
-
-/* We will need these for sorting on edges */
-// inline bool operator==(const Edge& lhs, const Edge& rhs){ 
-// 	return ((lhs.src == rhs.src ) && (lhs.dst == rhs.dst) && (lhs.w == rhs.w))
-// }
-// inline bool operator!=(const Edge& lhs, const Edge& rhs){return !operator==(lhs,rhs);}
 template <typename IdType, typename Weight, typename DataType>
 inline bool compare_edges(const shared_ptr<Edge<IdType, Weight, DataType>> lhs,
 	const shared_ptr<Edge<IdType, Weight, DataType>> rhs){

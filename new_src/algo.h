@@ -37,6 +37,7 @@ shared_ptr<GraphType<I, W, D>> dfs(shared_ptr<GraphType<I, W, D>> graph,
 			/* Add the edge representig how we got there */
 			auto pred_p = predecessor.find(x->get_id());
 
+			/* If prefeccessor exists, add the edge to the graph */
 			if(pred_p != predecessor.end()){
 				tree->add_edge( (*pred_p).second );
 			}
@@ -46,11 +47,8 @@ shared_ptr<GraphType<I, W, D>> dfs(shared_ptr<GraphType<I, W, D>> graph,
 				temp.push_front(y);
 				predecessor[y->get_id()] = graph->get_edge(x, y);
 			}
-
 		}
-
 	}
-
 	return tree;
 }
 

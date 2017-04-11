@@ -13,11 +13,6 @@
 //#include "graph_concepts.h"
 #include "Graph.hpp"
 
-//typedef std::shared_ptr<IdType> IdPtr;
-// template <typename IdType>
-// typedef std::shared_ptr<NodeAL<IdType>> NodeALPtr;
-
-
 
 using namespace std;
 
