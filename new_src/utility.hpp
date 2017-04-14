@@ -24,7 +24,7 @@ shared_ptr<GraphType<I, W, D>> make_undirected_from(shared_ptr<GraphType<I, W, D
 	auto edges = initial_graph->get_edges();
 
 	/* Add all nodes to the new graph since they are not influenced by directedness */
-	add_nodes(initial_graph->get_nodes(), undirected_graph);
+	add_nodes(undirected_graph, initial_graph->get_nodes());
 
 	for(auto edge_sp : edges){
 

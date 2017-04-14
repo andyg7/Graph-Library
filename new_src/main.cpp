@@ -20,10 +20,10 @@ int main(){
 	auto g1 = create_graph<string, int, int, GraphAL>();
 	
 	// Add nodes to the graph 
-	g1->add_node(n1);
-	g1->add_node(n2);
-	g1->add_node(n3);
-	g1->add_node(n4);
+	add_node(g1, n1);
+	add_node(g1, n2);
+	add_node(g1, n3);
+	add_node(g1, n4);
 	g1->print_graph();
 
 	// Add edges
@@ -49,10 +49,10 @@ int main(){
 	g1->remove_node(n2);
 	g1->print_graph();
 	cout << "And add back...\n";
-	g1->add_node(n1);
-	g1->add_node(n2);
-	g1->add_node(n3);
-	g1->add_node(n4);
+	add_node(g1, n1);
+	add_node(g1, n2);
+	add_node(g1, n3);
+	add_node(g1, n4);
 	g1->print_graph();
 
 	// Add a edges
@@ -145,8 +145,8 @@ int main(){
 	auto node_v = get_nodes(g1);
 	auto edges_v = get_edges(g1);
 	auto g2 = create_graph<string, int, int, GraphAL>();
-	add_nodes(node_v, g2);
-	add_edges(edges_v, g2);
+	add_nodes(g2, node_v);
+	add_edges(g2, edges_v);
 	g2->print_graph();
 
 	// Lets test the undirectification

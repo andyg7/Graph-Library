@@ -192,7 +192,7 @@ void print_edges(vector<shared_ptr<Edge<IdType, WeightType, DataType>>>& edges){
 
 /* Utility for creation */
 template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
-inline void add_nodes(const vector<shared_ptr<Node<I, D>>>& node_ps, shared_ptr<GraphType<I, W, D>> g){
+inline void add_nodes(shared_ptr<GraphType<I, W, D>> g, const vector<shared_ptr<Node<I, D>>>& node_ps){
 
 	for(auto node_p : node_ps){
 		g->add_node(node_p);
@@ -202,7 +202,7 @@ inline void add_nodes(const vector<shared_ptr<Node<I, D>>>& node_ps, shared_ptr<
 }
 
 template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
-inline void add_edges(const vector<shared_ptr<Edge<I, W, D>>>& edge_ps, shared_ptr<GraphType<I, W, D>> g){
+inline void add_edges(shared_ptr<GraphType<I, W, D>> g, const vector<shared_ptr<Edge<I, W, D>>>& edge_ps){
 
 	for(auto edge_p : edge_ps){
 		g->add_edge(edge_p);
@@ -272,6 +272,10 @@ inline bool adjacent(const GraphSP<I, W, D, GraphType> graph,
 	return graph->adjacent(src, dst);
 }
 
+template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
+bool add_node(const GraphSP<I, W, D, GraphType> graph, const NodeSP<I, D> x){
+	return graph->add_node(x);
+}
 
 
 
