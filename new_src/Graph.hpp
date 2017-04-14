@@ -275,6 +275,12 @@ inline bool operator==(const EdgeSP<I, W, D> lhs,
 		&& (lhs->get_dst() == rhs->get_dst());
 }
 
+template <typename I, typename W, typename D>
+inline bool operator!=(const EdgeSP<I, W, D> lhs,
+	const EdgeSP<I, W, D> rhs){
+	return !(lhs == rhs);
+}
+
 
 
 

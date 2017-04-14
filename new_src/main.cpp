@@ -186,6 +186,7 @@ int main(){
 	cout << (e5 == e6) << endl;
 	cout << (e5 == e7) << endl;
 	cout << (e5 == e8) << endl;
+	cout << (e5 != e8) << endl;
 
 
 
