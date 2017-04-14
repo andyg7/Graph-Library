@@ -5,6 +5,7 @@
 #include "Graph.hpp"
 #include "algo.h"
 #include "utility.hpp"
+#include "path_algorithms.h"
 
 
 int main(){
@@ -26,9 +27,15 @@ int main(){
 	g1->print_graph();
 
 	// Add edges
-	cout << "add edges A-B and A-C\n";
+	cout << "add edges A-B and B-C\n";
+	g1->add_edge(n1, 10, n4);
 	g1->add_edge(n1, 1, n2);
-	g1->add_edge(n1, 1, n3);
+	g1->add_edge(n2, 1, n3);
+	g1->add_edge(n3, 1, n4);
+	find_path_dfs(g1, n1, n4);
+	find_path_bfs(g1, n1, n4);
+	find_path_ucs(g1, n1, n4);
+
 	g1->print_graph();
 
 	// Remove a node
@@ -163,8 +170,6 @@ int main(){
 	auto ug3 = make_undirected_from<string, int, int, GraphAL>(g3, average_combine<string, int, int>);
 	ug3->print_graph();
 
-
-	cout << "Lets check the operator==\n";
 	auto n5 = create_node<string, int>("D", nullptr);
 	cout << (n5 == n4) << endl;
 	cout << (n5 == n3) << endl;
@@ -181,12 +186,6 @@ int main(){
 	cout << (e5 == e6) << endl;
 	cout << (e5 == e7) << endl;
 	cout << (e5 == e8) << endl;
-
-
-
-
-
-
 
 
 
