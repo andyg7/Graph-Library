@@ -254,6 +254,26 @@ inline EdgeSP<I, W, D> get_edge(const GraphSP<I, W, D, GraphType> graph, NodeSP<
 	return graph->get_edge(src, dst);
 }
 
+template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
+inline vector<NodeSP<I, D>> get_nodes(const GraphSP<I, W, D, GraphType> graph){
+	return graph->get_nodes();
+}
+
+template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
+inline vector<NodeSP<I, D>> neighbours(const GraphSP<I, W, D, GraphType> graph, const NodeSP<I, D> src){
+	return graph->neighbours(src);
+}
+
+
+
+
+
+
+
+
+
+
+
 
 /* OPERATORS ON NODE SPs */
 template <typename I, typename D>

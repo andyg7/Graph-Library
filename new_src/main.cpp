@@ -87,12 +87,12 @@ int main(){
 
 	// Get neighbours
 	cout << "Who are the neighbours of B?\n";
-	auto v = g1->neighbours(n2);
-	print_nodes<string, int>(v);
+	auto v = neighbours(g1, n2);
+	print_nodes(v);
 
 	// Lets see which nodes participate in g1
 	cout << "Who are the participants of g1?\n";
-	auto pariticipants = g1->get_nodes();
+	auto pariticipants = get_nodes(g1);
 	print_nodes(pariticipants);
 
 	// Lets get the edge list
@@ -142,7 +142,7 @@ int main(){
 
 	// Build a graph from multiple edges and nodes (make sure to add nodes first`)
 	cout << "Lets build a graph from edges and nodes of g1\n";
-	auto node_v = g1->get_nodes();
+	auto node_v = get_nodes(g1);
 	auto edges_v = get_edges(g1);
 	auto g2 = create_graph<string, int, int, GraphAL>();
 	add_nodes(node_v, g2);
