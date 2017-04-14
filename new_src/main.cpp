@@ -177,5 +177,18 @@ int main(){
 	cout << (n5 != n4) << endl;
 	cout << (n5 != n3) << endl;
 
+	cout << "Now on edges\n";
+	auto e5 = create_edge<string, int, int>(n2, 5, n4);
+	auto e6 = create_edge<string, int, int>(n2, 5, n5);
+	auto e7 = create_edge<string, int, int>(n2, 2, n5);
+	auto e8 = create_edge<string, int, int>(n1, 2, n5);
+
+	cout << (e5 == e6) << endl;
+	cout << (e5 == e7) << endl;
+	cout << (e5 == e8) << endl;
+	cout << (e5 != e8) << endl;
+
+
+
 	return 0;
 }

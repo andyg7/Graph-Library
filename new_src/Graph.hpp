@@ -104,13 +104,6 @@ public:
 		this->w = w;
 	}
 
-	// ~Edge(){
-	// 	cout << "delete ";
-	// 	print_edge();
-	// 	cout << endl;
-	// }
-
-
 private:
 	shared_ptr<Node<IdType, DataType>> src;
 	shared_ptr<Node<IdType, DataType>> dst;
@@ -262,7 +255,7 @@ inline EdgeSP<I, W, D> get_edge(const GraphSP<I, W, D, GraphType> graph, NodeSP<
 }
 
 
-/* OPERATORS ON NODES */
+/* OPERATORS ON NODE SPs */
 template <typename I, typename D>
 inline bool operator==(const NodeSP<I, D>& lhs, const NodeSP<I, D>& rhs){ 
 	return (lhs->get_id() == rhs->get_id());
@@ -270,6 +263,21 @@ inline bool operator==(const NodeSP<I, D>& lhs, const NodeSP<I, D>& rhs){
 
 template <typename I, typename D>
 inline bool operator!=(const NodeSP<I, D>& lhs, const NodeSP<I, D>& rhs){ 
+	return !(lhs == rhs);
+}
+
+/* OPERATORS EDGE SPs */
+template <typename I, typename W, typename D>
+inline bool operator==(const EdgeSP<I, W, D> lhs,
+	const EdgeSP<I, W, D> rhs){
+	return (lhs->get_weight() == rhs->get_weight())
+		&& (lhs->get_src() == rhs->get_src())
+		&& (lhs->get_dst() == rhs->get_dst());
+}
+
+template <typename I, typename W, typename D>
+inline bool operator!=(const EdgeSP<I, W, D> lhs,
+	const EdgeSP<I, W, D> rhs){
 	return !(lhs == rhs);
 }
 
