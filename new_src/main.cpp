@@ -28,10 +28,10 @@ int main(){
 
 	// Add edges
 	cout << "add edges A-B and B-C\n";
-	g1->add_edge(n1, 10, n4);
-	g1->add_edge(n1, 1, n2);
-	g1->add_edge(n2, 1, n3);
-	g1->add_edge(n3, 1, n4);
+	add_edge(g1, n1, 10, n4);
+	add_edge(g1, n1, 1, n2);
+	add_edge(g1, n2, 1, n3);
+	add_edge(g1, n3, 1, n4);
 	find_path_dfs(g1, n1, n4);
 	find_path_bfs(g1, n1, n4);
 	find_path_ucs(g1, n1, n4);
@@ -57,22 +57,22 @@ int main(){
 
 	// Add a edges
 	cout << "Add few edges\n";
-	g1->add_edge(n1, 1, n2);
-	g1->add_edge(n1, 1, n3);
-	g1->add_edge(n4, 1, n3);
-	g1->add_edge(n3, 1, n4);
+	add_edge(g1, n1, 1, n2);
+	add_edge(g1, n1, 1, n3);
+	add_edge(g1, n4, 1, n3);
+	add_edge(g1, n3, 1, n4);
 	g1->print_graph();
 
 	// Remove edges
 	cout << "Remove few edges\n";
-	g1->remove_edge(n1, n2);
-	g1->remove_edge(n4, n3);
+	remove_edge(g1, n1, n2);
+	remove_edge(g1, n4, n3);
 	g1->print_graph();
 
 	// Create an Edge, pass that object in instead
 	cout << "Add an Edge if you know what i mean\n";
 	auto e1 = create_edge<string, int, int>(n2, 7, n3);
-	g1->add_edge(e1);
+	add_edge(g1, e1);
 	g1->print_graph();
 
 	cout << "Is B adjacent to C?\n";
@@ -81,8 +81,8 @@ int main(){
 	cout << adjacent(g1, n3, n2) << endl;
 
 	cout << "Add more edges and see the neighbours\n";
-	g1->add_edge(n2, 1, n1);
-	g1->add_edge(n2, 1, n4);
+	add_edge(g1, n2, 1, n1);
+	add_edge(g1, n2, 1, n4);
 	g1->print_graph();
 
 	// Get neighbours
@@ -112,8 +112,8 @@ int main(){
 	cout << "Is D in the graph?\n";
 	cout << has_node(g1, n4) << endl;
 	cout << "Remove it. Is D in graph now?\n";
-	g1->remove_node(n4);
-	cout << g1->has_node(n4) << endl;
+	remove_node(g1, n4);
+	cout << has_node(g1, n4) << endl;
 	cout << "Lets check if there is an edge (A, 1, C)?\n";
 	auto e2 = create_edge<string, int, int>(n1, 1, n3);
 	cout << has_edge(g1, e2) << endl;
@@ -156,14 +156,14 @@ int main(){
 
 	cout << "Lets try a more complicated graph. Here is one:\n";
 	auto g3 = create_graph<string, int, int, GraphAL>();
-	g3->add_node(n1);
-	g3->add_node(n2);
-	g3->add_node(n3);
-	g3->add_node(n4);
+	add_node(g3, n1);
+	add_node(g3, n2);
+	add_node(g3, n3);
+	add_node(g3, n4);
 
-	g3->add_edge(n1, 1, n2);
-	g3->add_edge(n2, 8, n1);
-	g3->add_edge(n2, 5, n3);
+	add_edge(g3, n1, 1, n2);
+	add_edge(g3, n2, 8, n1);
+	add_edge(g3, n2, 5, n3);
 	g3->print_graph();
 
 	cout << "Now lets see how it can be made undirected by adding edges according to some rule\n";

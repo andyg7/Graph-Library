@@ -251,10 +251,6 @@ public:
 		return true;
 	}
 
-	/* Adds an edge to the graph */
-	inline bool add_edge(shared_ptr<Edge<IdType, WeightType, DataType>> e){
-		return add_edge(e->get_src(), e->get_weight(), e->get_dst());
-	}
 	bool add_edge(const shared_ptr<Node<IdType, DataType>> src, const WeightType w, 
 		const shared_ptr<Node<IdType, DataType>> dst){
 		/* All we need to do here is to add a pointer
