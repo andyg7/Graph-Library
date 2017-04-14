@@ -10,7 +10,7 @@
 #include <stdexcept>
 #include <utility>
 
-//#include "graph_concepts.h"
+#include "graph_concepts.h"
 #include "Graph.hpp"
 
 

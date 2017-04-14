@@ -265,8 +265,12 @@ inline vector<NodeSP<I, D>> neighbours(const GraphSP<I, W, D, GraphType> graph, 
 }
 
 
-
-
+template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
+inline bool adjacent(const GraphSP<I, W, D, GraphType> graph, 
+	const NodeSP<I, D> src, 
+	const NodeSP<I, D> dst){
+	return graph->adjacent(src, dst);
+}
 
 
 

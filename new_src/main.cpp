@@ -76,9 +76,9 @@ int main(){
 	g1->print_graph();
 
 	cout << "Is B adjacent to C?\n";
-	cout << g1->adjacent(n2, n3) << endl;
+	cout << adjacent(g1, n2, n3) << endl;
 	cout << "Is C adjacent to B?\n";
-	cout << g1->adjacent(n3, n2) << endl;
+	cout << adjacent(g1, n3, n2) << endl;
 
 	cout << "Add more edges and see the neighbours\n";
 	g1->add_edge(n2, 1, n1);
