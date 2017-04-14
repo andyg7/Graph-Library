@@ -53,4 +53,16 @@ void find_path_ucs(G graph_data, N start_node, N goal_node)
 	cout << string_path << '\n';
 }
 
+template<typename G, typename N>
+void find_path_ast(G graph_data, N start_node, N goal_node)
+{
+	using weight_type = typename G::element_type::weight_type;
+	using path_state_type = path_state<G, N, weight_type>;
+	shared_ptr<path_state_type> start_state = make_shared<path_state_type>(start_node, 0, nullptr, graph_data);
+	shared_ptr<path_state_type> goal_state = make_shared<path_state_type>(goal_node, 0, nullptr, graph_data);
+	auto path_data = find_path_ucs(start_state, goal_state);
+	auto string_path = path_data->to_string();
+	cout << string_path << '\n';
+}
+
 #endif
