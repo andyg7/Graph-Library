@@ -43,14 +43,11 @@ public:
 	}
 
 	/* Checks if the node is in the graph */
-	bool has_node(const shared_ptr<Node<IdType, DataType>> x){
+	inline bool has_node(const shared_ptr<Node<IdType, DataType>> x){
 		return node_in_graph(x);
 	}
 
-	/* Checks if this particular edge exists, notice that weight is part of the edge */
-	bool has_edge(shared_ptr<Edge<IdType, WeightType, DataType>> e){
-		return has_edge(e->get_src(), e->get_weight(), e->get_dst());
-	}	
+
 	bool has_edge(const shared_ptr<Node<IdType, DataType>> src, const WeightType w, 
 		const shared_ptr<Node<IdType, DataType>> dst){
 

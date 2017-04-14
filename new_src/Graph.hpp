@@ -221,8 +221,20 @@ inline void add_edges(const vector<shared_ptr<Edge<I, W, D>>>& edge_ps, shared_p
 /*                     IMPLEMENTATION WRAPPERS                          */
 /* These are the wrappers around the implementation dependent function. */
 template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
-bool has_node(const shared_ptr<GraphType<I, W, D>> graph, const shared_ptr<Node<I, D>> x){
+inline bool has_node(const shared_ptr<GraphType<I, W, D>> graph, const shared_ptr<Node<I, D>> x){
 	return graph->has_node(x);
+}
+
+template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
+inline bool has_edge(const shared_ptr<GraphType<I, W, D>> graph, shared_ptr<Edge<I, W, D>> e){
+	return graph->has_edge(e->get_src(), e->get_weight(), e->get_dst());
+}
+
+template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
+inline bool has_edge(const shared_ptr<GraphType<I, W, D>> graph, 
+	const shared_ptr<Node<I, D>> src, const W w, 
+		const shared_ptr<Node<I, D>> dst){
+	return graph->has_edge(src, w, dst);
 }
 
 

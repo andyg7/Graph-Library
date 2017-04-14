@@ -109,10 +109,10 @@ int main(){
 	cout << g1->has_node(n4) << endl;
 	cout << "Lets check if there is an edge (A, 1, C)?\n";
 	auto e2 = create_edge<string, int, int>(n1, 1, n3);
-	cout << g1->has_edge(e2) << endl;
+	cout << has_edge(g1, e2) << endl;
 	cout << "Maybe (C, 1, D)? Remember we removed D\n";
 	auto e3 = create_edge<string, int, int>(n3, 1, n4);
-	cout << g1->has_edge(e3) << endl;
+	cout << has_edge(g1, e3) << endl;
 	g1->print_graph();
 
 	// Lets get edges of B and its edges back
