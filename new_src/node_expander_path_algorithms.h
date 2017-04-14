@@ -23,18 +23,20 @@ bool path_exists(V v, V g)
 template<typename V, typename F, typename Insert, typename Remove, typename Top>
 bool path_exists_generic(V v, V g, F f, Insert in, Remove rem, Top top)
 {
-	typedef typename V::element_type element_type;
+	typedef V element_type;
+	typedef typename V::element_type::node_type node_type;
+	typedef typename V::element_type::weight_type weight_type;
 	vector<element_type> path;
 	unordered_set<element_type> visited_nodes;
 	unordered_set<element_type> frontier_helper;
 	F frontier = f;
 	in(frontier, v);
-	frontier_helper.insert(*v);
+	frontier_helper.insert(v);
 	while (!frontier.empty()) {
 		V curr_node = top(frontier);
-		visited_nodes.insert(*curr_node);
+		visited_nodes.insert(curr_node);
 		rem(frontier);
-		auto tmp_it = frontier_helper.find(*curr_node);
+		auto tmp_it = frontier_helper.find(curr_node);
 		frontier_helper.erase(tmp_it);
 
 		vector<V> children = curr_node->expand();
@@ -42,9 +44,9 @@ bool path_exists_generic(V v, V g, F f, Insert in, Remove rem, Top top)
 			if (*c == *g) {
 				return true;
 			}
-			if (visited_nodes.find(*c) == visited_nodes.end() && frontier_helper.find(*c) == frontier_helper.end()) {
+			if (visited_nodes.find(c) == visited_nodes.end() && frontier_helper.find(c) == frontier_helper.end()) {
 				in(frontier, c);
-				frontier_helper.insert(*c);
+				frontier_helper.insert(c);
 			}
 		}
 	}
