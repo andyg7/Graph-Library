@@ -251,6 +251,13 @@ inline vector<EdgeSP<I, W, D>> edges_of_node(const GraphSP<I, W, D, GraphType> g
 		return graph->edges_of_node(x);
 }
 
+template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
+inline vector<shared_ptr<Edge<IdType, WeightType, DataType>>> get_edges(const GraphSP<I, W, D, GraphType> graph){
+	return graph->get_edges();
+}
+
+
+
 
 
 

@@ -30,6 +30,10 @@ class GraphAL{
 friend class NodeAL<IdType, WeightType, DataType>;
 public:
 
+	using id_type = IdType;
+	using weight_type = WeightType;
+	using data_type = DataType;
+
 	static inline shared_ptr<GraphAL<IdType, WeightType, DataType>> create_graph(){
 		shared_ptr<GraphAL<IdType, WeightType, DataType>> p = make_shared<GraphAL<IdType, WeightType, DataType>>();
 		return p;
