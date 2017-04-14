@@ -34,6 +34,9 @@ template <typename IdType, typename WeightType, typename DataType>
 class GraphAL{
 friend class NodeAL<IdType, WeightType, DataType>;
 public:
+	using id_type = IdType;
+	using weight_type = WeightType;
+	using data_type = DataType;
 	/* Need to add more constructors such as list initialization here*/
 	GraphAL(){
 		next_unique_id = 0;
