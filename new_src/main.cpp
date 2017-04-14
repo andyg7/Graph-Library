@@ -117,7 +117,7 @@ int main(){
 
 	// Lets get edges of B and its edges back
 	cout << "Edges of B are?\n";
-	auto edges_of = g1->edges_of_node(n2);
+	auto edges_of = edges_of_node(g1, n2);
 	print_edges(edges_of);
 
 	// Run DFS
