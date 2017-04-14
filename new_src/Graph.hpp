@@ -248,7 +248,7 @@ inline bool has_edge(const GraphSP<I, W, D, GraphType> graph, const NodeSP<I, D>
 template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
 inline vector<EdgeSP<I, W, D>> edges_of_node(const GraphSP<I, W, D, GraphType> graph,
 	const NodeSP<I, D> x){
-		return graph->edges_of_node(x);
+	return graph->edges_of_node(x);
 }
 
 template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
@@ -256,8 +256,22 @@ inline vector<EdgeSP<I, W, D>> get_edges(const GraphSP<I, W, D, GraphType> graph
 	return graph->get_edges();
 }
 
+template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
+inline EdgeSP<I, W, D> get_edge(const GraphSP<I, W, D, GraphType> graph, NodeSP<I, D> src, NodeSP<I, D> dst){
+	return graph->get_edge(src, dst);
+}
 
 
+/* OPERATORS ON NODES */
+template <typename I, typename D>
+inline bool operator==(const NodeSP<I, D>& lhs, const NodeSP<I, D>& rhs){ 
+	return (lhs->get_id() == rhs->get_id());
+}
+
+template <typename I, typename D>
+inline bool operator!=(const NodeSP<I, D>& lhs, const NodeSP<I, D>& rhs){ 
+	return !(lhs == rhs);
+}
 
 
 

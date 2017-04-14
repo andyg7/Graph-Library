@@ -90,7 +90,7 @@ int main(){
 
 	// Lets get the edge list
 	cout << "What are the edges os g1?\n";
-	auto edges = g1->get_edges();
+	auto edges = get_edges(g1);
 	print_edges(edges);
 
 	// Set the data pointer of a node, access data, get id
@@ -136,7 +136,7 @@ int main(){
 	// Build a graph from multiple edges and nodes (make sure to add nodes first`)
 	cout << "Lets build a graph from edges and nodes of g1\n";
 	auto node_v = g1->get_nodes();
-	auto edges_v = g1->get_edges();
+	auto edges_v = get_edges(g1);
 	auto g2 = create_graph<string, int, int, GraphAL>();
 	add_nodes(node_v, g2);
 	add_edges(edges_v, g2);
@@ -162,6 +162,15 @@ int main(){
 	cout << "Now lets see how it can be made undirected by adding edges according to some rule\n";
 	auto ug3 = make_undirected_from<string, int, int, GraphAL>(g3, average_combine<string, int, int>);
 	ug3->print_graph();
+
+
+	cout << "Lets check the operator==\n";
+	auto n5 = create_node<string, int>("D", nullptr);
+	cout << (n5 == n4) << endl;
+	cout << (n5 == n3) << endl;
+
+	cout << (n5 != n4) << endl;
+	cout << (n5 != n3) << endl;
 
 
 
