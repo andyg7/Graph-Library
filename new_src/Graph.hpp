@@ -273,8 +273,13 @@ inline bool adjacent(const GraphSP<I, W, D, GraphType> graph,
 }
 
 template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
-bool add_node(const GraphSP<I, W, D, GraphType> graph, const NodeSP<I, D> x){
+inline bool add_node(const GraphSP<I, W, D, GraphType> graph, const NodeSP<I, D> x){
 	return graph->add_node(x);
+}
+
+template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
+inline bool remove_node(const GraphSP<I, W, D, GraphType> graph, const NodeSP<I, D> x){
+	return graph->remove_node(x);
 }
 
 

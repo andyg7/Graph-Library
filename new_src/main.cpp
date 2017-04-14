@@ -40,13 +40,13 @@ int main(){
 
 	// Remove a node
 	cout << "Remove C from the graph, should also remove the edge\n";
-	g1->remove_node(n3);
+	remove_node(g1, n3);
 	g1->print_graph();
 
 	cout << "Remove all vertices, and add them back\n";
-	g1->remove_node(n1);
-	g1->remove_node(n4);
-	g1->remove_node(n2);
+	remove_node(g1, n1);
+	remove_node(g1, n4);
+	remove_node(g1, n2);
 	g1->print_graph();
 	cout << "And add back...\n";
 	add_node(g1, n1);
