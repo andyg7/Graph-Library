@@ -103,7 +103,7 @@ int main(){
 
 	// Given an edge or a node, lets check if it is in the graph
 	cout << "Is D in the graph?\n";
-	cout << g1->has_node(n4) << endl;
+	cout << has_node(g1, n4) << endl;
 	cout << "Remove it. Is D in graph now?\n";
 	g1->remove_node(n4);
 	cout << g1->has_node(n4) << endl;

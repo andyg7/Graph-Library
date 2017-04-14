@@ -135,6 +135,9 @@ private:
 
 public:
 
+	using id_type = IdType;
+	using data_type = DataType;
+
 	Node(IdType id, DataType* data){
 		//cout << id << " created\n";
 		this->id = id;
@@ -214,6 +217,17 @@ inline void add_edges(const vector<shared_ptr<Edge<I, W, D>>>& edge_ps, shared_p
 
 	return;
 }
+
+/*                     IMPLEMENTATION WRAPPERS                          */
+/* These are the wrappers around the implementation dependent function. */
+template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
+bool has_node(const shared_ptr<GraphType<I, W, D>> graph, const shared_ptr<Node<I, D>> x){
+	return graph->has_node(x);
+}
+
+
+
+
 
 
 
