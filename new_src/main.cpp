@@ -7,15 +7,39 @@
 #include "utility.hpp"
 #include "path_algorithms.h"
 
+#include "GraphAM.hpp"
+
 
 int main(){
 
-	// Create few nodes. nullptr is the data pointer
+	/* Create few nodes. nullptr is the data pointer */
 	auto n1 = create_node<string, int>("A", nullptr);
 	auto n2 = create_node<string, int>("B", nullptr);
 	auto n3 = create_node<string, int>("C", nullptr);
 	auto n4 = create_node<string, int>("D", nullptr);
+	auto extra = create_node<string, int>("Z", nullptr);
 
+	cout << "Testing the matrix implementation\n";
+	cout << "Add 4 nodes and few edges\n";
+	auto gAM1 = create_graph<string, int, int, GraphAM>();
+	add_node(gAM1, n1);
+	add_node(gAM1, n2);
+	add_node(gAM1, n3);
+	add_node(gAM1, n4);
+
+	add_edge(gAM1, n1, 2, n2);
+	add_edge(gAM1, n2, 10, n1);
+	add_edge(gAM1, n3, 1, n1);
+	gAM1->print_graph();
+	cout << endl;
+
+	cout << "Add another node, and notice how the underlying matrix expands\n";
+	add_node(gAM1, extra);
+	gAM1->print_graph();
+	cout << endl;
+
+
+	cout << "Testing the adjacency list implementation\n";
 	// Create a graph
 	auto g1 = create_graph<string, int, int, GraphAL>();
 	
