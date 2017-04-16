@@ -38,6 +38,11 @@ int main(){
 	gAM1->print_graph();
 	cout << endl;
 
+	cout << "Remove an edge\n";
+	remove_edge(gAM1, n2, n1);
+	gAM1->print_graph();
+	cout << endl;
+
 
 	cout << "Testing the adjacency list implementation\n";
 	// Create a graph

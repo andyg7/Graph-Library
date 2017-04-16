@@ -59,6 +59,10 @@ public:
 		(*(entry + row_index*alloced + column_index)) = value;
 	}
 
+	inline void zero_entry(int row_index, int column_index){
+		memset(entry + row_index*alloced + column_index, 0, sizeof(EntryType));
+	}
+
 	inline void inc_used(){
 		used++;
 		if (used > alloced){

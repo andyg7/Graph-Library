@@ -133,9 +133,33 @@ public:
 		return true;
 	}
 
-	// /* Removes an edge from the graph */
-	// bool remove_edge(const shared_ptr<Node<IdType, DataType>> src,
-	// 	const shared_ptr<Node<IdType, DataType>> dst);
+	/* Removes an edge from the graph */
+	bool remove_edge(const shared_ptr<Node<IdType, DataType>> src,
+		const shared_ptr<Node<IdType, DataType>> dst){
+
+		/* First we need to check if the nodes are in the graph */
+		if(!nodes_in_graph(src, dst)){
+			throw std::invalid_argument("src or dst of the edge not in the graph");
+		}
+
+		/* Get hold of the wrappers */
+		auto src_p = get_wrapper_p(src);
+		auto dst_p = get_wrapper_p(dst);
+
+		/* Get the entry of the adjacency matrix to access */
+		int row = src_p->internal_id;
+		int column = dst_p->internal_id;
+
+		/* Check if the edge already exists, if it does, 
+		throw an exception */
+		if(!adjacent(src_p, dst_p)){
+			throw std::invalid_argument("nodes not adjacent");
+		}
+
+		/* If does not exist, lets add it by adding the weight */
+		adjacency_matrix.zero_entry(row, column);
+
+	}
 
 	void print_graph(){
 		adjacency_matrix.print_matrix();
