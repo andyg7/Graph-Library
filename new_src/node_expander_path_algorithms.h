@@ -14,6 +14,7 @@
 using namespace std;
 
 template<typename V>
+requires Expandable_state<V>
 bool path_exists(V v, V g)
 {
 	list<V> frontier;
@@ -21,6 +22,7 @@ bool path_exists(V v, V g)
 }
 
 template<typename V, typename F, typename Insert, typename Remove, typename Top>
+requires Expandable_state<V>
 bool path_exists_generic(V v, V g, F f, Insert in, Remove rem, Top top)
 {
 	typedef V element_type;
@@ -54,6 +56,7 @@ bool path_exists_generic(V v, V g, F f, Insert in, Remove rem, Top top)
 }
 
 template<typename V>
+requires Expandable_state<V>
 shared_ptr<struct path_data<typename V::element_type::node_type, typename V::element_type::weight_type>> find_path_dfs(V v, V g)
 {
 	list<V> frontier;
@@ -61,6 +64,7 @@ shared_ptr<struct path_data<typename V::element_type::node_type, typename V::ele
 }
 
 template<typename V>
+requires Expandable_state<V>
 shared_ptr<struct path_data<typename V::element_type::node_type, typename V::element_type::weight_type>> find_path_bfs(V v, V g)
 {
 	list<V> frontier;
@@ -68,6 +72,7 @@ shared_ptr<struct path_data<typename V::element_type::node_type, typename V::ele
 }
 
 template<typename V>
+requires Expandable_state<V>
 shared_ptr<struct path_data<typename V::element_type::node_type, typename V::element_type::weight_type>> find_path_ucs(V v, V g)
 {
 	typedef priority_queue<V, vector<V>, GreaterThanCost<V>> queue_type;
@@ -76,6 +81,7 @@ shared_ptr<struct path_data<typename V::element_type::node_type, typename V::ele
 }
 
 template<typename V>
+requires Expandable_state<V>
 shared_ptr<struct path_data<typename V::element_type::node_type, typename V::element_type::weight_type>> find_path_ast(V v, V g)
 {
 	typedef priority_queue<V, vector<V>, HeuristicGreaterThanCost<V>> queue_type;
@@ -84,6 +90,7 @@ shared_ptr<struct path_data<typename V::element_type::node_type, typename V::ele
 }
 
 template<typename V, typename F, typename Insert, typename Remove, typename Top>
+requires Expandable_state<V>
 shared_ptr<struct path_data<typename V::element_type::node_type, typename V::element_type::weight_type>> find_path_generic(V v, V g, F f, Insert in, Remove rem, Top top)
 {
 	typedef V element_type;

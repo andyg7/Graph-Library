@@ -4,12 +4,13 @@
 #include <memory>
 #include "path_algorithms_structs.h"
 #include "node_expander_path_algorithms.h"
+#include "graph_concepts.h"
 
 
 template<typename G, typename N>
+requires Graph<G>
 bool path_exists(G graph_data, N start_node, N goal_node)
 {
-
 	using weight_type = typename G::element_type::weight_type;
 	using path_state_type = path_state<G, N, weight_type>;
 	shared_ptr<path_state_type> start_state = make_shared<path_state_type>(start_node, 0, nullptr, graph_data);
@@ -18,6 +19,7 @@ bool path_exists(G graph_data, N start_node, N goal_node)
 }
 
 template<typename G, typename N>
+requires Graph<G>
 void find_path_dfs(G graph_data, N start_node, N goal_node)
 {
 	using weight_type = typename G::element_type::weight_type;
@@ -30,6 +32,7 @@ void find_path_dfs(G graph_data, N start_node, N goal_node)
 }
 
 template<typename G, typename N>
+requires Graph<G>
 void find_path_bfs(G graph_data, N start_node, N goal_node)
 {
 	using weight_type = typename G::element_type::weight_type;
@@ -42,6 +45,7 @@ void find_path_bfs(G graph_data, N start_node, N goal_node)
 }
 
 template<typename G, typename N>
+requires Graph<G>
 void find_path_ucs(G graph_data, N start_node, N goal_node)
 {
 	using weight_type = typename G::element_type::weight_type;
@@ -54,6 +58,7 @@ void find_path_ucs(G graph_data, N start_node, N goal_node)
 }
 
 template<typename G, typename N>
+requires Graph<G>
 void find_path_ast(G graph_data, N start_node, N goal_node)
 {
 	using weight_type = typename G::element_type::weight_type;

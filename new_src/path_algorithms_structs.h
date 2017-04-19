@@ -1,6 +1,8 @@
 #ifndef PATH_ALGORITHMS_STRUCTS
 #define PATH_ALGORITHMS_STRUCTS
 
+#include "graph_concepts.h"
+
 namespace std
 {
 	template<typename G, typename N, typename C>
