@@ -192,20 +192,20 @@ void print_edges(vector<shared_ptr<Edge<IdType, WeightType, DataType>>>& edges){
 
 /* Utility for creation */
 template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
-inline void add_nodes(const vector<shared_ptr<Node<I, D>>>& node_ps, shared_ptr<GraphType<I, W, D>> g){
+inline void add_nodes(shared_ptr<GraphType<I, W, D>> g, const vector<shared_ptr<Node<I, D>>>& node_ps){
 
 	for(auto node_p : node_ps){
-		g->add_node(node_p);
+		add_node(g, node_p);
 	}
 
 	return;
 }
 
 template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
-inline void add_edges(const vector<shared_ptr<Edge<I, W, D>>>& edge_ps, shared_ptr<GraphType<I, W, D>> g){
+inline void add_edges(shared_ptr<GraphType<I, W, D>> g, const vector<shared_ptr<Edge<I, W, D>>>& edge_ps){
 
 	for(auto edge_p : edge_ps){
-		g->add_edge(edge_p);
+		add_edge(g, edge_p);
 	}
 
 	return;
@@ -264,11 +264,37 @@ inline vector<NodeSP<I, D>> neighbours(const GraphSP<I, W, D, GraphType> graph, 
 	return graph->neighbours(src);
 }
 
+template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
+inline bool adjacent(const GraphSP<I, W, D, GraphType> graph, 
+	const NodeSP<I, D> src, 
+	const NodeSP<I, D> dst){
+	return graph->adjacent(src, dst);
+}
 
+template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
+inline bool add_node(const GraphSP<I, W, D, GraphType> graph, const NodeSP<I, D> x){
+	return graph->add_node(x);
+}
 
+template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
+inline bool remove_node(const GraphSP<I, W, D, GraphType> graph, const NodeSP<I, D> x){
+	return graph->remove_node(x);
+}
 
+template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
+inline bool add_edge(const GraphSP<I, W, D, GraphType> graph, const NodeSP<I, D> src, const W w, const NodeSP<I, D> dst){
+	return graph->add_edge(src, w, dst);
+}
 
+template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
+inline bool add_edge(const GraphSP<I, W, D, GraphType> graph, const EdgeSP<I, W, D> e){
+	return graph->add_edge(e->get_src(), e->get_weight(), e->get_dst());
+}
 
+template <typename I, typename W, typename D, template <typename, typename, typename> typename GraphType>
+bool remove_edge(const GraphSP<I, W, D, GraphType> graph, const NodeSP<I, D> src, const NodeSP<I, D> dst){
+	return graph->remove_edge(src, dst);
+}
 
 
 
