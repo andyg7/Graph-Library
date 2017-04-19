@@ -10,7 +10,7 @@
 #include <stdexcept>
 #include <utility>
 
-#include "graph_concepts.h"
+//#include "graph_concepts.h"
 #include "Graph.hpp"
 
 
@@ -251,6 +251,10 @@ public:
 		return true;
 	}
 
+	/* Adds an edge to the graph */
+	inline bool add_edge(shared_ptr<Edge<IdType, WeightType, DataType>> e){
+		return add_edge(e->get_src(), e->get_weight(), e->get_dst());
+	}
 	bool add_edge(const shared_ptr<Node<IdType, DataType>> src, const WeightType w, 
 		const shared_ptr<Node<IdType, DataType>> dst){
 		/* All we need to do here is to add a pointer
@@ -413,7 +417,10 @@ class NodeAL{
 friend class GraphAL<IdType, WeightType, DataType>;
 public:
 
-	/* Need to think about other constructors here a little */
+using id_type = IdType;
+using weight_type = WeightType;
+using data_type = DataType;
+/* Need to think about other constructors here a little */
 	/* Existance of NodeAL only makes sense in the context of a graph */
 	NodeAL(GraphAL<IdType, WeightType, DataType>* graph,
 		const shared_ptr<Node<IdType, DataType>> user_node){
@@ -421,6 +428,11 @@ public:
 		internal_id = graph->get_new_id();
 
 		user_node_p = user_node;
+	}
+
+	int heuristic_function() 
+	{
+		return 10;
 	}
 
 private:

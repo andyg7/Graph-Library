@@ -8,7 +8,7 @@
 
 
 template<typename G, typename N>
-requires Graph<G>
+requires Graph_ptr<G> && Node_ptr<N>
 bool path_exists(G graph_data, N start_node, N goal_node)
 {
 	using weight_type = typename G::element_type::weight_type;
@@ -19,7 +19,7 @@ bool path_exists(G graph_data, N start_node, N goal_node)
 }
 
 template<typename G, typename N>
-requires Graph<G>
+requires Graph_ptr<G> && Node_ptr<N>
 void find_path_dfs(G graph_data, N start_node, N goal_node)
 {
 	using weight_type = typename G::element_type::weight_type;
@@ -32,7 +32,7 @@ void find_path_dfs(G graph_data, N start_node, N goal_node)
 }
 
 template<typename G, typename N>
-requires Graph<G>
+requires Graph_ptr<G> && Node_ptr<N>
 void find_path_bfs(G graph_data, N start_node, N goal_node)
 {
 	using weight_type = typename G::element_type::weight_type;
@@ -45,7 +45,7 @@ void find_path_bfs(G graph_data, N start_node, N goal_node)
 }
 
 template<typename G, typename N>
-requires Graph<G>
+requires Graph_ptr<G> && Node_ptr<N>
 void find_path_ucs(G graph_data, N start_node, N goal_node)
 {
 	using weight_type = typename G::element_type::weight_type;
@@ -58,7 +58,7 @@ void find_path_ucs(G graph_data, N start_node, N goal_node)
 }
 
 template<typename G, typename N>
-requires Graph<G>
+requires Graph_ptr<G> && Node_ptr<N>
 void find_path_ast(G graph_data, N start_node, N goal_node)
 {
 	using weight_type = typename G::element_type::weight_type;

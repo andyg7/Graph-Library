@@ -15,6 +15,7 @@
 /*
    ... to here are from https://github.com/CaseyCarter/cmcstl2
  */
+#include <vector>
 
 using namespace std;
 
@@ -92,8 +93,15 @@ requires (P p) {
 	{ *p } -> typename P::element_type;
 };
 
+template<typename N>
+concept bool Node_ptr = 
+requires (N n) {
+	typename N::element_type::id_type;
+	typename N::element_type::data_type;
+};
+
 template<typename G>
-concept bool Graph = 
+concept bool Graph_ptr = 
 requires (G g) {
 	requires Shared_ptr<G>;
 	typename G::element_type::id_type;
@@ -104,7 +112,7 @@ template<typename S>
 concept bool Expandable_state = 
 requires (S s) {
 	requires Shared_ptr<S>;
-	s->expand();
+	{ s->expand() } -> vector<S>;
 };
 
 #endif
