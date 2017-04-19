@@ -17,15 +17,16 @@
 using namespace std;
 
 template <typename IdType, typename WeightType, typename DataType>
+requires Comparable<IdType> && Numeric<WeightType>
 class NodeAL;
 template <typename IdType, typename WeightType, typename DataType>
-//requires Comparable<IdType>
+requires Comparable<IdType> && Numeric<WeightType>
 class GraphAL;
 
 
 /************************* GraphAL Class ****************************/
 template <typename IdType, typename WeightType, typename DataType>
-//requires Comparable<IdType>
+requires Comparable<IdType> && Numeric<WeightType>
 class GraphAL{
 friend class NodeAL<IdType, WeightType, DataType>;
 public:
@@ -413,6 +414,7 @@ private:
 /* Adjacency list implementation node wrapper */
 //TODO: Need Comparable on ID type here
 template <typename IdType, typename WeightType, typename DataType>
+requires Comparable<IdType> && Numeric<WeightType>
 class NodeAL{
 friend class GraphAL<IdType, WeightType, DataType>;
 public:

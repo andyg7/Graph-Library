@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include "Graph.hpp"
+#include "graph_concepts.h"
+
 using namespace std;
 
 /* THE TODO LIST 
@@ -15,8 +17,10 @@ User must go through create_node function*
 
 
 template <typename IdType, typename DataType>
+requires Comparable<IdType> 
 class Node;
 template <typename IdType, typename WeightType, typename DataType>
+requires Comparable<IdType> && Numeric<WeightType>
 class Edge;
 
 //TODO:Make it a smart pointer
@@ -61,6 +65,7 @@ inline shared_ptr<GraphType<I, W, D>> create_graph(){
 
 /************************* Edge Class ****************************/
 template <typename IdType, typename WeightType, typename DataType>
+requires Comparable<IdType> && Numeric<WeightType>
 class Edge{
 public:
 
@@ -120,6 +125,7 @@ inline bool compare_edges(const shared_ptr<Edge<IdType, Weight, DataType>> lhs,
 
 /************************* Node Class ****************************/
 template <typename IdType, typename DataType>
+requires Comparable<IdType>
 class Node{
 
 private:

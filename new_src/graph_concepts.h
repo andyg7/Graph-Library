@@ -87,15 +87,22 @@ requires (G g) {
 };
 
 template<typename P>
+concept bool Ptr = 
+requires (P p) {
+	*p;
+};
+
+template<typename P>
 concept bool Shared_ptr = 
 requires (P p) {
 	typename P::element_type;
-	{ *p } -> typename P::element_type;
+	*p;
 };
 
 template<typename N>
 concept bool Node_ptr = 
 requires (N n) {
+	requires Shared_ptr<N>;
 	typename N::element_type::id_type;
 	typename N::element_type::data_type;
 };
