@@ -6,7 +6,6 @@
 #include "node_expander_path_algorithms.h"
 #include "graph_concepts.h"
 
-
 template<typename G, typename N>
 requires Graph_ptr<G> && Node_ptr<N>
 bool path_exists(G graph_data, N start_node, N goal_node)

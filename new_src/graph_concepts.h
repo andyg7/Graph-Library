@@ -2,6 +2,9 @@
 #define GRAPH_CONCEPTS_H
 
 #include <string>
+#include <memory>
+#include "Graph.hpp"
+
 /*
    The included files from here...
  */
@@ -113,6 +116,7 @@ requires (G g) {
 	requires Shared_ptr<G>;
 	typename G::element_type::id_type;
 	typename G::element_type::weight_type;
+	typename G::element_type::data_type;
 };
 
 template<typename S>

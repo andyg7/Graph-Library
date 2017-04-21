@@ -102,6 +102,9 @@ shared_ptr<struct path_data<typename V::element_type::node_type, typename V::ele
 	while (!frontier.empty()) {
 		V curr_node = top(frontier);
 		visited_nodes.insert(curr_node);
+		/*
+		Also here
+		*/
 		if (*curr_node == *g) {
 			vector<node_type> path;
 			path.push_back(curr_node->node);

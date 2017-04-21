@@ -64,6 +64,10 @@ namespace std
 			}
 	};
 
+	/*
+	   Somya look here
+	   this struct is returned from path algorithms
+	 */
 	template<typename V, typename C>
 	struct path_data {
 		C weight;

@@ -302,11 +302,6 @@ bool remove_edge(const GraphSP<I, W, D, GraphType> graph, const NodeSP<I, D> src
 	return graph->remove_edge(src, dst);
 }
 
-
-
-
-
-
 /* OPERATORS ON NODE SPs */
 template <typename I, typename D>
 inline bool operator==(const NodeSP<I, D>& lhs, const NodeSP<I, D>& rhs){ 
@@ -332,12 +327,5 @@ inline bool operator!=(const EdgeSP<I, W, D> lhs,
 	const EdgeSP<I, W, D> rhs){
 	return !(lhs == rhs);
 }
-
-
-
-
-
-
-
 
 #endif
