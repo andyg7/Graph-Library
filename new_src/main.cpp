@@ -72,6 +72,15 @@ int main(){
 	cout << adjacent(gAM1, n1, n3) << endl;
 	cout << "Let check adjacency. Is C adjacent to A?\n";
 	cout << adjacent(gAM1, n3, n1) << endl;
+	cout << endl;
+	gAM1->print_graph();
+	cout << endl;
+
+	cout << "Lets get the neighbours of C\n";
+	auto neighbours_AM = neighbours(gAM1, n3);
+	print_nodes(neighbours_AM);
+
+
 
 
 	// cout << "Testing the adjacency list implementation\n";

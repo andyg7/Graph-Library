@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <string.h>
+#include <vector>
 
 template <typename EntryType>
 class SquareMatrix{
@@ -61,6 +62,29 @@ public:
 
 	inline void zero_entry(int row_index, int column_index){
 		memset(entry + row_index*alloced + column_index, 0, sizeof(EntryType));
+	}
+
+	inline bool is_zero_entry(int row_index, int column_index){
+
+		char * temp = (char *) (entry + row_index*alloced + column_index);
+		for(int i = 0; i < sizeof(EntryType); ++i){
+			if((*temp) != '\0')
+				return false;
+			temp++;
+		}
+		return true;
+	}
+
+	inline std::vector<int> non_zero_entries(int row_index){
+		vector<int> temp;
+
+		/* Walk through the row and find the nonzero entries */
+		for(int i = 0; i < alloced; ++i){
+			if(!is_zero_entry(row_index, i)){
+				temp.push_back(i);
+			}
+		}
+		return temp;
 	}
 
 	inline void zero_row(int row_index){

@@ -40,9 +40,11 @@ public:
 		return p;
 	}
 
-	// ~GraphAM(){
-	// 	delete adjacency_matrix;
-	// }
+	~GraphAM(){
+		for(auto wrap_map_entry : wrapper_map){
+			delete wrap_map_entry.second;
+		}
+	}
 
 	// /* Checks if the node is in the graph */
 	// inline bool has_node(const shared_ptr<Node<IdType, DataType>> x){
@@ -66,10 +68,22 @@ public:
 	// /* Returns the nodes of the graph */
 	// vector<shared_ptr<Node<IdType, DataType>>> get_nodes();
 
-	// /* Function return the neighbours of the node */
-	// vector<shared_ptr<Node<IdType, DataType>>> neighbours(const shared_ptr<Node<IdType, DataType>> src);
+	/* Function return the neighbours of the node */
+	vector<shared_ptr<Node<IdType, DataType>>> neighbours(const shared_ptr<Node<IdType, DataType>> src){
 
-	// /* Checks if exists a directed edge from src to dst */
+		/* Get the indices of the entries that are not zero in the table */
+		auto indices = adjacency_matrix.non_zero_entries(get_wrapper_p(src)->internal_id);
+		vector<shared_ptr<Node<IdType, DataType>>> temp;
+
+		/* For each of these indices, get hold of the Node associated with them */
+		for(auto column_index : indices){
+			temp.push_back(wrapper_map[column_index]->user_node_p);
+		}
+
+		return temp;
+	}
+
+	/* Checks if exists a directed edge from src to dst */
 	bool adjacent(const shared_ptr<Node<IdType, DataType>> src, const shared_ptr<Node<IdType, DataType>> dst){
 
 		/* First we need to check if the nodes are in the graph */
@@ -96,6 +110,9 @@ public:
 		NodeAM<IdType, WeightType, DataType>* vertex_p = 
 			new NodeAM<IdType, WeightType, DataType>(this, x);
 		int internal_id = vertex_p->internal_id;
+
+		/* Add the entry to the wrapper map */
+		wrapper_map[internal_id] = vertex_p;
 
 		/* Update the knowledge about highest active id */
 		if(internal_id > highest_active_id){
@@ -129,6 +146,8 @@ public:
 		adjacency_matrix.zero_row(internal_id);
 		adjacency_matrix.zero_column(internal_id);
 
+		/* Delete the entry from the wrapper map */
+		wrapper_map.erase(wrapper_p->internal_id);
 		/* Delete the wrapper */
 		delete wrapper_p;
 
@@ -213,8 +232,12 @@ private:
 	to the neighbours of the node from its wrapper. The penalty – vertex
 	removal */
 	SquareMatrix<WeightType> adjacency_matrix;
-	// Need this map to go from Node -> NodeAL
+
+	/* Node id to the wrapper */
 	map<IdType, NodeAM<IdType, WeightType, DataType>*> id_map;
+
+	/* From internal id to the wrapper */
+	map<int, NodeAM<IdType, WeightType, DataType>*> wrapper_map;
 
 	/* Same idea as for GraphAl here */
 	long next_unique_id;
