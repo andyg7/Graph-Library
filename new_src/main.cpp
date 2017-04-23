@@ -48,7 +48,6 @@ int main(){
 	add_edge(gAM1, n1, 5, n3);
 	add_edge(gAM1, n2, 5, n3);
 	add_edge(gAM1, n4, 5, n3);
-
 	add_edge(gAM1, n3, 7, n2);
 	add_edge(gAM1, n3, 7, n4);
 	gAM1->print_graph();
@@ -58,6 +57,22 @@ int main(){
 	remove_node(gAM1, n3);
 	gAM1->print_graph();
 	cout << endl;
+
+	cout << "Add the node back to make sure the id is given back\n";
+	add_node(gAM1, n3);
+	add_edge(gAM1, n1, 5, n3);
+	add_edge(gAM1, n2, 5, n3);
+	add_edge(gAM1, n4, 5, n3);
+	add_edge(gAM1, n3, 7, n2);
+	add_edge(gAM1, n3, 7, n4);
+
+	gAM1->print_graph();
+	cout << endl;
+	cout << "Let check adjacency. Is A adjacent to C?\n";
+	cout << adjacent(gAM1, n1, n3) << endl;
+	cout << "Let check adjacency. Is C adjacent to A?\n";
+	cout << adjacent(gAM1, n3, n1) << endl;
+
 
 	// cout << "Testing the adjacency list implementation\n";
 	// // Create a graph

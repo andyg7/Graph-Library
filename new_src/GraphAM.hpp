@@ -70,7 +70,19 @@ public:
 	// vector<shared_ptr<Node<IdType, DataType>>> neighbours(const shared_ptr<Node<IdType, DataType>> src);
 
 	// /* Checks if exists a directed edge from src to dst */
-	// bool adjacent(const shared_ptr<Node<IdType, DataType>> src, const shared_ptr<Node<IdType, DataType>> dst);
+	bool adjacent(const shared_ptr<Node<IdType, DataType>> src, const shared_ptr<Node<IdType, DataType>> dst){
+
+		/* First we need to check if the nodes are in the graph */
+		if(!nodes_in_graph(src, dst)){
+			throw std::invalid_argument("src or dst of the edge not in the graph");
+		}
+
+		/* Get hold of the wrappers */
+		auto src_p = get_wrapper_p(src);
+		auto dst_p = get_wrapper_p(dst);
+
+		return adjacent(src_p, dst_p);
+	}
 
 	/* Adds a node to the graph */
 	bool add_node(const shared_ptr<Node<IdType, DataType>> x){
@@ -244,16 +256,6 @@ private:
 
 	bool adjacent(const NodeAM<IdType, WeightType, DataType> * src_p, 
 		const NodeAM<IdType, WeightType, DataType> * dst_p){
-
-		/*Lets findout if dst_p in in neghbours of src_p */
-		// auto it = 
-		// find_if(src_p->neighbours.begin(), 
-		// src_p->neighbours.end(),
-  //   	[&](const pair<NodeAL<IdType, WeightType, DataType>*, WeightType>& element)
-  //   		{return element.first == dst_p;});
-
-		// if(it != src_p->neighbours.end())
-		// 	return true;
 
 		if(adjacency_matrix.get_entry(src_p->internal_id, dst_p->internal_id) == 0)
 			return false;
