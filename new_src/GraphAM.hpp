@@ -103,7 +103,31 @@ public:
 	}
 
 	// /* Removes a node from a graph */
-	// bool remove_node(const shared_ptr<Node<IdType, DataType>> x);
+	bool remove_node(const shared_ptr<Node<IdType, DataType>> x){
+
+		/* Check if the vertex is already in the graph */
+		if(!node_in_graph(x)){
+			throw std::invalid_argument("node not in the graph");
+		}
+
+		auto wrapper_p = get_wrapper_p(x);
+		int internal_id = wrapper_p->internal_id;
+
+		/* Erase the row an the column */
+		adjacency_matrix.zero_row(internal_id);
+		adjacency_matrix.zero_column(internal_id);
+
+		/* Delete the wrapper */
+		delete wrapper_p;
+
+		/* Get the unique id back for id recycling */
+		return_id(internal_id);
+
+		/* Erase the vertex from the wrapper map */
+		id_map.erase(x->get_id());
+
+		return true;
+	}
 
 	bool add_edge(const shared_ptr<Node<IdType, DataType>> src, const WeightType w, 
 		const shared_ptr<Node<IdType, DataType>> dst){
@@ -255,7 +279,7 @@ private:
 	// }
 };
 
-/************************* NodeAL Class ****************************/
+/************************* NodeAM Class ****************************/
 
 /* Adjacency list implementation node wrapper */
 //TODO: Need Comparable on ID type here
@@ -265,7 +289,7 @@ friend class GraphAM<IdType, WeightType, DataType>;
 public:
 
 	/* Need to think about other constructors here a little */
-	/* Existance of NodeAL only makes sense in the context of a graph */
+	/* Existance of NodeAL only maks sense in the context of a graph */
 	NodeAM(GraphAM<IdType, WeightType, DataType>* graph,
 		const shared_ptr<Node<IdType, DataType>> user_node){
 		/* Get the new internal id */

@@ -63,6 +63,16 @@ public:
 		memset(entry + row_index*alloced + column_index, 0, sizeof(EntryType));
 	}
 
+	inline void zero_row(int row_index){
+		memset(entry + row_index*alloced, 0, sizeof(EntryType) * alloced);
+	}
+
+	inline void zero_column(int column_index){
+		for(int i = 0; i < alloced; i++){
+			zero_entry(i, column_index);
+		}
+	}
+
 	inline void inc_used(){
 		used++;
 		if (used > alloced){
