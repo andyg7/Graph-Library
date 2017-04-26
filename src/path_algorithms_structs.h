@@ -82,7 +82,6 @@ namespace std
 			for (auto p : path_v_stringified) {
 				s+=p;
 				s+="\n";
-				s+="|";
 			}
 			s+="\n";
 			return s;

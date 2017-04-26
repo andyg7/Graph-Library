@@ -132,6 +132,9 @@ int main(int argc, char *argv[])
 	cout << "cost " << path_v0_v1->cost << '\n';
 	path_v0_v1 = find_path_ucs(my_graph, v0, v1);
 	cout << path_v0_v1->to_string() << '\n';
+	for (auto s : path_v0_v1->path_v) {
+		cout << s.to_string() << '\n';
+	}
 	cout << "ucs: \n";
 	for (auto& p : path_v0_v1->path_v) {
 		cout << p.get_name() << ", ";

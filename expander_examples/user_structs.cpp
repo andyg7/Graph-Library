@@ -196,7 +196,6 @@ string Node::to_string() const
 			s+=std::to_string(curr_elem);
 			s+=" ";
 		}
-		s+="\n";
 	}
 	return s;
 }
