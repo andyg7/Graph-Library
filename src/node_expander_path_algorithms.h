@@ -12,6 +12,7 @@
 using namespace std;
 
 template<typename V>
+requires Path_state<V>
 bool path_exists(V v, V g)
 {
 	list<V> frontier;
@@ -19,10 +20,10 @@ bool path_exists(V v, V g)
 }
 
 template<typename V, typename F, typename Insert, typename Remove, typename Top>
+requires Path_state<V>
 bool path_exists_generic(V v, V g, F f, Insert in, Remove rem, Top top)
 {
 	typedef typename V::element_type element_type;
-	bool debug_on = false;
 	vector<element_type> path;
 	unordered_set<element_type> visited_nodes;
 	unordered_set<element_type> frontier_helper;
@@ -51,6 +52,7 @@ bool path_exists_generic(V v, V g, F f, Insert in, Remove rem, Top top)
 }
 
 template<typename V>
+requires Path_state<V>
 shared_ptr<struct path_data<typename V::element_type, typename V::element_type::cost_type>> find_path_dfs(V v, V g)
 {
 	list<V> frontier;
@@ -58,6 +60,7 @@ shared_ptr<struct path_data<typename V::element_type, typename V::element_type::
 }
 
 template<typename V>
+requires Path_state<V>
 shared_ptr<struct path_data<typename V::element_type, typename V::element_type::cost_type>> find_path_bfs(V v, V g)
 {
 	list<V> frontier;
@@ -65,6 +68,7 @@ shared_ptr<struct path_data<typename V::element_type, typename V::element_type::
 }
 
 template<typename V>
+requires Path_state<V>
 shared_ptr<struct path_data<typename V::element_type, typename V::element_type::cost_type>> find_path_ucs(V v, V g)
 {
 	typedef priority_queue<V, vector<V>, GreaterThanCost<V>> queue_type;
@@ -73,6 +77,7 @@ shared_ptr<struct path_data<typename V::element_type, typename V::element_type::
 }
 
 template<typename V>
+requires Path_state<V>
 shared_ptr<struct path_data<typename V::element_type, typename V::element_type::cost_type>> find_path_ast(V v, V g)
 {
 	typedef priority_queue<V, vector<V>, HeuristicGreaterThanCost<V>> queue_type;
@@ -81,27 +86,20 @@ shared_ptr<struct path_data<typename V::element_type, typename V::element_type::
 }
 
 template<typename V, typename F, typename Insert, typename Remove, typename Top>
+requires Path_state<V>
 shared_ptr<struct path_data<typename V::element_type, typename V::element_type::cost_type>> find_path_generic(V v, V g, F f, Insert in, Remove rem, Top top)
 {
 	typedef typename V::element_type element_type;
 	typedef typename V::element_type::cost_type cost_type;
-	bool debug_on = false;
-	unordered_set<typename V::element_type> visited_nodes;
+	unordered_set<element_type> visited_nodes;
 	F frontier = f;
 	in(frontier, v);
 	while (!frontier.empty()) {
-		if (debug_on) {
-			cout << "still looping\n";
-			cout << "frontier size" << frontier.size() << '\n';
-		}
 		V curr_node = top(frontier);
 		visited_nodes.insert(*curr_node);
 		if (*curr_node == *g) {
 			vector<element_type> path;
 			vector<string> string_path;
-			if (debug_on) {
-				cout << "found goal state\n";
-			}
 			path.push_back(*curr_node);
 			string_path.push_back((*curr_node).to_string());
 			cost_type total_cost = (curr_node->cost);

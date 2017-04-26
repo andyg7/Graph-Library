@@ -7,14 +7,14 @@
 #include <unordered_set>
 #include <set>
 #include <queue>
-#include "graph_concepts.h"
+//#include "graph_concepts.h"
 #include "function_objs.h"
 #include "path_algorithms_structs.h"
 
 using namespace std;
 
 template<typename V>
-requires Expandable_state<V>
+//requires Expandable_state<V>
 bool path_exists(V v, V g)
 {
 	list<V> frontier;
@@ -22,7 +22,7 @@ bool path_exists(V v, V g)
 }
 
 template<typename V, typename F, typename Insert, typename Remove, typename Top>
-requires Expandable_state<V>
+//requires Expandable_state<V>
 bool path_exists_generic(V v, V g, F f, Insert in, Remove rem, Top top)
 {
 	typedef V element_type;
@@ -35,7 +35,9 @@ bool path_exists_generic(V v, V g, F f, Insert in, Remove rem, Top top)
 	in(frontier, v);
 	frontier_helper.insert(v);
 	while (!frontier.empty()) {
+		cout << "looking for path\n";
 		V curr_node = top(frontier);
+		cout << curr_node->to_string() << '\n';
 		visited_nodes.insert(curr_node);
 		rem(frontier);
 		auto tmp_it = frontier_helper.find(curr_node);
@@ -56,7 +58,7 @@ bool path_exists_generic(V v, V g, F f, Insert in, Remove rem, Top top)
 }
 
 template<typename V>
-requires Expandable_state<V>
+//requires Expandable_state<V>
 shared_ptr<struct path_data<typename V::element_type::node_type, typename V::element_type::weight_type>> find_path_dfs(V v, V g)
 {
 	list<V> frontier;
@@ -64,7 +66,7 @@ shared_ptr<struct path_data<typename V::element_type::node_type, typename V::ele
 }
 
 template<typename V>
-requires Expandable_state<V>
+//requires Expandable_state<V>
 shared_ptr<struct path_data<typename V::element_type::node_type, typename V::element_type::weight_type>> find_path_bfs(V v, V g)
 {
 	list<V> frontier;
@@ -72,7 +74,7 @@ shared_ptr<struct path_data<typename V::element_type::node_type, typename V::ele
 }
 
 template<typename V>
-requires Expandable_state<V>
+//requires Expandable_state<V>
 shared_ptr<struct path_data<typename V::element_type::node_type, typename V::element_type::weight_type>> find_path_ucs(V v, V g)
 {
 	typedef priority_queue<V, vector<V>, GreaterThanCost<V>> queue_type;
@@ -81,7 +83,7 @@ shared_ptr<struct path_data<typename V::element_type::node_type, typename V::ele
 }
 
 template<typename V>
-requires Expandable_state<V>
+//requires Expandable_state<V>
 shared_ptr<struct path_data<typename V::element_type::node_type, typename V::element_type::weight_type>> find_path_ast(V v, V g)
 {
 	typedef priority_queue<V, vector<V>, HeuristicGreaterThanCost<V>> queue_type;
@@ -90,7 +92,7 @@ shared_ptr<struct path_data<typename V::element_type::node_type, typename V::ele
 }
 
 template<typename V, typename F, typename Insert, typename Remove, typename Top>
-requires Expandable_state<V>
+//requires Expandable_state<V>
 shared_ptr<struct path_data<typename V::element_type::node_type, typename V::element_type::weight_type>> find_path_generic(V v, V g, F f, Insert in, Remove rem, Top top)
 {
 	typedef V element_type;
@@ -100,6 +102,7 @@ shared_ptr<struct path_data<typename V::element_type::node_type, typename V::ele
 	F frontier = f;
 	in(frontier, v);
 	while (!frontier.empty()) {
+		cout << "hi\n";
 		V curr_node = top(frontier);
 		visited_nodes.insert(curr_node);
 		/*
@@ -107,11 +110,11 @@ shared_ptr<struct path_data<typename V::element_type::node_type, typename V::ele
 		*/
 		if (*curr_node == *g) {
 			vector<node_type> path;
-			path.push_back(curr_node->node);
+			path.push_back(*curr_node);
 			weight_type total_weight = (curr_node->weight);
 			auto curr_v = curr_node->parent;
 			while (curr_v != nullptr) {
-				path.push_back(curr_v->node);
+				path.push_back(*curr_node);
 				curr_v = curr_v->parent;
 			}
 			reverse(path.begin(), path.end());

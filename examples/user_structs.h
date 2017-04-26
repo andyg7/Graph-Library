@@ -42,6 +42,9 @@ struct my_edge {
 	int cost;
 	vertex_type v1;
 	vertex_type v2;
+	bool operator==(const my_edge& rhs) const {
+		return v1 == rhs.v1 && v2 == rhs.v2;
+	}
 };
 
 struct user_vertex_1 {
@@ -89,6 +92,9 @@ struct user_edge_1 {
 	int cost;
 	vertex_type v1;
 	vertex_type v2;
+	bool operator==(const user_edge_1& rhs) const {
+		return v1 == rhs.v1 && v2 == rhs.v2;
+	}
 };
 
 struct user_vertex_2 {
@@ -140,6 +146,9 @@ struct user_edge_2 {
 	int cost;
 	vertex_type v1;
 	vertex_type v2;
+	bool operator==(const user_edge_2& rhs) const {
+		return v1 == rhs.v1 && v2 == rhs.v2;
+	}
 };
 
 #endif

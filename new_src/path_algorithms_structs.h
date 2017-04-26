@@ -1,8 +1,6 @@
 #ifndef PATH_ALGORITHMS_STRUCTS
 #define PATH_ALGORITHMS_STRUCTS
 
-#include "graph_concepts.h"
-
 namespace std
 {
 	template<typename G, typename N, typename C>
@@ -75,8 +73,8 @@ namespace std
 		vector<string> path_v_stringified;
 		string to_string() {
 			string s;
-			for (auto p : path_v) {
-				s+=(p->get_id());
+			for (auto p : path_v_stringified) {
+				s+=p;
 				s+="\n";
 				s+="|";
 			}

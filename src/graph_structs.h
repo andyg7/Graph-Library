@@ -13,6 +13,7 @@ namespace graph_std_lib
 	template<typename T>
 	struct vertex_wrapper {
 		using vertex_type = T;
+		int internal_id;
 		vertex_type vertex_data;
 		Value value;
 
@@ -28,7 +29,7 @@ namespace graph_std_lib
 		}
 	};
 
-	template<typename T, typename E>
+	template<typename V, typename E>
 	struct edge_wrapper {
 		E edge;
 		Value value;
@@ -101,6 +102,7 @@ namespace graph_std_lib
 		using vertex_type = V;
 		using vertex_header_type = vertex_header<V, E>;
 		using vertex_wrapper_type = vertex_wrapper<V>;
+		using edge_wrapper_type = edge_wrapper<V, E>;
 		using underlying_data_type = vector<vertex_header<V, E>>;
 		underlying_data_type underlying_data;
 	};
@@ -113,10 +115,14 @@ namespace graph_std_lib
 		using vertex_type = V;
 		using vertex_header_type = vertex_header<V, E>;
 		using vertex_wrapper_type = vertex_wrapper<V>;
+		using edge_wrapper_type = edge_wrapper<V, E>;
 		using underlying_data_type = vector<vector<int>>;
 		underlying_data_type underlying_data;
 		unordered_map<int, shared_ptr<vertex_wrapper_type>> id_to_wrapper;
 		unordered_map<shared_ptr<vertex_wrapper_type>, int> wrapper_to_id;
+		unordered_map<int, vector<shared_ptr<edge_wrapper_type>>> id_to_edges;
+		unordered_map<int, vertex_type> id_to_vertex;
+		unordered_map<vertex_type, int> vertex_to_id;
 		matrix_graph(int n) 
 		{
 			for (int i = 0; i < n; i++) {
@@ -128,6 +134,7 @@ namespace graph_std_lib
 			}
 		}
 		matrix_graph() {}
+		int sum_internal_ids;
 	};
 
 	template<typename V, typename E>
@@ -138,6 +145,7 @@ namespace graph_std_lib
 		using vertex_type = V;
 		using vertex_wrapper_type = vertex_wrapper<V>;
 		using vertex_header_type = vertex_header<V, E>;
+		using edge_wrapper_type = edge_wrapper<V, E>;
 		using underlying_data_type = vector<vertex_header<V, E>>;
 		underlying_data_type underlying_data;
 	};
@@ -150,6 +158,7 @@ namespace graph_std_lib
 		using vertex_type = V;
 		using vertex_header_type = vertex_header<V, E>;
 		using vertex_wrapper_type = vertex_wrapper<V>;
+		using edge_wrapper_type = edge_wrapper<V, E>;
 		using underlying_data_type = vector<vertex_header<V, E>>;
 		underlying_data_type underlying_data;
 	};

@@ -47,6 +47,7 @@ int main(int argc, const char *argv[])
 	shared_ptr<struct path_data<Node, int>> path_d = find_path_ast(n, goal_state);
 	cout << "cost\n";
 	cout << path_d->cost << '\n';
+	cout << path_d->to_string() << '\n';
 	cout << "calculating dfs path...\n";
 	path_d = find_path_dfs(n, goal_state);
 	cout << "cost\n";

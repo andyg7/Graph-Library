@@ -2,9 +2,11 @@
 #define GRAPH_CONCEPTS_H
 
 #include <string>
+#include <vector>
 /*
    The included files from here...
  */
+/*
 #include <stl2/detail/concepts/object.hpp>
 #include <stl2/detail/fwd.hpp>
 #include <stl2/detail/meta.hpp>
@@ -12,6 +14,7 @@
 #include <stl2/detail/concepts/object/assignable.hpp>
 #include <stl2/detail/concepts/object/regular.hpp>
 #include <stl2/iterator.hpp>
+*/
 /*
    ... to here are from https://github.com/CaseyCarter/cmcstl2
  */
@@ -30,6 +33,13 @@ struct Matrix_graph {};
 template<typename X> 
 using Value_type = typename X::value_type;
 using Value = std::pair<string, int>;
+
+template<typename T>
+concept bool Equality_comparable =
+requires (T t1, T t2) {
+	{ t1 == t2 } -> bool;
+	{ t1 != t2 } -> bool;
+};
 
 template<typename T>
 concept bool Comparable =
@@ -68,7 +78,9 @@ requires(T t) {
 	typename T::iterator;
 	{ begin(t) } -> typename T::iterator;
 	{ end(t) } -> typename T::iterator;
+	/*
 	requires std::experimental::ranges::Iterator<typename T::iterator>();
+	*/
 };
 
 /*
@@ -78,12 +90,13 @@ requires(T t) {
 template<typename V>
 concept bool Vertex =
 requires (V v1, V v2) {
-	v1.vertex_id;
 	{ v1 == v2 } -> bool;
+	/*
 	requires std::experimental::ranges::Assignable<V&, V>();
 	requires std::experimental::ranges::Constructible<V>();
 	requires std::experimental::ranges::Copyable<V>();
 	requires std::experimental::ranges::Movable<V>();
+	*/
 };
 
 template<typename V>
@@ -123,10 +136,13 @@ requires (E e1, E e2) {
 	requires Vertex<typename E::vertex_type>;	
 	requires Numeric<typename E::cost_type>;
 
+	{ e1 == e2 } -> bool;
+	/*
 	requires std::experimental::ranges::Assignable<E&, E>();
 	requires std::experimental::ranges::Constructible<E>();
 	requires std::experimental::ranges::Copyable<E>();
 	requires std::experimental::ranges::Movable<E>();
+	*/
 };
 
 template<typename E>
@@ -187,10 +203,12 @@ requires (G g) {
 	requires Sequence<typename G::element_type::underlying_data_type>
 	requires Same_type<typename G::element_type::edge_type::vertex_type, typename G::element_type::vertex_type>;
 
+	/*
 	requires std::experimental::ranges::Constructible<typename G::element_type>();
 	requires std::experimental::ranges::Assignable<typename G::element_type&, typename G::element_type>();
 	requires std::experimental::ranges::Copyable<typename G::element_type>();
 	requires std::experimental::ranges::Movable<typename G::element_type>();
+	*/
 };
 
 /*
@@ -238,4 +256,20 @@ requires (G g) {
 	requires Graph<G>;
 	requires is_matrix<typename G::element_type::graph_type>;
 };
+
+template<typename P>
+concept bool Shared_ptr = 
+requires (P p) {
+	typename P::element_type;
+	{ *p } -> typename P::element_type;
+};
+
+template<typename P>
+concept bool Path_state = 
+requires (P p) {
+	requires Shared_ptr<P>;
+	requires Equality_comparable<P>;
+	{ p->expand() } -> vector<P>;	
+};
+
 #endif

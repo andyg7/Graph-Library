@@ -4,28 +4,14 @@
 #include <iostream>
 #include <memory>
 #include "graph_concepts.h"
-#include "graph_structs.h"
 #include "function_objs.h"
-#include "graph_lib.h"
+#include "graph_lib_header_helper.h"
 #include "node_expander_path_algorithms.h"
 
 using namespace std;
-using namespace graph_std_lib;
 
 template<typename G, typename V>
 requires Graph<G> && Vertex_ptr<V>
-shared_ptr<path_state<G, typename G::element_type::edge_type::cost_type>> generate_state(G g, V x)
-{
-	typedef typename G::element_type::vertex_type vertex_type;
-	typedef typename G::element_type::edge_type::cost_type cost_type;
-	typedef path_state<G, cost_type> path_state_type;
-	auto v_w = get_vertex_wrapper(g, x);
-	shared_ptr<path_state_type> state = make_shared<path_state_type>(v_w, 0, nullptr, g);
-	return state;
-}
-
-template<typename G, typename V>
-requires Matrix_Graph<G> && Vertex_ptr<V>
 shared_ptr<path_state<G, typename G::element_type::edge_type::cost_type>> generate_state(G g, V x)
 {
 	typedef typename G::element_type::vertex_type vertex_type;
@@ -80,20 +66,6 @@ bool path_exists(G g, V x, V y)
 	shared_ptr<path_state_type> start_state = generate_state(g, x);
 	shared_ptr<path_state_type> goal_state = generate_state(g, y);
 
-	return path_exists(start_state, goal_state);
-}
-
-template<typename G, typename V>
-requires Matrix_Graph<G> && Vertex_ptr<V>
-bool path_exists(G g, V x, V y)
-{
-
-	typedef typename G::element_type::vertex_type vertex_type;
-	typedef typename G::element_type::edge_type::cost_type cost_type;
-	typedef path_state<G, cost_type> path_state_type;
-
-	shared_ptr<path_state_type> start_state = generate_state(g, x);
-	shared_ptr<path_state_type> goal_state = generate_state(g, y);
 	return path_exists(start_state, goal_state);
 }
 

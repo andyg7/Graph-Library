@@ -3,27 +3,11 @@
 
 #include <memory>
 #include "graph_concepts.h"
-#include "graph_lib.h"
+#include "graph_lib_header_helper.h"
 
-template<typename G>
-requires Graph<G>
-vector<typename G::element_type::vertex_type> get_vertices(G g);
-
-template<typename G>
-requires Matrix_Graph<G>
-vector<typename G::element_type::vertex_type> get_vertices(G g);
-
-template<typename G>
-requires Graph<G>
-int num_vertices(G g);
-
-template<typename G>
-requires Matrix_Graph<G>
-int num_vertices(G g);
-
-template<typename G>
+template<typename G, typename F>
 requires Vertex_numeric_id<typename G::element_type::vertex_type>
-int get_unique_id(G g)
+int get_unique_id(G g, F f)
 {
 	int max_id = 0;
 	int sum_id = 0;
@@ -31,9 +15,8 @@ int get_unique_id(G g)
 	if (num_vertices(g) == 0) {
 		return 0;
 	}
-	vector<typename G::element_type::vertex_type> curr_vertices = get_vertices(g);
-	for (auto n : curr_vertices) {
-		int curr_id = n.get_key();
+	vector<int> curr_vertices_ids = f(g);
+	for (auto curr_id : curr_vertices_ids) {
 		sum_id = sum_id + curr_id;
 		if (curr_id > max_id) {
 			max_id = curr_id;
@@ -41,7 +24,6 @@ int get_unique_id(G g)
 		count_id++;
 	}
 	int ideal_sum = (count_id * (count_id + 1)) / 2;
-
 	if (count_id == max_id - 1 && ideal_sum == sum_id) {
 		return 0;
 	}
@@ -57,7 +39,7 @@ requires Graph<G> && Vertex_numeric_id<typename G::element_type::vertex_type>
 shared_ptr<typename G::element_type::vertex_type> create_vertex(G g)
 {
 	typedef typename G::element_type::vertex_type vertex_type;
-	int unique_id = get_unique_id(g);
+	int unique_id = get_unique_id(g, [](G g) { return get_vertices_ids(g); });
 	shared_ptr<vertex_type> new_vertex = make_shared<vertex_type>();
 	new_vertex->set_key(unique_id);
 	return new_vertex;

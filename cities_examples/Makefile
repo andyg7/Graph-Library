@@ -1,14 +1,14 @@
 CC=g++
 FLAGS= -fconcepts -std=c++1z -g -O2
 CURR_DIR= $(shell pwd)
-GRAPH_LIB_DIR=/home/ubuntu/safe_dir/Graph-Library/src
+GRAPH_LIB_DIR=/home/ubuntu/my_graph_lib/src
 THIRD_PARTY_CODE= $(CURR_DIR)/../src/cmcstl2/include
 INCLUDE=-I$(THIRD_PARTY_CODE) -I$(GRAPH_LIB_DIR)
 EXE=main
 DEBUG_EXE=debug
 VALGRIND_TARGET=valgrind
 OBJS=main.o 
-HEADERS=$(GRAPH_LIB_DIR)/graph_lib.h $(GRAPH_LIB_DIR)/path_algorithms.h $(GRAPH_LIB_DIR)/graph_concepts.h $(GRAPH_LIB_DIR)/graph_structs.h user_data_structures.h $(GRAPH_LIB_DIR)/function_objs.h $(GRAPH_LIB_DIR)/node_expander_path_algorithms.h $(GRAPH_LIB_DIR)/path_algorithms_structs.h
+HEADERS=$(GRAPH_LIB_DIR)/graph_lib.h $(GRAPH_LIB_DIR)/path_algorithms.h $(GRAPH_LIB_DIR)/graph_concepts.h $(GRAPH_LIB_DIR)/graph_structs.h user_data_structures.h $(GRAPH_LIB_DIR)/function_objs.h $(GRAPH_LIB_DIR)/node_expander_path_algorithms.h $(GRAPH_LIB_DIR)/path_algorithms_structs.h $(GRAPH_LIB_DIR)/matrix_graph_lib.h
 
 $(EXE): $(OBJS)
 	$(CC) $(FLAGS) $(INCLUDE) $(OBJS) -o $@

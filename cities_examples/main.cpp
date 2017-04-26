@@ -13,6 +13,14 @@ int main(int argc, char *argv[])
 
 	using namespace graph_std_lib;
 
+	city my_c("NYC", 1);
+	city my_c2("NYC", 1);
+	vector<city> vec;
+	vec.push_back(my_c);
+	vec.push_back(my_c2);
+	my_c.set_name("jon");
+	cout << vec[0].get_name() << '\n';
+	cout << my_c.get_name() << '\n';
 	shared_ptr<matrix_graph<city, road>> my_graph = make_shared<matrix_graph<city, road>>(10);
 	auto v0 = create_vertex(my_graph);
 	v0->set_name("New York");
@@ -123,6 +131,7 @@ int main(int argc, char *argv[])
 	}
 	cout << "cost " << path_v0_v1->cost << '\n';
 	path_v0_v1 = find_path_ucs(my_graph, v0, v1);
+	cout << path_v0_v1->to_string() << '\n';
 	cout << "ucs: \n";
 	for (auto& p : path_v0_v1->path_v) {
 		cout << p.get_name() << ", ";

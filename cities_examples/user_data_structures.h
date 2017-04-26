@@ -30,12 +30,15 @@ class city {
 };
 
 class road {
-	using vertex_type = city;
-	using cost_type = int;
 	public:
-	vertex_type v1;
-	vertex_type v2;
-	cost_type cost;
+		using vertex_type = city;
+		using cost_type = int;
+		vertex_type v1;
+		vertex_type v2;
+		cost_type cost;
+		bool operator==(const road& rhs) const {
+		return v1 == rhs.v1 && v1 == rhs.v2;
+	}
 };
 
 city::city() {}
