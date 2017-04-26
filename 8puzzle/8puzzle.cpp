@@ -12,65 +12,44 @@ using std::endl;
 using std::pair;
 using std::make_pair;
 
-//typedef pair<int, int> pii;
-
 Board board (3, 3);
-int view_left, view_bottom, view_right, view_top;
-int current_player = 1;
-int state = 1;
-unsigned int crossId = 1;
-unsigned int oId = 2;
-bool againstComputer = false;
+unsigned int id[9] = {0,1,2,3,4,5,6,7,8};
 
-void display(void)
+    
+int view_right;
+int view_bottom;
+int view_top;
+int view_left;
+
+void display()
 {
-    fill_board();
     draw_initial_board();
-
-//    if (winner != 0) {
-//        display_win(winner);
-//    } else if (find_valid_moves(current_player).size() == 0) {
-//        display_win(0);
-//    }
     glutSwapBuffers();
 }
 
 int main(int argc, char *argv[])
 {
+
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(500, 500);
-    glutCreateWindow("Tic Tac Toe");
+    glutCreateWindow("8puzzle");
     init();    
-//    glutMouseFunc(process_mouse);
-    int x = 100, y = 400;
-    int i = (y / 500.0 * 100 - 5) / 30;
-    int j = (x / 500.0 * 100 - 5) / 30;
 
-//int k=2;
-//while(k){
+    int index_x[9] = {0,0,0,1,1,1,2,2,2};
+    int index_y[9] = {0,1,2,0,1,2,0,1,2};
 
 
-//     x = 100, y = 100;
-//     i = (y / 500.0 * 100 - 5) / 30;
-//     j = (x / 500.0 * 100 - 5) / 30;
-//  if ( board.getXY(i, j) == 0) {
-     //sleep(60);
-move_player(i, j);
-//fill_player(i,j,1);
+
+    for(int i=0;i<9;i++)
+        fill_player(index_x[i],index_y[i],i);
+
 sleep(1);
+//    fill_player(0,0,5);
+    for(int i=0;i<8;i++)
+        fill_player(index_x[i],index_y[i],i+1);
+    fill_player(index_x[8],index_y[8],1);
 
-     x = 200, y = 200;
-     i = (y / 500.0 * 100 - 5) / 30;
-     j = (x / 500.0 * 100 - 5) / 30;
-
-
-
-fill_player(i,j,2);
-     move_player(i, j);
-
-//k--;
-//}
 
     glutDisplayFunc(display);
     glutMainLoop();
@@ -79,38 +58,25 @@ fill_player(i,j,2);
 }
 
 
-void move_player(int i, int j)
-{
-//    board.setXY(i, j, 1/*current_player*/);
-    board.setXY(i, j, 2/*current_player*/);
-    display();
-}
 
-/*look here*/
-void fill_board(void)
-{
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            if (board.getXY(i, j) == 0) {
-                continue;
-            } else {
-                fill_player(j, i, 1 /*board.getXY(i, j)*/);
-                fill_player(j, i , 2);
-            }
-        }
-    }
-}
-
-/*look here*/
-void fill_player(int x, int y, int player) 
+void fill_player(int x, int y, int dnumber) 
 {
     unsigned int textureId;
-
-    if (player == 1) {
-        textureId = crossId;
-    } else {
-        textureId = oId;
+    cout<<x<<y<<dnumber<<endl;
+    switch(dnumber){
+        case 0: textureId = id[0];break;
+        case 1: textureId = id[1];break;
+        case 2: textureId = id[2];break;
+        case 3: textureId = id[3];break;
+        case 4: textureId = id[4];break;
+        case 5: textureId = id[5];break;
+        case 6: textureId = id[6];break;
+        case 7: textureId = id[7];break;
+        case 8: textureId = id[8];break;  
     }
+
+
+
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, textureId);
     glBegin(GL_POLYGON);
@@ -127,6 +93,7 @@ void fill_player(int x, int y, int player)
         glVertex2f(x * 30 + 5, (3 - y - 1)* 30 + 5 + 30);
     glEnd();
     glDisable(GL_TEXTURE_2D);
+
 }
 
 /******************************************************************************************/
@@ -161,14 +128,36 @@ void init(void)
 
     gluOrtho2D(view_left, view_right, view_bottom, view_top);
     glClear(GL_COLOR_BUFFER_BIT);
-    if (!loadTexture("textures/2.jpg", &crossId)) {
-        cout << "Unable to load cross" << endl;
+    if (!loadTexture("textures/0.jpg", &id[0])) {
+        cout << "Unable to load blank" << endl;
     }
-    if (!loadTexture("textures/1.jpg", &oId)) {
-        cout << "Unable to load o" << endl;
+    if (!loadTexture("textures/1.jpg", &id[1])) {
+        cout << "Unable to load 1" << endl;
+    }
+    if (!loadTexture("textures/2.jpg", &id[2])) {
+        cout << "Unable to load 2" << endl;
+    }
+    if (!loadTexture("textures/3.jpg", &id[3])) {
+        cout << "Unable to load 3" << endl;
+    }
+    if (!loadTexture("textures/4.jpg", &id[4])) {
+        cout << "Unable to load 4" << endl;
+    }
+    if (!loadTexture("textures/5.jpg", &id[5])) {
+        cout << "Unable to load 5" << endl;
+    }
+    if (!loadTexture("textures/6.jpg", &id[6])) {
+        cout << "Unable to load 6" << endl;
+    }
+    if (!loadTexture("textures/7.jpg", &id[7])) {
+        cout << "Unable to load 7" << endl;
+    }
+    if (!loadTexture("textures/8.jpg", &id[8])) {
+        cout << "Unable to load 8" << endl;
     }
 }
 
+/*
 void reset_board(void)
 {
     state = 1;
@@ -188,6 +177,8 @@ void reset_board(void)
 
     display();
 }
+*/
+
 /*nothing to change here**/
 bool loadTexture(char *filename, unsigned int *texture){
     *texture = SOIL_load_OGL_texture(filename,

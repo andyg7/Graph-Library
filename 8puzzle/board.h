@@ -9,7 +9,7 @@ class Board {
     public:
         Board(int rows, int cols);
         int getXY(int x, int y);
-        void setXY(int x, int y, int val);
+        void setXY(int x, int y, int val );
 };
 
 
