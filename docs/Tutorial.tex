@@ -1,0 +1,22 @@
+\documentclass{article} 
+\usepackage{url, graphicx}
+\usepackage[margin=1in]{geometry}
+
+\title{Graph and Search Library Tutorial}
+\author{Andrew Grant,  Anton Igorevich, Somya Vasudevan}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{How to Use the Library}
+\begin{itemize}
+\item The most important thing is for the user to define his/her vertex and edge data types. The only requirements are that the vertex/edge are comparable (aka must implement operator==) and hashable (aka implement struct hash ...).
+\item Then the user should select one of \texttt{graph\_dg}, \texttt{graph\_dag}, \texttt{graph\_dt}, \texttt{matrix\_graph} and provide the struct with two template parameters that specify the vertex and edge types (as mentioned above the lib provides vertex and edge for this but the user can use his/her own data types) e.g. \texttt{dag\_graph}<\texttt{my\_vertex\_1}, \texttt{my\_edge\_1}> \texttt{my\_graph}; e.g. \texttt{dt\_graph}<vertex, edge> \texttt{my\_graph}; e.g. \texttt{dg\_graph}<\texttt{my\_vertex\_2}, \texttt{my\_edge\_2}> \texttt{my\_graph};
+\item At this point any/all of the functions can be used. Note that all functions require pointers as inputs (more specifically \texttt{shared\_ptrs}); this is to avoid the cost of copying large graphs/vertices/edges
+see examples/ directory for some examples
+\item Note that the same function name is used for all graph types, vertex types and edge types. This is another benefit of concepts; that is, concepts are used to make sure the right function is called using overloading
+\end{itemize}
+
+\end{document} 

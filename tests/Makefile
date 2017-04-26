@@ -1,6 +1,6 @@
 CC=g++
 FLAGS= -fconcepts -std=c++1z -g -O2
-CURR_DIR= '$(shell pwd)'
+CURR_DIR= $(shell pwd)
 GRAPH_LIB_DIR=/home/ubuntu/my_graph_lib/src
 THIRD_PARTY_CODE= $(CURR_DIR)/../src/cmcstl2/include
 INCLUDE=-I$(THIRD_PARTY_CODE) -I$(GRAPH_LIB_DIR)
