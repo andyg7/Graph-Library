@@ -1,6 +1,7 @@
 \documentclass{article} 
 \usepackage{url, graphicx}
 \usepackage[margin=1in]{geometry}
+\usepackage{listings}
 
 \title{Graph and Search Library Tutorial}
 \author{Andrew Grant,  Anton Igorevich, Somya Vasudevan}
@@ -18,5 +19,46 @@
 see examples/ directory for some examples
 \item Note that the same function name is used for all graph types, vertex types and edge types. This is another benefit of concepts; that is, concepts are used to make sure the right function is called using overloading
 \end{itemize}
+
+\section{Examples}
+
+\subsection{Creating a graph}
+Create a matrix graph, where Vertex type is ``city", and Edge type is ``road". ``city" and ``road" are both user defined classes.
+\begin{lstlisting}
+shared_ptr<matrix_graph<city, road>> my_graph = make_shared<matrix_graph<city, road>>(10);
+\end{lstlisting}
+
+\subsection{Creating a Vertex using helper function}
+Create a Vertex using helper function. A unique id is automatically assigned to v1
+\begin{lstlisting}
+auto v1 = create_vertex(my_graph);
+\end{lstlisting}
+
+\subsection{Setting a value to a Vertex}
+Note, the user defined Vertex does not need to know anything about Value
+\begin{lstlisting}
+set_value(my_graph, v0, Value {"A", 1990});
+\end{lstlisting}
+
+
+\subsection{Creating Edge}
+\begin{lstlisting}
+auto e1 = create_edge(my_graph, v0, v2);
+\end{lstlisting}
+
+\subsection{Removing a Vertex}
+\begin{lstlisting}
+remove(my_graph, v11);
+\end{lstlisting}
+
+\subsection{Finding path between Vertices}
+First we get a struct that contains a bunch of data about the path. The second line we get a vector of the vertices along the path.
+\begin{lstlisting}
+path_v0_v1 = find_path_ucs(my_graph, v0, v1);
+auto vector_of_vertices = path_v0_v1->path_v;
+\end{lstlisting}
+
+
+
 
 \end{document} 
