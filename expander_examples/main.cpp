@@ -45,6 +45,12 @@ int main(int argc, const char *argv[])
 	}
 	cout << "calculating ast path...\n";
 	shared_ptr<struct path_data<Node, int>> path_d = find_path_ast(n, goal_state);
+	auto path_vertices = path_d->path_v;
+	for (auto v : path_vertices) {
+		// this string t
+		string t = v.to_string();
+		cout << "udklfjkldjflkjdlkfkd" << t << '\n';
+	}
 	cout << "cost\n";
 	cout << path_d->cost << '\n';
 	cout << path_d->to_string() << '\n';
