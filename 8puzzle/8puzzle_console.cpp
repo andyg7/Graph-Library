@@ -9,7 +9,6 @@ void p(const char *str){
 int main()
 {
 	const char *str ="\n_____________\n";
-//	write(1,str,strlen(str));
 	p("| 1 | 2 |   |\n| 4 | 5 | 6 |\n| 7 | 8 | 9 |\n"); /*p("can't \n"); p("see \n"); p("me\n");*/
 
 // 	write(1,str,strlen(str));
