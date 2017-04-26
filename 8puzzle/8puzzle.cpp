@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include "8puzzle.h"
 #include "board.h"
-
+#include <vector>
 using std::cout;
 using std::endl;
 using std::pair;
@@ -27,6 +27,7 @@ void display()
     glutSwapBuffers();
 }
 
+
 int main(int argc, char *argv[])
 {
 
@@ -36,19 +37,49 @@ int main(int argc, char *argv[])
     glutCreateWindow("8puzzle");
     init();    
 
+
+    char* str1 = "1 2 3 4 5 6 7 8  ";
+    char* str2 = "1 2 3 4 1 3 6 1  ";
+
+// tokenising code goes here; 
+
+    char string[9] = {'0','1','5','6','7','2','8','3','4'};   
+    int final_values[2][9] ={ {0,1,5,6,7,2,8,3,4}, {0,1,2,3,4,5,6,7,8}};
     int index_x[9] = {0,0,0,1,1,1,2,2,2};
     int index_y[9] = {0,1,2,0,1,2,0,1,2};
 
+//    display();
+ 
+int j;
 
+for(j = 0;j<2;j++)
+{
+//glutDisplayFunc(display);
+sleep(2);
+//display();
+int i;
+    for(int i=0;i<9;i++){
+//    sleep(1);    
+    display();
+    glutDisplayFunc(display);
+    fill_player(index_x[i],index_y[i],final_values[j][i]);
+    display();
+    }
+    
 
-    for(int i=0;i<9;i++)
-        fill_player(index_x[i],index_y[i],i);
+}
+  
+ 
+/*testing */
+/*
 
-sleep(1);
-//    fill_player(0,0,5);
-    for(int i=0;i<8;i++)
-        fill_player(index_x[i],index_y[i],i+1);
-    fill_player(index_x[8],index_y[8],1);
+    fill_player(0,1,final_values[1][1]);
+//    display();   
+    fill_player(0,0,final_values[1][2]);
+
+    sleep(1);
+    display();
+*/
 
 
     glutDisplayFunc(display);
@@ -62,7 +93,7 @@ sleep(1);
 void fill_player(int x, int y, int dnumber) 
 {
     unsigned int textureId;
-    cout<<x<<y<<dnumber<<endl;
+    cout<<"X = "<<x<<"Y = "<<y<<"Dnumber"<<dnumber<<endl;
     switch(dnumber){
         case 0: textureId = id[0];break;
         case 1: textureId = id[1];break;
@@ -74,9 +105,6 @@ void fill_player(int x, int y, int dnumber)
         case 7: textureId = id[7];break;
         case 8: textureId = id[8];break;  
     }
-
-
-
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, textureId);
     glBegin(GL_POLYGON);
@@ -157,27 +185,6 @@ void init(void)
     }
 }
 
-/*
-void reset_board(void)
-{
-    state = 1;
-    current_player = 1;
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            board.setXY(i, j, 0);
-        }
-    }
-    glColor3f(0.06, 0.06, 0.06);
-    glBegin(GL_POLYGON);
-        glVertex2f(view_left, view_bottom);
-        glVertex2f(view_right, view_bottom);
-        glVertex2f(view_right, view_top);
-        glVertex2f(view_left, view_top);
-    glEnd();
-
-    display();
-}
-*/
 
 /*nothing to change here**/
 bool loadTexture(char *filename, unsigned int *texture){
