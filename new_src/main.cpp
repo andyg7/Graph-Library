@@ -5,92 +5,167 @@
 #include "Graph.hpp"
 #include "algo.h"
 #include "utility.hpp"
+#include "path_algorithms.h"
+
+#include "GraphAM.hpp"
 
 
 int main(){
 
-	// Create few nodes. nullptr is the data pointer
+	/* Create few nodes. nullptr is the data pointer */
 	auto n1 = create_node<string, int>("A", nullptr);
 	auto n2 = create_node<string, int>("B", nullptr);
 	auto n3 = create_node<string, int>("C", nullptr);
 	auto n4 = create_node<string, int>("D", nullptr);
+	auto extra = create_node<string, int>("Z", nullptr);
 
+	cout << "Testing the matrix implementation\n";
+	cout << "Add 4 nodes and few edges\n";
+	auto gAM1 = create_graph<string, int, int, GraphAM>();
+	add_node(gAM1, n1);
+	add_node(gAM1, n2);
+	add_node(gAM1, n3);
+	add_node(gAM1, n4);
+
+	add_edge(gAM1, n1, 2, n2);
+	add_edge(gAM1, n2, 10, n1);
+	add_edge(gAM1, n3, 1, n1);
+
+	gAM1->print_graph();
+	cout << endl;
+
+	cout << "Add another node, and notice how the underlying matrix expands\n";
+	add_node(gAM1, extra);
+	gAM1->print_graph();
+	cout << endl;
+
+	cout << "Remove an edge\n";
+	remove_edge(gAM1, n2, n1);
+	gAM1->print_graph();
+	cout << endl;
+
+	cout << "Lets add bunch of edges and then delete a node\n";
+	add_edge(gAM1, n1, 5, n3);
+	add_edge(gAM1, n2, 5, n3);
+	add_edge(gAM1, n4, 5, n3);
+	add_edge(gAM1, n3, 7, n2);
+	add_edge(gAM1, n3, 7, n4);
+	gAM1->print_graph();
+	cout << endl;
+
+	cout << "Now delete the node 3\n";
+	remove_node(gAM1, n3);
+	gAM1->print_graph();
+	cout << endl;
+
+	cout << "Add the node back to make sure the id is given back\n";
+	add_node(gAM1, n3);
+	add_edge(gAM1, n1, 5, n3);
+	add_edge(gAM1, n2, 5, n3);
+	add_edge(gAM1, n4, 5, n3);
+	add_edge(gAM1, n3, 7, n2);
+	add_edge(gAM1, n3, 7, n4);
+
+	gAM1->print_graph();
+	cout << endl;
+	cout << "Let check adjacency. Is A adjacent to C?\n";
+	cout << adjacent(gAM1, n1, n3) << endl;
+	cout << "Let check adjacency. Is C adjacent to A?\n";
+	cout << adjacent(gAM1, n3, n1) << endl;
+	cout << endl;
+	gAM1->print_graph();
+	cout << endl;
+
+	cout << "Lets get the neighbours of C\n";
+	auto neighbours_AM = neighbours(gAM1, n3);
+	print_nodes(neighbours_AM);
+
+
+
+
+	cout << "Testing the adjacency list implementation\n";
 	// Create a graph
 	auto g1 = create_graph<string, int, int, GraphAL>();
 	
 	// Add nodes to the graph 
-	g1->add_node(n1);
-	g1->add_node(n2);
-	g1->add_node(n3);
-	g1->add_node(n4);
+	add_node(g1, n1);
+	add_node(g1, n2);
+	add_node(g1, n3);
+	add_node(g1, n4);
 	g1->print_graph();
 
 	// Add edges
-	cout << "add edges A-B and A-C\n";
-	g1->add_edge(n1, 1, n2);
-	g1->add_edge(n1, 1, n3);
+	cout << "add edges A-B and B-C\n";
+	add_edge(g1, n1, 10, n4);
+	add_edge(g1, n1, 1, n2);
+	add_edge(g1, n2, 1, n3);
+	add_edge(g1, n3, 1, n4);
+	find_path_dfs(g1, n1, n4);
+	find_path_bfs(g1, n1, n4);
+	find_path_ucs(g1, n1, n4);
+
 	g1->print_graph();
 
 	// Remove a node
 	cout << "Remove C from the graph, should also remove the edge\n";
-	g1->remove_node(n3);
+	remove_node(g1, n3);
 	g1->print_graph();
 
 	cout << "Remove all vertices, and add them back\n";
-	g1->remove_node(n1);
-	g1->remove_node(n4);
-	g1->remove_node(n2);
+	remove_node(g1, n1);
+	remove_node(g1, n4);
+	remove_node(g1, n2);
 	g1->print_graph();
 	cout << "And add back...\n";
-	g1->add_node(n1);
-	g1->add_node(n2);
-	g1->add_node(n3);
-	g1->add_node(n4);
+	add_node(g1, n1);
+	add_node(g1, n2);
+	add_node(g1, n3);
+	add_node(g1, n4);
 	g1->print_graph();
 
 	// Add a edges
 	cout << "Add few edges\n";
-	g1->add_edge(n1, 1, n2);
-	g1->add_edge(n1, 1, n3);
-	g1->add_edge(n4, 1, n3);
-	g1->add_edge(n3, 1, n4);
+	add_edge(g1, n1, 1, n2);
+	add_edge(g1, n1, 1, n3);
+	add_edge(g1, n4, 1, n3);
+	add_edge(g1, n3, 1, n4);
 	g1->print_graph();
 
 	// Remove edges
 	cout << "Remove few edges\n";
-	g1->remove_edge(n1, n2);
-	g1->remove_edge(n4, n3);
+	remove_edge(g1, n1, n2);
+	remove_edge(g1, n4, n3);
 	g1->print_graph();
 
 	// Create an Edge, pass that object in instead
 	cout << "Add an Edge if you know what i mean\n";
 	auto e1 = create_edge<string, int, int>(n2, 7, n3);
-	g1->add_edge(e1);
+	add_edge(g1, e1);
 	g1->print_graph();
 
 	cout << "Is B adjacent to C?\n";
-	cout << g1->adjacent(n2, n3) << endl;
+	cout << adjacent(g1, n2, n3) << endl;
 	cout << "Is C adjacent to B?\n";
-	cout << g1->adjacent(n3, n2) << endl;
+	cout << adjacent(g1, n3, n2) << endl;
 
 	cout << "Add more edges and see the neighbours\n";
-	g1->add_edge(n2, 1, n1);
-	g1->add_edge(n2, 1, n4);
+	add_edge(g1, n2, 1, n1);
+	add_edge(g1, n2, 1, n4);
 	g1->print_graph();
 
 	// Get neighbours
 	cout << "Who are the neighbours of B?\n";
-	auto v = g1->neighbours(n2);
-	print_nodes<string, int>(v);
+	auto v = neighbours(g1, n2);
+	print_nodes(v);
 
 	// Lets see which nodes participate in g1
 	cout << "Who are the participants of g1?\n";
-	auto pariticipants = g1->get_nodes();
+	auto pariticipants = get_nodes(g1);
 	print_nodes(pariticipants);
 
 	// Lets get the edge list
 	cout << "What are the edges os g1?\n";
-	auto edges = g1->get_edges();
+	auto edges = get_edges(g1);
 	print_edges(edges);
 
 	// Set the data pointer of a node, access data, get id
@@ -103,21 +178,21 @@ int main(){
 
 	// Given an edge or a node, lets check if it is in the graph
 	cout << "Is D in the graph?\n";
-	cout << g1->has_node(n4) << endl;
+	cout << has_node(g1, n4) << endl;
 	cout << "Remove it. Is D in graph now?\n";
-	g1->remove_node(n4);
-	cout << g1->has_node(n4) << endl;
+	remove_node(g1, n4);
+	cout << has_node(g1, n4) << endl;
 	cout << "Lets check if there is an edge (A, 1, C)?\n";
 	auto e2 = create_edge<string, int, int>(n1, 1, n3);
-	cout << g1->has_edge(e2) << endl;
+	cout << has_edge(g1, e2) << endl;
 	cout << "Maybe (C, 1, D)? Remember we removed D\n";
 	auto e3 = create_edge<string, int, int>(n3, 1, n4);
-	cout << g1->has_edge(e3) << endl;
+	cout << has_edge(g1, e3) << endl;
 	g1->print_graph();
 
 	// Lets get edges of B and its edges back
 	cout << "Edges of B are?\n";
-	auto edges_of = g1->edges_of_node(n2);
+	auto edges_of = edges_of_node(g1, n2);
 	print_edges(edges_of);
 
 	// Run DFS
@@ -135,11 +210,11 @@ int main(){
 
 	// Build a graph from multiple edges and nodes (make sure to add nodes first`)
 	cout << "Lets build a graph from edges and nodes of g1\n";
-	auto node_v = g1->get_nodes();
-	auto edges_v = g1->get_edges();
+	auto node_v = get_nodes(g1);
+	auto edges_v = get_edges(g1);
 	auto g2 = create_graph<string, int, int, GraphAL>();
-	add_nodes(node_v, g2);
-	add_edges(edges_v, g2);
+	add_nodes(g2, node_v);
+	add_edges(g2, edges_v);
 	g2->print_graph();
 
 	// Lets test the undirectification
@@ -149,22 +224,37 @@ int main(){
 
 	cout << "Lets try a more complicated graph. Here is one:\n";
 	auto g3 = create_graph<string, int, int, GraphAL>();
-	g3->add_node(n1);
-	g3->add_node(n2);
-	g3->add_node(n3);
-	g3->add_node(n4);
+	add_node(g3, n1);
+	add_node(g3, n2);
+	add_node(g3, n3);
+	add_node(g3, n4);
 
-	g3->add_edge(n1, 1, n2);
-	g3->add_edge(n2, 8, n1);
-	g3->add_edge(n2, 5, n3);
+	add_edge(g3, n1, 1, n2);
+	add_edge(g3, n2, 8, n1);
+	add_edge(g3, n2, 5, n3);
 	g3->print_graph();
 
 	cout << "Now lets see how it can be made undirected by adding edges according to some rule\n";
 	auto ug3 = make_undirected_from<string, int, int, GraphAL>(g3, average_combine<string, int, int>);
 	ug3->print_graph();
 
+	auto n5 = create_node<string, int>("D", nullptr);
+	cout << (n5 == n4) << endl;
+	cout << (n5 == n3) << endl;
 
+	cout << (n5 != n4) << endl;
+	cout << (n5 != n3) << endl;
 
+	cout << "Now on edges\n";
+	auto e5 = create_edge<string, int, int>(n2, 5, n4);
+	auto e6 = create_edge<string, int, int>(n2, 5, n5);
+	auto e7 = create_edge<string, int, int>(n2, 2, n5);
+	auto e8 = create_edge<string, int, int>(n1, 2, n5);
+
+	cout << (e5 == e6) << endl;
+	cout << (e5 == e7) << endl;
+	cout << (e5 == e8) << endl;
+	cout << (e5 != e8) << endl;
 
 
 

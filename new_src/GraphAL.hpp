@@ -17,18 +17,23 @@
 using namespace std;
 
 template <typename IdType, typename WeightType, typename DataType>
+requires Comparable<IdType> && Numeric<WeightType>
 class NodeAL;
 template <typename IdType, typename WeightType, typename DataType>
-//requires Comparable<IdType>
+requires Comparable<IdType> && Numeric<WeightType>
 class GraphAL;
 
 
 /************************* GraphAL Class ****************************/
 template <typename IdType, typename WeightType, typename DataType>
-//requires Comparable<IdType>
+requires Comparable<IdType> && Numeric<WeightType>
 class GraphAL{
 friend class NodeAL<IdType, WeightType, DataType>;
 public:
+
+	using id_type = IdType;
+	using weight_type = WeightType;
+	using data_type = DataType;
 
 	static inline shared_ptr<GraphAL<IdType, WeightType, DataType>> create_graph(){
 		shared_ptr<GraphAL<IdType, WeightType, DataType>> p = make_shared<GraphAL<IdType, WeightType, DataType>>();
@@ -43,14 +48,11 @@ public:
 	}
 
 	/* Checks if the node is in the graph */
-	bool has_node(const shared_ptr<Node<IdType, DataType>> x){
+	inline bool has_node(const shared_ptr<Node<IdType, DataType>> x){
 		return node_in_graph(x);
 	}
 
-	/* Checks if this particular edge exists, notice that weight is part of the edge */
-	bool has_edge(shared_ptr<Edge<IdType, WeightType, DataType>> e){
-		return has_edge(e->get_src(), e->get_weight(), e->get_dst());
-	}	
+
 	bool has_edge(const shared_ptr<Node<IdType, DataType>> src, const WeightType w, 
 		const shared_ptr<Node<IdType, DataType>> dst){
 
@@ -412,11 +414,15 @@ private:
 /* Adjacency list implementation node wrapper */
 //TODO: Need Comparable on ID type here
 template <typename IdType, typename WeightType, typename DataType>
+requires Comparable<IdType> && Numeric<WeightType>
 class NodeAL{
 friend class GraphAL<IdType, WeightType, DataType>;
 public:
 
-	/* Need to think about other constructors here a little */
+using id_type = IdType;
+using weight_type = WeightType;
+using data_type = DataType;
+/* Need to think about other constructors here a little */
 	/* Existance of NodeAL only makes sense in the context of a graph */
 	NodeAL(GraphAL<IdType, WeightType, DataType>* graph,
 		const shared_ptr<Node<IdType, DataType>> user_node){
@@ -424,6 +430,11 @@ public:
 		internal_id = graph->get_new_id();
 
 		user_node_p = user_node;
+	}
+
+	int heuristic_function() 
+	{
+		return 10;
 	}
 
 private:
