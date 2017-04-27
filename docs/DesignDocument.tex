@@ -148,14 +148,21 @@ We designed the path searching part of the library such that \emph{all} algorith
 \par
 Obviously we wouldn't want the user to know or worry about such details. Thus, the user simply calls \texttt{find\_path\_ast(s, g)}, and under the hood the library creates the appropriate frontier set and calls the generic code from there.
 
-\subsubsection{Graph Library Integration}
+\subsection{Path Interface}
+As mentioned above, the path searching algorithms requires only a start state and goal state. Both states must be wrapped in a \texttt{shared\_ptr<>}
+
+\subsection{Graph Library Integration}
 The core graph library doesn't know anything about a ``start" state and a ``goal" state. A vertex is not the same thing as a state; for example, a vertex does not have the concept of a parent pointer. In order to use the path searching code, we therefore has to create state wrappers that integrated with the pre-existing graph data types. This made sure we could still use code described above, while also making sure the user did not have to worry about such transformations.
 
 \section{Concepts}
 \subsection{What are concepts?}
 Concepts are essentially compile time predicates. That is, they are requirements on the types that are passed into functions. If an argument doesn't satisfy the concept, the compiler will immediately report an error. This makes debugging much easier when using templates. Without concepts, debugging can be very tricky when using templates, as it's often late in the compilation process that the compiler realizes a type is no good. As a result error messages can be extremely long, making dubugging tricky. 
 \subsection{Library Usage}
-In terms of this library, the idea is that user defined vertices and edges must satisfy certain properties; concepts are used to enforce these. For example, an Edge must point to two vertices; an Edge must be comparable; a Vertex must have a unique identifier. Perhaps more importantly, we use concepts to support function overloading. The names of the functions that work on different graph types are all the same; thus the user can call the same function whether he or she is working with a matrix or adjacency list. Concepts determine which function should be called at \emph{compile} time, not runtime. 
+In terms of this library, there are two main ways we use concepts.
+\par
+The first is to make debugging easier; user defined vertices and edges must satisfy certain properties and concepts are used to enforce these and catch bugs earlier in the compilation process. For example, an Edge must point to two vertices; an Edge must be comparable; a Vertex must have a unique identifier. 
+\par
+Perhaps more importantly, we use concepts to support function overloading. The names of the functions that work on different graph types are all the same; thus the user can call the same function whether he or she is working with a matrix or adjacency list. Concepts determine which function should be called at \emph{compile} time, not runtime. 
 
 \subsection{References}
 \begin{itemize}
