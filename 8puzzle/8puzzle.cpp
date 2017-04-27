@@ -8,10 +8,10 @@
 #include "board.h"
 #include <vector>
 #include <string>
-using std::cout;
-using std::endl;
-using std::pair;
-using std::make_pair;
+
+//using std::cout;
+//using std::endl;
+using namespace std;
 
 Board board (3, 3);
 unsigned int id[9] = {0,1,2,3,4,5,6,7,8};
@@ -21,22 +21,56 @@ int view_bottom;
 int view_top;
 int view_left;
 
+vector<string> split(const char *str, char c = ' ')
+{
+	vector<string> result;
+	do
+	{
+		const char *begin = str;
+
+		while(*str != c && *str)
+			str++;
+
+		result.push_back(string(begin, str));
+	} while (0 != *str++);
+	return result;
+}
+
+
 void display()
 {
 	draw_initial_board();
 	glutSwapBuffers();
 }
 
-void test(int values[])
+
+int num;
+
+void test(const char *s)
 {
+
+	int j =0;
+	int values[9];
+	vector<string> ans = split(s,' ');
+	vector<string>::iterator it;
+	for(it=ans.begin() ; it < ans.end(); it++,j++) {
+		values[j] = atoi(ans.at(j).c_str());
+	}
+/*
+	for(int i=0;i<3;i++){
+		cout<<a[i];
+	}
+*/
 	int index_x[9] = {0,1,2,0,1,2,0,1,2};
 	int index_y[9] = {0,0,0,1,1,1,2,2,2};
 	int i;
+
 	for(int i=0;i<9;i++){
 		glutDisplayFunc(display);
 		fill_player(index_x[i],index_y[i],values[i]);
 		display();
 	}
+
 }
 
 int main(int argc, char *argv[])
@@ -47,12 +81,25 @@ int main(int argc, char *argv[])
 	glutInitWindowSize(500, 500);
 	glutCreateWindow("8puzzle");
 	init();    
-	int final_values[2][9] ={ {1,0,2,3,4,5,6,7,8}, {0,1,2,3,4,5,6,7,8}};
+	int final_values[3][9] ={ {1,0,2,3,4,5,6,7,8}, {0,1,2,3,4,5,6,7,8},{1,2,7,3,2,5,3,6,0}};
 	int j;
+	const char *testval = "1 2 3 4 5 6 7 8 0";
 
-	test(final_values[0]);
-	sleep(1);
-	test(final_values[1]);
+	 /*This is the iterator 
+	   for(j=0;j<3;j++){
+	 */
+	test(testval);
+	/*
+	   sleep(1);
+	   }
+	 */
+
+
+	/*pass the string into this*/
+	//test(final_values[1]);
+
+
+	/*PUT IN MAIN FUCNTION*/
 	glutDisplayFunc(display);
 	glutMainLoop();
 	return 0;
@@ -63,7 +110,7 @@ int main(int argc, char *argv[])
 void fill_player(int x, int y, int dnumber) 
 {
 	unsigned int textureId;
-	cout<<"X = "<<x<<"Y = "<<y<<"Dnumber"<<dnumber<<endl;
+	//cout<<"X = "<<x<<"Y = "<<y<<"Dnumber"<<dnumber<<endl;
 	switch(dnumber){
 		case 0: textureId = id[0];break;
 		case 1: textureId = id[1];break;

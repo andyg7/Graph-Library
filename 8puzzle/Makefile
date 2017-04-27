@@ -1,6 +1,6 @@
 OBJS = 8puzzle.o board.o
 CC = g++
-OGL= -lGL -lGLU -lglut -lSOIL
+OGL= -lGL -lGLU -lglut -lSOIL -Wno-write-strings
 
 8puzzle: $(OBJS)
 	$(CC) 8puzzle.o board.o -o 8puzzle $(OGL)
