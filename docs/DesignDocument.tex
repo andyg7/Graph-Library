@@ -2,7 +2,7 @@
 \usepackage{url, graphicx}
 \usepackage[margin=1in]{geometry}
 
-\title{Graph and Search Library Design Document}
+\title{Graph and Path Search Library Design Document}
 \author{
 Andrew Grant\\
 \texttt{amg2215@columbia.edu}
@@ -66,18 +66,49 @@ As with the adjacency list representation, \texttt{vertex\_wrapper} is a fundame
 \subsection{Data Structures}
 We use a vector of vectors to represent the matrix. 
 
+\section{Path Searching algorithms}
+\subsection{Algorithms Supported}
+We support the following path searching algorithms: 
+\begin{itemize}
+\item BFS
+\item DFS
+\item UCS
+\item A*
+\end{itemize}
+
+\subsection{Implementation}
+\subsubsection{User Defined State}
+We designed the path algorithms such that they only require a ``start" state and ``goal" state, where ``state" is an abstract type. The user simply defines his/her own start and goal state, and the code handles the rest. Of course the semantics of path finding require that any given state must adhere to some requirements; we use concepts to enforce these:
+\begin{itemize}
+\item a state must be comparable
+\item a state must be hashable
+\item a state must have a \texttt{to\_string()} member function
+\item a state must have a field called parent that is of type \texttt{shared\_ptr<state>}
+\item a state must have a field called cost that is numeric
+\item a state must have a member function called ``expand" that returns a vector of states
+\item if A* is used, a member function called \texttt{heuristic\_func()} is required that returns a numeric type
+\end{itemize}
+As long as the user provides a type that adheres to these properties, any of our algorithms can be run
+
+\subsubsection{Path Code}
+We designed the path searching part of the library such that \emph{all} algorithms actually run on the same while loop. The function that eventually gets called accepts a few parameters that determine which algorithm gets run. For example, if we want to run DFS we send the path code a stack to be used as the frontier set. If we want to run BFS we send it a queue for the frontier set. Thus, all the different algorithms actually run on the same code; it's the inputs that decide which algorithm gets run. 
+\par
+Obviously we wouldn't want the user to know or worry about such details. Thus, the user simply calls \texttt{find\_path\_ast(s, g)}, and under the hood the library creates the appropriate frontier set and calls the generic code from there.
+
+\subsubsection{Graph Library Integration}
+The core graph library doesn't know anything about a ``start" state and a ``goal" state. A vertex is not the same thing as a state; for example, a vertex does not have the concept of a parent pointer. In order to use the path searching code, we therefore has to create state wrappers that integrated with the pre-existing graph data types. This made sure we could still use code described above, while also making sure the user did not have to worry about such transformations.
+
 \section{Concepts}
 \subsection{What are concepts?}
 Concepts are essentially compile time predicates. That is, they are requirements on the types that are passed into functions. If an argument doesn't satisfy the concept, the compiler will immediately report an error. This makes debugging much easier when using templates. Without concepts, debugging can be very tricky when using templates, as it's often late in the compilation process that the compiler realizes a type is no good. As a result error messages can be extremely long, making dubugging tricky. 
 \subsection{Library Usage}
 In terms of this library, the idea is that user defined vertices and edges must satisfy certain properties; concepts are used to enforce these. For example, an Edge must point to two vertices; an Edge must be comparable; a Vertex must have a unique identifier. Perhaps more importantly, we use concepts to support function overloading. The names of the functions that work on different graph types are all the same; thus the user can call the same function whether he or she is working with a matrix or adjacency list. Concepts determine which function should be called at \emph{compile} time, not runtime. 
 
-\subsection{Reference}
-Reference: \url{http://www.stroustrup.com/good_concepts.pdf}
-\section{Conclusion}
-
-\section{Repository Information}
-The complete project is located at \url{https://github.com/andyg7/Graph-Library}.
-The core graph library code is located at \url{https://github.com/andyg7/Graph-Library/src}
+\subsection{References}
+\begin{itemize}
+\item Concepts reference: \url{http://www.stroustrup.com/good_concepts.pdf}
+\item The complete project is located at \url{https://github.com/andyg7/Graph-Library}.
+\item The core graph library code is located at \url{https://github.com/andyg7/Graph-Library/src}
+\end{itemize}
 
 \end{document} 
