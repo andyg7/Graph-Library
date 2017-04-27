@@ -1,5 +1,5 @@
 #include <iostream>
-#include <GL/glut.h>
+#include "glut-3.7/include/GL/glut.h"
 #include <string>
 #include <utility>
 #include "soil/src/SOIL.h"
