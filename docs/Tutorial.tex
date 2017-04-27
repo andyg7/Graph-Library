@@ -4,7 +4,16 @@
 \usepackage{listings}
 
 \title{Graph and Search Library Tutorial}
-\author{Andrew Grant,  Anton Igorevich, Somya Vasudevan}
+\author{
+Andrew Grant\\
+\texttt{amg2215@columbia.edu}
+\and 
+Anton Igorevich \\
+\texttt{ain2108@columbia.edu}
+\and
+ Somya Vasudevan \\
+ \texttt{sv2500@columbia.edu}
+}
 \date{4/28/2017}
 
 \begin{document}
@@ -78,6 +87,11 @@ auto e1 = create_edge(my_graph, v0, v2);
 bool a = adjacent(my_graph, v0, v1)
 \end{lstlisting}
 
+\subsection{Getting vertices by value}
+\begin{lstlisting}
+vector<V> vertices_by_value = get_vertices_by_value(my_graph);
+\end{lstlisting}
+
 \subsection{Removing a Vertex}
 \begin{lstlisting}
 remove(my_graph, v11);
@@ -90,7 +104,6 @@ struct path_data path_v0_v1_data = find_path_ucs(my_graph, v0, v1);
 auto vector_of_vertices = path_v0_v1_data->path_v;
 string string_of_path = path_v0_v1_data->to_string();
 \end{lstlisting}
-
 
 
 
