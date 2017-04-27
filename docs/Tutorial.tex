@@ -51,6 +51,15 @@ The path searching algorithms are accessible just like regular graph functions. 
 One important note is how the cost is computed. The cost is determined by the cost of the edge; if the user does not define a cost for an edge a cost of 1 is assumed.
 
 \subsubsection{Path Algorithms in Other Domains}
+Our path algorithms are also designed to work in other domains where the user can provide a start state and goal state. The idea is that our code will work will pretty much any user defined ``state" as long as it adheres to a few requirements:
+\begin{itemize}
+\item a state must have a parent pointer; this is to retrace the found path once the goal state is found
+\item a state must have a cost field that is numeric
+\item a state must be hashable
+\item a state must be comparable
+\item a state must have a function called \texttt{expand()} that returns a vector of states. This function should return a given states successor states.
+\end{itemize}
+As long as the user defined data type adheres to these requirements, any of the path finding algorithms can be used.
 
 \subsection{Important Notes}
 The API requires the user to send in pointers, to avoid the cost of copying. Nonetheless, the library copies data into the graph data structures. For example, when a vertex is added to a graph, a copy of a vertex is added to the graph struct; this is exactly how vector from the standard library works. This prevents the user from maintaining pointers into the underlying graph data structure and changing data from under it's feet. We believe this will prevent nasty bugs.
@@ -112,6 +121,73 @@ auto vector_of_vertices = path_v0_v1_data->path_v;
 string string_of_path = path_v0_v1_data->to_string();
 \end{lstlisting}
 
+\subsection{Finding a path from start state to goal state (8 puzzle problem)}
+Here we show how our code can be used to solve the 8 puzzle problem. The user has defined a class that represents the state of the board at any given time. The class has a function called \texttt{expand()} that returns a vector of states that can be moved to in one move. The class has a parent pointer. The class has a cost. It is hashable and it is comparable. 
 
+\begin{lstlisting}
+class Node : public std::enable_shared_from_this<Node>
+{
+	public:
+		int vertex_id;
+		using cost_type = int;
+		Node(vector<vector<int>>, int, shared_ptr<Node>);
+		vector<shared_ptr<Node>> expand();
+		int get_element(int, int) const;
+		int get_element(tuple<int,int>) const;
+		void set_element(int, int, int);
+		void set_element(tuple<int,int>, int);
+		void switch_elements(tuple<int, int>, tuple<int, int>);
+		bool is_goal_node();
+		void set_cost(int);
+		int get_cost() const;
+		void set_parent(shared_ptr<Node> p);
+		shared_ptr<Node> get_parent() const;
+		bool operator==(const Node& rhs) const;
+		bool operator!=(const Node& rhs) const;
+		int heuristic_func() const;
+		shared_ptr<Node> parent;
+		int cost;
+		string to_string() const;
+
+		//int get_estimated_cost_to_end() const;
+	private:
+		vector<vector<int>> grid;
+		tuple<int,int> get_zero_element() const;
+		//int estimated_cost_to_end;
+};
+
+\end{lstlisting}
+The user is now able to create a start state, and goal state and call our code and get the path in return:
+
+\begin{lstlisting}
+shared_ptr<Node> n = make_shared<Node>(v, 0, nullptr);
+	n->set_element(0,0,1);
+	n->set_element(1,0,7);
+	n->set_element(2,0,4);
+	n->set_element(0,1,3);
+	n->set_element(1,1,5);
+	n->set_element(2,1,6);
+	n->set_element(0,2,2);
+	n->set_element(1,2,8);
+	n->set_element(2,2,0);
+	shared_ptr<Node> goal_state = make_shared<Node>(v, 0, nullptr);
+	goal_state->set_element(0,0,1);
+	goal_state->set_element(1,0,2);
+	goal_state->set_element(2,0,3);
+	goal_state->set_element(0,1,4);
+	goal_state->set_element(1,1,5);
+	goal_state->set_element(2,1,6);
+	goal_state->set_element(0,2,7);
+	goal_state->set_element(1,2,8);
+	goal_state->set_element(2,2,0);
+	if (!path_exists(n, goal_state)) {
+		cout << "No path ! \n";
+		return 0;
+	}
+	cout << "calculating ast path...\n";
+	shared_ptr<struct path_data<Node, int>> path_d = find_path_ast(n, goal_state);
+\end{lstlisting}
+
+Hopefully these examples have given you an idea of what our library can be used for!
 
 \end{document} 
