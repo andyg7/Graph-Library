@@ -20,7 +20,7 @@ Anton Igorevich \\
 \maketitle
 
 \section{Introduction}
-We've built a graph and path searching library, built in C++. The library is designed to make it really easy for users to use their own vertex and edge data structures and get going using graphs and running algorithms on them right away. Currently the library supports the following graphs: DG (directed graph), DAG (directed acyclic graph), DT (directed tree), Matrix(undirected). The idea is that users define their own vertex and edge data types, and then the library handles everything else under the hood.
+We've built a graph and path searching library, built in C++. The library is designed to make it really easy for users to use their own vertex and edge data structures and get going using graphs and running algorithms on them right away. Currently the library supports the following graphs: DG (directed graph), DAG (directed acyclic graph), DT (directed tree), Matrix(undirected). The idea is that users define their own vertex and edge data types, and then the library handles everything else under the hood. We also provide very generic path searching code that can be used in many domains. 
 
 \section{Motivation}
 Conceptually, a graph is made up of a bunch of vertices and edges. At a minimum there must be some way to distinguish between vertices, distinguish between edges, and define edges as made up of two vertices. Nonetheless, users often want to embed extra information in these ADTs. For example, a user may want a graph representing cities and the highways between them. The user may have a City class; cities must of course have some unique id (e.g. city name), but they may also have extra information such as population, GDP, etc. The same goes for edges; maybe a Road class is used, and the class also has miles, age of road etc. 
@@ -31,7 +31,7 @@ The philosophy of the library was that it should be really easy for users to be 
 The library was designed so that users are able to design their own vertex and edge data structures. All that is required of the users is the following:
 \begin{itemize}
 \item Vertex and Edge must be comparable (that is they must implement the == operator for their types)
-\item Vertex and Edge must be hashable (
+\item Vertex and Edge must be hashable
 \item Edge must have two fields \texttt{v\_1} and \texttt{v\_2}, that are of the same type as the Vertex that they defined.
 \item To use the path algorithms, Edge must have a cost field that is numeric. If the user does not define a cost, the library will automatically given an edge a cost of 1.
 \item Vertex must have a \texttt{to\_string} function that returns a string representation of the vertex. 
@@ -64,7 +64,7 @@ As with the adjacency list representation, \texttt{vertex\_wrapper} is a fundame
 \includegraphics{matrix}
 
 \subsection{Data Structures}
-We use a vector of vectors to represent the matrix. 
+We use a vector of vectors to represent the matrix. Since the internal id is an int, the matrix is thus a vector of vector of ints. 
 
 \section{Path Searching algorithms}
 \subsection{Algorithms Supported}
