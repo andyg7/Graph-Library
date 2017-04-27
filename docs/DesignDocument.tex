@@ -53,8 +53,9 @@ The idea is the same for the \texttt{edge\_wrapper}
 \texttt{vertex\_data} points to the user provided vertex data. This \texttt{vertex\_wrapper} is the fundamental data type of our graph library. Whether a DAG, DG, DT or matrix graph representation is used, each vertex is stored in this struct. 
 
 \subsection{Graph Interface}
-Because all graphs are represented by structs, pretty much every graph library function requires such a graph struct as a formal argument. Furthermore, concepts allow us to use the same function name multiple times for each graph type. More specifically, there is a different function \texttt{add\_edge(G g, E e)} for each graph type. For example:
-
+Because all graphs are represented by structs, pretty much every graph library function requires such a graph struct as a formal argument. The remaining arguments are almost always one of the user defined vertex or edge. Thus, users do not need to know about wrappers at all. The wrappers are handled by the library. Furthermore, \texttt{shared\_ptr<>s} are required when using the API. That is, the library requires every formal argument to be of type \texttt{shared\_ptr<>} 
+\par
+Concepts allow us to use the same function name for different graph types. For example, there is a different function \texttt{add\_edge(G g, E e)} for each graph type.
 \begin{lstlisting}
 template<typename G, typename E>
 requires Graph<G> && Edge_ptr<E>
@@ -98,8 +99,6 @@ bool add_edge(G g, E e)
 	return added_edge;
 }
 \end{lstlisting}
-When using our API the user sends in their vertex and/or edge type. They do not need to know about wrappers at all. The wrappers are handled by the library. Furthermore, \texttt{shared\_ptr<>s} are required when using the API. That is, the library requires every formal argument to be of type \texttt{shared\_ptr<>} 
-
 
 \section{Adjacency List Design}
 \subsection{}
@@ -118,7 +117,7 @@ As with the adjacency list representation, \texttt{vertex\_wrapper} is a fundame
 \includegraphics{matrix}
 
 \subsection{Data Structures}
-We use a vector of vectors to represent the matrix. Since the internal id is an int, the matrix is thus a vector of vector of ints. 
+We use a vector of vectors to represent the matrix. Since the internal id is an int, the matrix is thus a vector of vector of ints. We also maintain a hashmap pointing from a vertex to its wrapper.
 
 \section{Path Searching algorithms}
 \subsection{Algorithms Supported}
