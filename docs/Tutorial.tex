@@ -5,31 +5,54 @@
 
 \title{Graph and Search Library Tutorial}
 \author{Andrew Grant,  Anton Igorevich, Somya Vasudevan}
-\date{}
+\date{4/28/2017}
 
 \begin{document}
 
 \maketitle
 
+\section{Introduction}
+This is a short tutorial on how to get going using the graph library. The big picture idea is for you, the user, to create your own Vertex and Edge data structures; once you provide the library with these two user defined types, you'll be immediately able to start creating graphs and running algorithms on these graphs using our simple API.
+
 \section{How to Use the Library}
+\subsection{User Defined Vertex and Edge}
+The most important thing is for the user to define his/her vertex and edge data types. The types must adhere to the following requirements:
 \begin{itemize}
-\item The most important thing is for the user to define his/her vertex and edge data types. The only requirements are that the vertex/edge are comparable (aka must implement operator==) and hashable (aka implement struct hash ...).
-\item Then the user should select one of \texttt{graph\_dg}, \texttt{graph\_dag}, \texttt{graph\_dt}, \texttt{matrix\_graph} and provide the struct with two template parameters that specify the vertex and edge types (as mentioned above the lib provides vertex and edge for this but the user can use his/her own data types) e.g. \texttt{dag\_graph}<\texttt{my\_vertex\_1}, \texttt{my\_edge\_1}> \texttt{my\_graph}; e.g. \texttt{dt\_graph}<vertex, edge> \texttt{my\_graph}; e.g. \texttt{dg\_graph}<\texttt{my\_vertex\_2}, \texttt{my\_edge\_2}> \texttt{my\_graph};
-\item At this point any/all of the functions can be used. Note that all functions require pointers as inputs (more specifically \texttt{shared\_ptrs}); this is to avoid the cost of copying large graphs/vertices/edges
-see examples/ directory for some examples
-\item Note that the same function name is used for all graph types, vertex types and edge types. This is another benefit of concepts; that is, concepts are used to make sure the right function is called using overloading
+\item Vertex and Edge must be comparable
+\item Vertex and Edge must be hashable
+\item Edge must have two fields \texttt{v\_1} and \texttt{v\_2}, that are of the same type as the Vertex defined.
+\item Vertex must have a \texttt{to\_string} function that returns a string representation of the vertex. 
 \end{itemize}
+\subsection{Choosing a Graph Type}
+Then the user should select one of \texttt{graph\_dg}, \texttt{graph\_dag}, \texttt{graph\_dt}, \texttt{matrix\_graph} and provide the struct with two template parameters that specify the vertex and edge types (the library provides vertex and edge types for user, but most likely the user will to provide his/her own data types) 
+For example: 
+\begin{itemize}
+\item \texttt{dag\_graph<}\texttt{my\_vertex\_1}, \texttt{my\_edge\_1>} \texttt{my\_graph}; 
+\item \texttt{dt\_graph<vertex, edge>} \texttt{my\_graph}; 
+\item \texttt{dg\_graph<}\texttt{my\_vertex\_2}, \texttt{my\_edge\_2>} \texttt{my\_graph};
+\end{itemize}
+ At this point the user can easily start using the library provided functions. All functions require the user to provide at least the graph object. Furthermore, all arguments should be \texttt{shared\_ptrs}; this is to avoid the cost of copying. These savings could be substantial for large graph objects.
+Note that the same function name is used for all graph types, vertex types and edge types. This is thanks to concepts; that is, concepts are used to make sure the right function is called using overloading. This makes it super easy for the user to write generic programs that work on different graph types. 
+\subsection{Path Algorithms}
+Path algorithms are accessible just like regular graph functions. One thing to note is the return type of the path algorithms. The path algorithms actually return a pointer to a struct called \texttt{path\_data}. This struct points to various interesting information about the path found. It contains the following data: 1) the cost of the path 2) a vector of the vertices along the path 3) a vector of string representations of the path 4) a function \texttt{to\_string} that returns a string of the path
+
+\subsection{Important Notes}
+The API requires the user to send in pointers, to avoid the cost of copying. Nonetheless, the library copies data into the graph data structures. For example, when a vertex is added to a graph, a copy of a vertex is added to the graph struct; this is exactly how vector from the standard library works. This prevents the user from maintaining pointers into the underlying graph data structure and changing data from under it's feet. We believe this will prevent nasty bugs.
 
 \section{Examples}
-
+Here we provide some examples on how to use the library. 
 \subsection{Creating a graph}
-Create a matrix graph, where Vertex type is ``city", and Edge type is ``road". ``city" and ``road" are both user defined classes.
+Here we create a matrix graph, where Vertex type is ``city", and Edge type is ``road". ``city" and ``road" are both user defined classes. 10 refers to the dimension of the matrix. We highly recommend using the keyword ``auto" whenever possible.
 \begin{lstlisting}
-shared_ptr<matrix_graph<city, road>> my_graph = make_shared<matrix_graph<city, road>>(10);
+auto my_graph = make_shared<matrix_graph<city, road>>(10);
+\end{lstlisting}
+Here we create an adjacency list DAG graph.
+\begin{lstlisting}
+auto my_graph = make_shared<dag_graph<city, road>>();
 \end{lstlisting}
 
 \subsection{Creating a Vertex using helper function}
-Create a Vertex using helper function. A unique id is automatically assigned to v1
+Create a Vertex using helper function. A unique id is automatically assigned to v1. This is a helper function for the user if he/she needs to create a ton of vertices on the fly and doesn't want to manually create them and worry about creating unique ids. Nonetheless, the user can create his/her own vertices manually as well of course. 
 \begin{lstlisting}
 auto v1 = create_vertex(my_graph);
 \end{lstlisting}
@@ -40,10 +63,19 @@ Note, the user defined Vertex does not need to know anything about Value
 set_value(my_graph, v0, Value {"A", 1990});
 \end{lstlisting}
 
+\subsection{Adding a vertex to a graph}
+\begin{lstlisting}
+add(my_graph, v0);
+\end{lstlisting}
 
 \subsection{Creating Edge}
 \begin{lstlisting}
 auto e1 = create_edge(my_graph, v0, v2);
+\end{lstlisting}
+
+\subsection{Checking if vertices are adjacent}
+\begin{lstlisting}
+bool a = adjacent(my_graph, v0, v1)
 \end{lstlisting}
 
 \subsection{Removing a Vertex}
@@ -51,11 +83,12 @@ auto e1 = create_edge(my_graph, v0, v2);
 remove(my_graph, v11);
 \end{lstlisting}
 
-\subsection{Finding path between Vertices}
-First we get a struct that contains a bunch of data about the path. The second line we get a vector of the vertices along the path.
+\subsection{Finding a path between Vertices}
+Here we show you how to use the path finding algorithms. Notice how we get a struct from the function. In the second line we get a vector of the vertices along the path. So in our case we would get a vector of ``city" objects. In the third line we are able to get a string; this string is a string of the path. Note how this requires the ``city" provides a \texttt{to\_string} function.
 \begin{lstlisting}
-path_v0_v1 = find_path_ucs(my_graph, v0, v1);
-auto vector_of_vertices = path_v0_v1->path_v;
+struct path_data path_v0_v1_data = find_path_ucs(my_graph, v0, v1);
+auto vector_of_vertices = path_v0_v1_data->path_v;
+string string_of_path = path_v0_v1_data->to_string();
 \end{lstlisting}
 
 
