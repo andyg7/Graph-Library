@@ -30,6 +30,7 @@ The most important thing is for the user to define his/her vertex and edge data 
 \item Vertex and Edge must be comparable
 \item Vertex and Edge must be hashable
 \item Edge must have two fields \texttt{v\_1} and \texttt{v\_2}, that are of the same type as the Vertex defined.
+\item To use the path algorithms, Edge must have a cost field that is numeric. If the user does not define a cost, the library will automatically given an edge a cost of 1.
 \item Vertex must have a \texttt{to\_string} function that returns a string representation of the vertex. 
 \end{itemize}
 \subsection{Choosing a Graph Type}
@@ -43,7 +44,13 @@ For example:
  At this point the user can easily start using the library provided functions. All functions require the user to provide at least the graph object. Furthermore, all arguments should be \texttt{shared\_ptrs}; this is to avoid the cost of copying. These savings could be substantial for large graph objects.
 Note that the same function name is used for all graph types, vertex types and edge types. This is thanks to concepts; that is, concepts are used to make sure the right function is called using overloading. This makes it super easy for the user to write generic programs that work on different graph types. 
 \subsection{Path Algorithms}
-Path algorithms are accessible just like regular graph functions. One thing to note is the return type of the path algorithms. The path algorithms actually return a pointer to a struct called \texttt{path\_data}. This struct points to various interesting information about the path found. It contains the following data: 1) the cost of the path 2) a vector of the vertices along the path 3) a vector of string representations of the path 4) a function \texttt{to\_string} that returns a string of the path
+The path searching code is very generic and is designed to work with our graph library as well as our path searching domains.  
+\subsubsection{Path Algorithms Using Our Graph Library}
+The path searching algorithms are accessible just like regular graph functions. One thing to note is the return type of the path algorithms. The path algorithms actually return a pointer to a struct called \texttt{path\_data}. This struct points to various interesting information about the path found. It contains the following data: 1) the cost of the path 2) a vector of the vertices along the path 3) a vector of string representations of the path 4) a function \texttt{to\_string} that returns a string of the path
+\par
+One important note is how the cost is computed. The cost is determined by the cost of the edge; if the user does not define a cost for an edge a cost of 1 is assumed.
+
+\subsubsection{Path Algorithms in Other Domains}
 
 \subsection{Important Notes}
 The API requires the user to send in pointers, to avoid the cost of copying. Nonetheless, the library copies data into the graph data structures. For example, when a vertex is added to a graph, a copy of a vertex is added to the graph struct; this is exactly how vector from the standard library works. This prevents the user from maintaining pointers into the underlying graph data structure and changing data from under it's feet. We believe this will prevent nasty bugs.

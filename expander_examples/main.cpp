@@ -49,7 +49,7 @@ int main(int argc, const char *argv[])
 	for (auto v : path_vertices) {
 		// this string t
 		string t = v.to_string();
-		cout << "udklfjkldjflkjdlkfkd" << t << '\n';
+		//cout << "udklfjkldjflkjdlkfkd" << t << '\n';
 	}
 	cout << "cost\n";
 	cout << path_d->cost << '\n';
