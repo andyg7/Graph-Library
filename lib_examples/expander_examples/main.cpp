@@ -58,14 +58,17 @@ int main(int argc, const char *argv[])
 	path_d = find_path_dfs(n, goal_state);
 	cout << "cost\n";
 	cout << path_d->cost << '\n';
+	cout << path_d->to_string() << '\n';
 	cout << "calculating bfs path...\n";
 	path_d = find_path_bfs(n, goal_state);
 	cout << "cost\n";
 	cout << path_d->cost << '\n';
+	cout << path_d->to_string() << '\n';
 	cout << "calculating ucs path...\n";
 	path_d = find_path_ucs(n, goal_state);
 	cout << "cost\n";
 	cout << path_d->cost << '\n';
+	cout << path_d->to_string() << '\n';
 	return 0;
 }
 
