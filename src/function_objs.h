@@ -1,3 +1,6 @@
+/// \file
+/// \brief Has 2 functions GreaterThanCost() and HeuristicGreaterThanCost() 
+
 #ifndef FUNCTION_OBJS
 #define FUNCTION_OBJS
 

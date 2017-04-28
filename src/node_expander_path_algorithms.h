@@ -1,3 +1,6 @@
+/// \file
+///\brief Node Expander Path Finding algorithms are implemented here
+
 #ifndef NODE_EXPANDER_PATH_ALGORITHMS_H
 #define NODE_EXPANDER_PATH_ALGORITHMS_H
 

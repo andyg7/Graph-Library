@@ -1,3 +1,6 @@
+/// \file
+/// \brief The 4 main path algorithms are implemented here
+
 #ifndef PATH_ALGORITHMS_H
 #define PATH_ALGORITHMS_H
 

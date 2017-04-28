@@ -1,3 +1,6 @@
+/// \file
+/// \brief functions to create a graph are defined
+
 #ifndef GRAPH_CREATE
 #define GRAPH_CREATE
 

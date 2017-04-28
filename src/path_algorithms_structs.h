@@ -1,3 +1,5 @@
+/// \file
+/// \brief Helper functions for the path algorithms are implemented here
 #ifndef PATH_ALGORITHMS_STRUCTS
 #define PATH_ALGORITHMS_STRUCTS
 
@@ -9,6 +11,10 @@ namespace std
 	class path_state;
 
 	template<typename G, typename C>
+	///
+	/// \brief This is structure stores the current state of the path
+	///
+
 	class path_state : public std::enable_shared_from_this<path_state<G, C>> 
 	{
 		public:

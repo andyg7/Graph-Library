@@ -1,3 +1,6 @@
+/// \file
+/// \brief Adjacency Matrix implementation for a Graph
+
 #ifndef MATRIX_GRAPH_LIB_H
 #define MATRIX_GRAPH_LIB_H
 

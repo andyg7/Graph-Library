@@ -1,3 +1,6 @@
+/// \file
+/// \brief Helper functions to be included in the main header file are declared
+
 #ifndef GRAPH_LIB_HEADER_HELPER
 #define GRAPH_LIB_HEADER_HELPER
 

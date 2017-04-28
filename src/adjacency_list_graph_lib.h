@@ -1,3 +1,7 @@
+/// \file
+/// \brief Adjacency list implementation for Graph
+
+
 #ifndef ADJACENCY_LIST_GRAPH_LIB_H
 #define ADJACENCY_LIST_GRAPH_LIB_H
 

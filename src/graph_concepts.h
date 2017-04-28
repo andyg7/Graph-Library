@@ -1,3 +1,6 @@
+/// \file
+/// \brief Concepts for different types of graphs are implemented
+
 #ifndef GRAPH_CONCEPTS_H
 #define GRAPH_CONCEPTS_H
 
@@ -24,9 +27,16 @@ using namespace std;
 /*
    Dummy types used for member type concept overloading
  */
+/// \index Graph structure
 struct Graph {};
+///
+/// \index Directed Acyclic Graph structure
 struct DAG : Graph {};
+///
+/// \index Directed Graph structure
 struct DG : Graph {};
+///
+/// \index Tree structure
 struct DT : DG {};
 struct Matrix_graph {};
 
@@ -250,6 +260,7 @@ requires (G g) {
 };
 
 template<typename G>
+///\index Matrix implementation for graph
 concept bool Matrix_Graph = 
 requires (G g) {
 	g->id_to_wrapper;

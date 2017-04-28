@@ -5,15 +5,20 @@
 #include "soil/src/SOIL.h"
 #include <unistd.h>
 #include "8puzzle.h"
-#include "board.h"
+//#include "board.h"
 #include <vector>
 #include <string>
+#include <fstream>
+#include <sstream>
+//#include <string>
+std::ifstream infile("output.txt");
+std::string line;
 
 //using std::cout;
 //using std::endl;
 using namespace std;
 
-Board board (3, 3);
+//Board board (3, 3);
 unsigned int id[9] = {0,1,2,3,4,5,6,7,8};
 
 int view_right;
@@ -45,26 +50,20 @@ void display()
 
 
 int num;
-
-void test(const char *s)
+void test(string line)
 {
-
-	int j =0;
 	int values[9];
-	vector<string> ans = split(s,' ');
-	vector<string>::iterator it;
-	for(it=ans.begin() ; it < ans.end(); it++,j++) {
-		values[j] = atoi(ans.at(j).c_str());
+	int counter = 0;
+	for (int i = 0; i < line.length(); i++) {
+		if (line.at(i) != ' ') {
+			int d = line.at(i) - '0';
+			values[counter] = d;
+			counter++;
+		}
 	}
-/*
-	for(int i=0;i<3;i++){
-		cout<<a[i];
-	}
-*/
 	int index_x[9] = {0,1,2,0,1,2,0,1,2};
 	int index_y[9] = {0,0,0,1,1,1,2,2,2};
 	int i;
-
 	for(int i=0;i<9;i++){
 		glutDisplayFunc(display);
 		fill_player(index_x[i],index_y[i],values[i]);
@@ -81,22 +80,18 @@ int main(int argc, char *argv[])
 	glutInitWindowSize(500, 500);
 	glutCreateWindow("8puzzle");
 	init();    
-	int final_values[3][9] ={ {1,0,2,3,4,5,6,7,8}, {0,1,2,3,4,5,6,7,8},{1,2,7,3,2,5,3,6,0}};
+	//int final_values[3][9] ={ {1,0,2,3,4,5,6,7,8}, {0,1,2,3,4,5,6,7,8},{1,2,7,3,2,5,3,6,0}};
 	int j;
-	const char *testval = "1 2 3 4 5 6 7 8 0";
-
-	 /*This is the iterator 
-	   for(j=0;j<3;j++){
-	 */
-	test(testval);
-	/*
-	   sleep(1);
-	   }
-	 */
+	//const char *testval = "1 2 3 4 5 6 7 8 0";
 
 
-	/*pass the string into this*/
-	//test(final_values[1]);
+	//std::istringstream iss(line);
+	//std::string s;
+	while (std::getline(infile, line))
+	{
+		test(line);
+		sleep(1);
+	}
 
 
 	/*PUT IN MAIN FUCNTION*/

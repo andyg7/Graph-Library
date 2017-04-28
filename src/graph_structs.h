@@ -1,3 +1,6 @@
+/// \file
+/// \brief Structs that are used to define a graph are defined here
+
 #ifndef GRAPH_STRUCTS_H
 #define GRAPH_STRUCTS_H
 
@@ -10,6 +13,10 @@ using namespace std;
 
 namespace graph_std_lib 
 {
+	///
+	/// \brief Wrapper Class for the vertex
+	///
+
 	template<typename T>
 	struct vertex_wrapper {
 		using vertex_type = T;
@@ -28,12 +35,18 @@ namespace graph_std_lib
 			return vertex_data != rhs.vertex_data;
 		}
 	};
+	///
+	/// \brief Wrapper class for Edge
+	///
 
 	template<typename V, typename E>
 	struct edge_wrapper {
 		E edge;
 		Value value;
 	};
+	///
+ 	///\brief Header for each vertex and points to each wrappers
+ 	///
 
 	template<typename T, typename E>
 	struct vertex_header {
@@ -50,6 +63,9 @@ namespace graph_std_lib
 		neighbors_type neighbors;
 		edges_type edges;
 	};
+	///
+	/// \brief This is the vertex struct that has the a unique ID and other operators
+	///
 
 	struct vertex {
 		int vertex_id;
@@ -81,6 +97,9 @@ namespace graph_std_lib
 		}
 	};
 
+	///
+	/// \brief This is the generic Edge struct to define an edge between 2 vertices
+	///
 
 	struct edge {
 		using vertex_type = vertex;
@@ -93,6 +112,9 @@ namespace graph_std_lib
 			return rhs.v1 == v1 && rhs.v2 == v2;
 		}		
 	};
+	///
+	/// \brief This is struct specifies the Directed graph implementation
+	///
 
 	template<typename V, typename E>
 	requires Vertex<V> && Edge<E> && Matching_vertices_edges<E, V> 
@@ -106,6 +128,9 @@ namespace graph_std_lib
 		using underlying_data_type = vector<vertex_header<V, E>>;
 		underlying_data_type underlying_data;
 	};
+	///
+	/// \brief This is the vertex struct is specific to the Matrix Implementation
+	///
 
 	template<typename V, typename E>
 	requires Vertex<V> && Edge<E> && Matching_vertices_edges<E, V> 
@@ -136,6 +161,9 @@ namespace graph_std_lib
 		matrix_graph() {}
 		int sum_internal_ids;
 	};
+	///
+	/// \brief This is struct gives the Directed Acyclic Graph implementation
+	///
 
 	template<typename V, typename E>
 	requires Vertex<V> && Edge<E> && Matching_vertices_edges<E, V> 
@@ -149,6 +177,9 @@ namespace graph_std_lib
 		using underlying_data_type = vector<vertex_header<V, E>>;
 		underlying_data_type underlying_data;
 	};
+	///
+	/// \brief This struct is used to specify the Tree type
+	///
 
 	template<typename V, typename E>
 	requires Vertex<V> && Edge<E> && Matching_vertices_edges<E, V> 
@@ -168,6 +199,9 @@ using namespace graph_std_lib;
 namespace std
 {
 	template <>
+	///
+	/// \brief Library provided vertex
+	///
 	struct hash<vertex>
 		{
 			size_t operator()(const vertex& n) const noexcept
@@ -177,6 +211,9 @@ namespace std
 		};
 
 	template <typename T>
+	///
+	/// \brief Library provided vertex
+	///
 	struct hash<vertex_wrapper<T>>
 		{
 			size_t operator()(const vertex_wrapper<T>& n) const noexcept
