@@ -20,6 +20,8 @@ Anton Igorevich \\
 
 \maketitle
 
+\tableofcontents
+
 \section{Introduction}
 We've built a graph and path searching library, built in C++. The library is designed to make it really easy for users to use their own vertex and edge data structures and get going using graphs and running algorithms on them right away. Currently the library supports the following graphs: DG (directed graph), DAG (directed acyclic graph), DT (directed tree), Matrix(undirected). The idea is that users define their own vertex and edge data types, and then the library handles everything else under the hood. We also provide very generic path searching code that can be used in many domains. 
 
@@ -153,6 +155,8 @@ As mentioned above, the path searching algorithms requires only a start state an
 
 \subsection{Graph Library Integration}
 The core graph library doesn't know anything about a ``start" state and a ``goal" state. A vertex is not the same thing as a state; for example, a vertex does not have the concept of a parent pointer. In order to use the path searching code, we therefore has to create state wrappers that integrated with the pre-existing graph data types. This made sure we could still use code described above, while also making sure the user did not have to worry about such transformations.
+
+\section{Performance Measurements}
 
 \section{Concepts}
 \subsection{What are concepts?}

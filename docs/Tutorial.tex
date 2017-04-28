@@ -20,6 +20,8 @@ Anton Igorevich \\
 
 \maketitle
 
+\tableofcontents
+
 \section{Introduction}
 This is a short tutorial on how to get going using the graph library. The big picture idea is for you, the user, to create your own Vertex and Edge data structures; once you provide the library with these two user defined types, you'll be immediately able to start creating graphs and running algorithms on these graphs using our simple API.
 
@@ -63,6 +65,40 @@ As long as the user defined data type adheres to these requirements, any of the 
 
 \subsection{Important Notes}
 The API requires the user to send in pointers, to avoid the cost of copying. Nonetheless, the library copies data into the graph data structures. For example, when a vertex is added to a graph, a copy of a vertex is added to the graph struct; this is exactly how vector from the standard library works. This prevents the user from maintaining pointers into the underlying graph data structure and changing data from under it's feet. We believe this will prevent nasty bugs.
+
+\subsection{Hashable}
+As mentioned above vertices and edges should be hashable; this involves creating a struct called ``hash", providing it with a type, and implementing the $()$ operator. The following code illustrates how to define a hash function for a user defined class called ``city"
+
+\begin{lstlisting}
+namespace std
+{
+	template <>
+		struct hash<city>
+		{
+			size_t operator()(const city& n) const noexcept
+			{
+				return std::hash<string>()(n.get_name());
+			}
+		};
+}
+\end{lstlisting}
+In this instance we're hashing on the ``city" class' ``name" field, which is accessible via \texttt{get\_name}.
+\\
+Here's another example where we has on an int.
+\begin{lstlisting}
+namespace std
+{
+	template<>
+	struct hash<vertex>
+		{
+			size_t operator()(const vertex& n) const noexcept
+			{
+				return std::hash<int>()(n.vertex_id);
+			}
+		};
+	}
+\end{lstlisting}
+In both instances we use the library provide hash function (\texttt{std::hash<int>, std::hash<string>}; this is not required (but it is encouraged). As long as some sort of hash of type \texttt{size\_t} is returned you should be good to go.
 
 \section{Examples}
 Here we provide some examples on how to use the library. 
