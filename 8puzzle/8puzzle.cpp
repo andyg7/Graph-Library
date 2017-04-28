@@ -80,17 +80,11 @@ int main(int argc, char *argv[])
 	glutInitWindowSize(500, 500);
 	glutCreateWindow("8puzzle");
 	init();    
-	//int final_values[3][9] ={ {1,0,2,3,4,5,6,7,8}, {0,1,2,3,4,5,6,7,8},{1,2,7,3,2,5,3,6,0}};
 	int j;
-	//const char *testval = "1 2 3 4 5 6 7 8 0";
-
-
-	//std::istringstream iss(line);
-	//std::string s;
 	while (std::getline(infile, line))
 	{
 		test(line);
-		sleep(1);
+		sleep(0.5);
 	}
 
 
