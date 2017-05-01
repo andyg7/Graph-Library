@@ -7,9 +7,6 @@
 \author{
 Andrew Grant\\
 \texttt{amg2215@columbia.edu}
-\and 
-Anton Igorevich \\
-\texttt{ain2108@columbia.edu}
 \and
  Somya Vasudevan \\
  \texttt{sv2500@columbia.edu}
@@ -20,7 +17,9 @@ Anton Igorevich \\
 
 \maketitle
 
-\section{}
+\tableofcontents
+
+\section{Introduction}
 We've provide you with links to a bunch of the required files. If any do not work for some reason, please reach out to us via email. Nonetheless, all files will be in the repository which is located at:  \url{https://github.com/andyg7/Graph-Library} which should almost assuredly work and so you can look there too to find some of the documents.
 \par
 \section{Development Environment}
@@ -50,7 +49,379 @@ Compile times are pretty slow due to use using concepts.
 \item Real usage of library - as solved the 8 puzzle game using our library. The code to do this is here:  \url{https://github.com/andyg7/Graph-Library/tree/master/expander_examples}
 \end{itemize}
 
+\section{How to run our code (and our application)}
+\begin{itemize}
+\item Go to \texttt{lib\_examples} directory (\url{https://github.com/andyg7/Graph-Library/tree/master/lib_examples})
+\item There are three subdirectories (\texttt{cities\_examples, expander\_examples, simple\_examples}) that contain examples of code using our library
+\item run ``make" to compile. ``make clean" will clean the dir first. The binary is called ``main".
+\item \texttt{ expander\_examples} contains the application of our library. The design document explains the application in more detail.  
+\end{itemize}
 
+\section{Testing Code}
+Our unit testing suite is in Graph-Library/tests. Just run ``make". The binary is called ``main".
 
+\section{Design Document}
+
+\subsection{Introduction}
+We've built a graph and path searching library, built in C++. The library is designed to make it really easy for users to use their own vertex and edge data structures and get going using graphs and running algorithms on them right away. Currently the library supports the following graphs: DG (directed graph), DAG (directed acyclic graph), DT (directed tree), Matrix(undirected). The idea is that users define their own vertex and edge data types, and then the library handles everything else under the hood. We also provide very generic path searching code that can be used in many domains. 
+
+\subsection{Motivation}
+Conceptually, a graph is made up of a bunch of vertices and edges. At a minimum there must be some way to distinguish between vertices, distinguish between edges, and define edges as made up of two vertices. Nonetheless, users often want to embed extra information in these ADTs. For example, a user may want a graph representing cities and the highways between them. The user may have a City class; cities must of course have some unique id (e.g. city name), but they may also have extra information such as population, GDP, etc. The same goes for edges; maybe a Road class is used, and the class also has miles, age of road etc. 
+\par
+We wanted to design a library that made it super easy for users to user their \emph{own} vertex and edge data types.
+The philosophy of the library was that it should be really easy for users to be able to use their own vertex and edge data structures, and that the the library would handle everything else under the hood. In order to make it easy to use the library, we designed the library with minimal requirements when it came to the user defined vertex and edge types. 
+
+\subsection{General Graph Design}
+\subsubsection{Graph Data Types}
+We provide the following graph types: DG (adjacency list), DAG (adjacency list), DT (adjacency list), and Matrix (undirected). All of these types are represented by simple structs. Each struct holds certain information about the graph it is representing. For example, the adjacency list structs will point to lists of vertices, while the matrix struct will point to some sort of matrix. An important member type of each struct is \texttt{graph\_type}. This member type is set to one of: \texttt{DAG, DG, DT, Matrix\_graph}. Concepts (described below) use this member type to determine what graph type is being used, and thus be able to determine, at compile type, which function to call. This is important as fundamentally there is no structural difference between a DT and DG; by using this member type we can have a function that works on a DT (and checks to make sure the tree structure invariant is maintained) and another function that works on a DG (and doesn't have to check that tree structure is maintained).
+
+\subsubsection{User Defined Data Structures}
+The library was designed so that users are able to design their own vertex and edge data structures. All that is required of the users is the following:
+\begin{itemize}
+\item Vertex and Edge must be comparable (that is they must implement the == operator for their types)
+\item Vertex and Edge must be hashable
+\item Edge must have two fields \texttt{v\_1} and \texttt{v\_2}, that are of the same type as the Vertex that they defined.
+\item To use the path algorithms, Edge must have a cost field that is numeric. If the user does not define a cost, the library will automatically given an edge a cost of 1.
+\item Vertex must have a \texttt{to\_string} function that returns a string representation of the vertex. 
+\end{itemize}
+
+\subsubsection{Wrappers}
+Because minimal requirements are imposed on the user when it comes to his/her vertex and edge type, we needed to wrap the users data types in our own struct for certain bookkeeping reasons. Thus, under the hood the graph library stores each vertex in a \texttt{vertex\_wrapper} and each edge in a \texttt{edge\_wrapper}. Both wrappers also store a field of type \texttt{Value} which is a pair consisting of a string and an int. This lets the user set some sort of value for each vertex and/or edge, without their own data type knowing about such a value. Lastly, the wrapper also stores a unique id (of type int) that the user is again completely oblivious to. This id is generated by the graph library for internal bookkeeping (for example, it's used as the index when a matrix graph representation is used). The following image illustrates this.
+
+\includegraphics{vertexwrapper}
+
+The idea is the same for the \texttt{edge\_wrapper}
+
+\texttt{vertex\_data} points to the user provided vertex data. This \texttt{vertex\_wrapper} is the fundamental data type of our graph library. Whether a DAG, DG, DT or matrix graph representation is used, each vertex is stored in this struct. 
+
+\subsubsection{Graph Interface}
+Because all graphs are represented by structs, pretty much every graph library function requires such a graph struct as a formal argument. The remaining arguments are almost always one of the user defined vertex or edge. Thus, users do not need to know about wrappers at all. The wrappers are handled by the library. Furthermore, \texttt{shared\_ptr<>s} are required when using the API. That is, the library requires every formal argument to be of type \texttt{shared\_ptr<>} 
+\par
+Concepts allow us to use the same function name for different graph types. For example, there is a different function \texttt{add\_edge(G g, E e)} for each graph type.
+\begin{lstlisting}
+template<typename G, typename E>
+requires Graph<G> && Edge_ptr<E>
+bool add_edge(G g, E e)
+{
+	bool added_edge = add_edge_blindly_w_edge(g, e);
+	return added_edge;
+}
+
+template<typename G, typename E>
+requires DAG_Graph<G> && Edge_ptr<E>
+bool add_edge(G g, E e)
+{
+	typedef typename G::element_type::vertex_type vertex_type;
+	shared_ptr<vertex_type> tmp_v1 = make_shared<vertex_type>(e->v1);
+	shared_ptr<vertex_type> tmp_v2 = make_shared<vertex_type>(e->v2);
+	bool path_ex = path_exists(g, tmp_v2, tmp_v1);
+	if (path_ex == true) {
+		return false;
+	} 
+	bool added_edge = add_edge_blindly_w_edge(g, e);
+	return added_edge;
+}
+
+template<typename G, typename E>
+requires DT_Graph<G> && Edge_ptr<E>
+bool add_edge(G g, E e)
+{
+	typedef typename G::element_type::vertex_type vertex_type;
+	shared_ptr<vertex_type> tmp_v1 = make_shared<vertex_type>(e->v1);
+	shared_ptr<vertex_type> tmp_v2 = make_shared<vertex_type>(e->v2);
+	bool path_ex = path_exists(g, tmp_v2, tmp_v1);
+	if (path_ex == true) {
+		return false;
+	}
+	bool has_par = has_parent(g, tmp_v2);
+	if (has_par == true) {
+		return false;
+	}
+	bool added_edge = add_edge_blindly_w_edge(g, e);
+	return added_edge;
+}
+\end{lstlisting}
+
+\subsection{Adjacency List Design}
+\subsubsection{}
+DAG, DG and DT are are represented using adjacency lists. In order to implement an adjacency list, we actually created another data type to wrap \texttt{vertex\_wrapper}, which we call \texttt{vertex\_header}. The \texttt{vertex\_header} is the head of a vertex's adjacency list. Thus, the difference between a \texttt{vertex\_header} and \texttt{vertex\_wrapper}, is that the \texttt{vertex\_header} is the conceptual head of a vertex's adjacency list and points to a list of \texttt{vertex\_wrapper}.
+
+\includegraphics{al}
+
+The image above shows the \texttt{vertex\_header} pointing to a list of \texttt{vertex\_wrapper}. \texttt{vertex\_header} actually also points to a list of \texttt{edge\_wrapper} too. 
+\subsubsection{Data Structures}
+The list of vertex headers is stored in a vector. The list of neighbors (aka \texttt{vertex\_wrapper} is also stored in a vector. The list of edges (aka \texttt{edge\_wrapper} is also stored in a vector).
+
+\subsection{Matrix Design}
+\subsubsection{}
+As with the adjacency list representation, \texttt{vertex\_wrapper} is a fundamental data type to our matrix implementation. As emphasized, we wanted the user to be able to use his/her own vertex and edge types. In order to be as flexible as possible we did \emph{not} require the user to assign each vertex a unique integer id. Nonetheless, in order to use matrix graph representations we need some way to index each vertex into the matrix. We decided to use the internal id embedded in each \texttt{vertex\_wrapper} for this purpose. However, using this unique id wasn't enough. The whole point of using a matrix representation is the access efficiency; we needed some way to immediately map an incoming vertex to its unique id without iterating over \emph{all} vertices. Thus, to make the matrix representation work we maintain a hashmap pointing from a vertex to its \texttt{vertex\_wrapper}, which contains it's unique id. 
+
+\includegraphics{matrix}
+
+\subsubsection{Data Structures}
+We use a vector of vectors to represent the matrix. Since the internal id is an int, the matrix is thus a vector of vector of ints. We also maintain a hashmap pointing from a vertex to its wrapper.
+
+\subsection{Path Searching algorithms}
+\subsubsection{Algorithms Supported}
+We support the following path searching algorithms: 
+\begin{itemize}
+\item BFS
+\item DFS
+\item UCS
+\item A*
+\end{itemize}
+
+\subsubsection{Implementation}
+\textbf{User Defined State}
+We designed the path algorithms such that they only require a ``start" state and ``goal" state, where ``state" is an abstract type. The user simply defines his/her own start and goal state, and the code handles the rest. Of course the semantics of path finding require that any given state must adhere to some requirements; we use concepts to enforce these:
+\begin{itemize}
+\item a state must be comparable
+\item a state must be hashable
+\item a state must have a \texttt{to\_string()} member function
+\item a state must have a field called parent that is of type \texttt{shared\_ptr<state>}
+\item a state must have a field called cost that is numeric
+\item a state must have a member function called ``expand" that returns a vector of states
+\item if A* is used, a member function called \texttt{heuristic\_func()} is required that returns a numeric type
+\end{itemize}
+As long as the user provides a type that adheres to these properties, any of our algorithms can be run
+
+\textbf{Path Code}
+We designed the path searching part of the library such that \emph{all} algorithms actually run on the same while loop. The function that eventually gets called accepts a few parameters that determine which algorithm gets run. For example, if we want to run DFS we send the path code a stack to be used as the frontier set. If we want to run BFS we send it a queue for the frontier set. Thus, all the different algorithms actually run on the same code; it's the inputs that decide which algorithm gets run. 
+\par
+Obviously we wouldn't want the user to know or worry about such details. Thus, the user simply calls \texttt{find\_path\_ast(s, g)}, and under the hood the library creates the appropriate frontier set and calls the generic code from there.
+
+\textbf{Path Interface}
+As mentioned above, the path searching algorithms requires only a start state and goal state. Both states must be wrapped in a \texttt{shared\_ptr<>}
+
+\subsubsection{Graph Library Integration}
+The core graph library doesn't know anything about a ``start" state and a ``goal" state. A vertex is not the same thing as a state; for example, a vertex does not have the concept of a parent pointer. In order to use the path searching code, we therefore has to create state wrappers that integrated with the pre-existing graph data types. This made sure we could still use code described above, while also making sure the user did not have to worry about such transformations.
+
+\subsection{Performance Measurements}
+
+\subsection{Concepts}
+\subsubsection{What are concepts?}
+Concepts are essentially compile time predicates. That is, they are requirements on the types that are passed into functions. If an argument doesn't satisfy the concept, the compiler will immediately report an error. This makes debugging much easier when using templates. Without concepts, debugging can be very tricky when using templates, as it's often late in the compilation process that the compiler realizes a type is no good. As a result error messages can be extremely long, making dubugging tricky. 
+\subsubsection{Library Usage}
+In terms of this library, there are two main ways we use concepts.
+\par
+The first is to make debugging easier; user defined vertices and edges must satisfy certain properties and concepts are used to enforce these and catch bugs earlier in the compilation process. For example, an Edge must point to two vertices; an Edge must be comparable; a Vertex must have a unique identifier. 
+\par
+Perhaps more importantly, we use concepts to support function overloading. The names of the functions that work on different graph types are all the same; thus the user can call the same function whether he or she is working with a matrix or adjacency list. Concepts determine which function should be called at \emph{compile} time, not runtime. 
+
+\subsection{Application}
+For our application we wrote a solver for the 8 puzzle game. \url{https://en.wikipedia.org/wiki/15_puzzle}. We were able to use the path searching code to easily use the generic code to solve the game using BFS, DFS, UCS and A*. All we needed to go was create a class to represent the state of the board at any given time, and write a function called ``expand" which returned a vector of board configurations that could be reached in one stop. At that point we instantiated two objects, the initial board config, and goal board config and the library handled the rest. Check out \url{https://github.com/andyg7/Graph-Library/tree/master/lib_examples/expander_examples} to see the code to actually solve the puzzle using our library.
+
+\subsubsection{References}
+\begin{itemize}
+\item Concepts reference: \url{http://www.stroustrup.com/good_concepts.pdf}
+\item The complete project is located at \url{https://github.com/andyg7/Graph-Library}.
+\item The core graph library code is located at \url{https://github.com/andyg7/Graph-Library/src}
+\end{itemize}
+
+\section{Tutorial}
+
+\subsection{Introduction}
+This is a short tutorial on how to get going using the graph library. The big picture idea is for you, the user, to create your own Vertex and Edge data structures; once you provide the library with these two user defined types, you'll be immediately able to start creating graphs and running algorithms on these graphs using our simple API.
+
+\subsection{How to Use the Library}
+\subsubsection{User Defined Vertex and Edge}
+The most important thing is for the user to define his/her vertex and edge data types. The types must adhere to the following requirements:
+\begin{itemize}
+\item Vertex and Edge must be comparable
+\item Vertex and Edge must be hashable
+\item Edge must have two fields \texttt{v\_1} and \texttt{v\_2}, that are of the same type as the Vertex defined.
+\item To use the path algorithms, Edge must have a cost field that is numeric. If the user does not define a cost, the library will automatically given an edge a cost of 1.
+\item Vertex must have a \texttt{to\_string} function that returns a string representation of the vertex. 
+\end{itemize}
+\subsubsection{Choosing a Graph Type}
+Then the user should select one of \texttt{graph\_dg}, \texttt{graph\_dag}, \texttt{graph\_dt}, \texttt{matrix\_graph} and provide the struct with two template parameters that specify the vertex and edge types (the library provides vertex and edge types for user, but most likely the user will to provide his/her own data types) 
+For example: 
+\begin{itemize}
+\item \texttt{dag\_graph<}\texttt{my\_vertex\_1}, \texttt{my\_edge\_1>} \texttt{my\_graph}; 
+\item \texttt{dt\_graph<vertex, edge>} \texttt{my\_graph}; 
+\item \texttt{dg\_graph<}\texttt{my\_vertex\_2}, \texttt{my\_edge\_2>} \texttt{my\_graph};
+\end{itemize}
+ At this point the user can easily start using the library provided functions. All functions require the user to provide at least the graph object. Furthermore, all arguments should be \texttt{shared\_ptrs}; this is to avoid the cost of copying. These savings could be substantial for large graph objects.
+Note that the same function name is used for all graph types, vertex types and edge types. This is thanks to concepts; that is, concepts are used to make sure the right function is called using overloading. This makes it super easy for the user to write generic programs that work on different graph types. 
+\subsubsection{Path Algorithms}
+The path searching code is very generic and is designed to work with our graph library as well as our path searching domains.  
+\textbf{Path Algorithms Using Our Graph Library}
+The path searching algorithms are accessible just like regular graph functions. One thing to note is the return type of the path algorithms. The path algorithms actually return a pointer to a struct called \texttt{path\_data}. This struct points to various interesting information about the path found. It contains the following data: 1) the cost of the path 2) a vector of the vertices along the path 3) a vector of string representations of the path 4) a function \texttt{to\_string} that returns a string of the path
+\par
+One important note is how the cost is computed. The cost is determined by the cost of the edge; if the user does not define a cost for an edge a cost of 1 is assumed.
+
+\textbf{Path Algorithms in Other Domains}
+Our path algorithms are also designed to work in other domains where the user can provide a start state and goal state. The idea is that our code will work will pretty much any user defined ``state" as long as it adheres to a few requirements:
+\begin{itemize}
+\item a state must have a parent pointer; this is to retrace the found path once the goal state is found
+\item a state must have a cost field that is numeric
+\item a state must be hashable
+\item a state must be comparable
+\item a state must have a function called \texttt{expand()} that returns a vector of states. This function should return a given states successor states.
+\end{itemize}
+As long as the user defined data type adheres to these requirements, any of the path finding algorithms can be used.
+
+\subsubsection{Important Notes}
+The API requires the user to send in pointers, to avoid the cost of copying. Nonetheless, the library copies data into the graph data structures. For example, when a vertex is added to a graph, a copy of a vertex is added to the graph struct; this is exactly how vector from the standard library works. This prevents the user from maintaining pointers into the underlying graph data structure and changing data from under it's feet. We believe this will prevent nasty bugs.
+
+\subsubsection{Hashable}
+As mentioned above vertices and edges should be hashable; this involves creating a struct called ``hash", providing it with a type, and implementing the $()$ operator. The following code illustrates how to define a hash function for a user defined class called ``city"
+
+\begin{lstlisting}
+namespace std
+{
+	template <>
+		struct hash<city>
+		{
+			size_t operator()(const city& n) const noexcept
+			{
+				return std::hash<string>()(n.get_name());
+			}
+		};
+}
+\end{lstlisting}
+In this instance we're hashing on the ``city" class' ``name" field, which is accessible via \texttt{get\_name}.
+\\
+Here's another example where we has on an int.
+\begin{lstlisting}
+namespace std
+{
+	template<>
+	struct hash<vertex>
+		{
+			size_t operator()(const vertex& n) const noexcept
+			{
+				return std::hash<int>()(n.vertex_id);
+			}
+		};
+	}
+\end{lstlisting}
+In both instances we use the library provide hash function (\texttt{std::hash<int>, std::hash<string>}; this is not required (but it is encouraged). As long as some sort of hash of type \texttt{size\_t} is returned you should be good to go.
+
+\subsection{Examples}
+Here we provide some examples on how to use the library. 
+\subsubsection{Creating a graph}
+Here we create a matrix graph, where Vertex type is ``city", and Edge type is ``road". ``city" and ``road" are both user defined classes. 10 refers to the dimension of the matrix. We highly recommend using the keyword ``auto" whenever possible.
+\begin{lstlisting}
+auto my_graph = make_shared<matrix_graph<city, road>>(10);
+\end{lstlisting}
+Here we create an adjacency list DAG graph.
+\begin{lstlisting}
+auto my_graph = make_shared<dag_graph<city, road>>();
+\end{lstlisting}
+
+\subsubsection{Creating a Vertex using helper function}
+Create a Vertex using helper function. A unique id is automatically assigned to v1. This is a helper function for the user if he/she needs to create a ton of vertices on the fly and doesn't want to manually create them and worry about creating unique ids. Nonetheless, the user can create his/her own vertices manually as well of course. 
+\begin{lstlisting}
+auto v1 = create_vertex(my_graph);
+\end{lstlisting}
+
+\subsubsection{Setting a value to a Vertex}
+Note, the user defined Vertex does not need to know anything about Value
+\begin{lstlisting}
+set_value(my_graph, v0, Value {"A", 1990});
+\end{lstlisting}
+
+\subsubsection{Adding a vertex to a graph}
+\begin{lstlisting}
+add(my_graph, v0);
+\end{lstlisting}
+
+\subsubsection{Creating Edge}
+\begin{lstlisting}
+auto e1 = create_edge(my_graph, v0, v2);
+\end{lstlisting}
+
+\subsubsection{Checking if vertices are adjacent}
+\begin{lstlisting}
+bool a = adjacent(my_graph, v0, v1)
+\end{lstlisting}
+
+\subsubsection{Getting vertices by value}
+\begin{lstlisting}
+vector<V> vertices_by_value = get_vertices_by_value(my_graph);
+\end{lstlisting}
+
+\subsubsection{Removing a Vertex}
+\begin{lstlisting}
+remove(my_graph, v11);
+\end{lstlisting}
+
+\subsubsection{Finding a path between Vertices}
+Here we show you how to use the path finding algorithms. Notice how we get a struct from the function. In the second line we get a vector of the vertices along the path. So in our case we would get a vector of ``city" objects. In the third line we are able to get a string; this string is a string of the path. Note how this requires the ``city" provides a \texttt{to\_string} function.
+\begin{lstlisting}
+struct path_data path_v0_v1_data = find_path_ucs(my_graph, v0, v1);
+auto vector_of_vertices = path_v0_v1_data->path_v;
+string string_of_path = path_v0_v1_data->to_string();
+\end{lstlisting}
+
+\subsubsection{Finding a path from start state to goal state (8 puzzle problem)}
+Here we show how our code can be used to solve the 8 puzzle problem. The user has defined a class that represents the state of the board at any given time. The class has a function called \texttt{expand()} that returns a vector of states that can be moved to in one move. The class has a parent pointer. The class has a cost. It is hashable and it is comparable. 
+
+\begin{lstlisting}
+class Node : public std::enable_shared_from_this<Node>
+{
+	public:
+		int vertex_id;
+		using cost_type = int;
+		Node(vector<vector<int>>, int, shared_ptr<Node>);
+		vector<shared_ptr<Node>> expand();
+		int get_element(int, int) const;
+		int get_element(tuple<int,int>) const;
+		void set_element(int, int, int);
+		void set_element(tuple<int,int>, int);
+		void switch_elements(tuple<int, int>, tuple<int, int>);
+		bool is_goal_node();
+		void set_cost(int);
+		int get_cost() const;
+		void set_parent(shared_ptr<Node> p);
+		shared_ptr<Node> get_parent() const;
+		bool operator==(const Node& rhs) const;
+		bool operator!=(const Node& rhs) const;
+		int heuristic_func() const;
+		shared_ptr<Node> parent;
+		int cost;
+		string to_string() const;
+
+		//int get_estimated_cost_to_end() const;
+	private:
+		vector<vector<int>> grid;
+		tuple<int,int> get_zero_element() const;
+		//int estimated_cost_to_end;
+};
+
+\end{lstlisting}
+The user is now able to create a start state, and goal state and call our code and get the path in return:
+
+\begin{lstlisting}
+shared_ptr<Node> n = make_shared<Node>(v, 0, nullptr);
+	n->set_element(0,0,1);
+	n->set_element(1,0,7);
+	n->set_element(2,0,4);
+	n->set_element(0,1,3);
+	n->set_element(1,1,5);
+	n->set_element(2,1,6);
+	n->set_element(0,2,2);
+	n->set_element(1,2,8);
+	n->set_element(2,2,0);
+	shared_ptr<Node> goal_state = make_shared<Node>(v, 0, nullptr);
+	goal_state->set_element(0,0,1);
+	goal_state->set_element(1,0,2);
+	goal_state->set_element(2,0,3);
+	goal_state->set_element(0,1,4);
+	goal_state->set_element(1,1,5);
+	goal_state->set_element(2,1,6);
+	goal_state->set_element(0,2,7);
+	goal_state->set_element(1,2,8);
+	goal_state->set_element(2,2,0);
+	if (!path_exists(n, goal_state)) {
+		cout << "No path ! \n";
+		return 0;
+	}
+	cout << "calculating ast path...\n";
+	shared_ptr<struct path_data<Node, int>> path_d = find_path_ast(n, goal_state);
+\end{lstlisting}
+
+Hopefully these examples have given you an idea of what our library can be used for!
 
 \end{document} 
