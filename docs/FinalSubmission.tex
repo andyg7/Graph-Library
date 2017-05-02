@@ -212,6 +212,19 @@ Perhaps more importantly, we use concepts to support function overloading. The n
 \subsection{Application}
 For our application we wrote a solver for the 8 puzzle game. \url{https://en.wikipedia.org/wiki/15_puzzle}. We were able to use the path searching code to easily use the generic code to solve the game using BFS, DFS, UCS and A*. All we needed to go was create a class to represent the state of the board at any given time, and write a function called ``expand" which returned a vector of board configurations that could be reached in one stop. At that point we instantiated two objects, the initial board config, and goal board config and the library handled the rest. Check out \url{https://github.com/andyg7/Graph-Library/tree/master/lib_examples/expander_examples} to see the code to actually solve the puzzle using our library.
 
+\subsection{Performance measurements}
+We looked at how generic code ran for different puzzle sizes of our application (the 8 puzzle). The library was benchmarked, and the computation times of the 8 puzzle problem was calculated for 3X3, 4X4, 5X5 matrices, for DFS, AST, UCS and BFS methods. The following are the graph for the performance.
+
+\includegraphics{somyagraph}
+
+We also ran the different algorithms for each of the 3X3, 4X4, 5X5 puzzles configurations. The results are below:
+
+\includegraphics{somyagraph3}
+
+\includegraphics{somyagraph4}
+
+\includegraphics{somyagraph5}
+
 \subsubsection{References}
 \begin{itemize}
 \item Concepts reference: \url{http://www.stroustrup.com/good_concepts.pdf}
